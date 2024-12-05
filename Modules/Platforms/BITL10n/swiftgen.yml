@@ -1,0 +1,7 @@
+strings:
+  inputs: Sources/BITL10n/Resources/de.lproj
+  outputs:
+    - templateName: structured-swift5
+      output: Sources/BITL10n/Strings.swift
+      params:
+        publicAccess: true

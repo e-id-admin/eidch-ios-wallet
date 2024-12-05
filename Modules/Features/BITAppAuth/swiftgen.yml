@@ -1,0 +1,8 @@
+xcassets:
+  inputs:
+    - Sources/BITAppAuth/Resources/Assets.xcassets
+  outputs:
+    - templateName: swift5
+      output: Sources/BITAppAuth/Module/Assets.swift
+      params:
+        enumName: Assets

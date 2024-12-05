@@ -1,0 +1,18 @@
+# strings:
+#   inputs: Modules/Platforms/BITCore/Sources/BITCore/Resources/de.lproj
+#   outputs:
+#     - templateName: structured-swift5
+#       output: Modules/Platforms/BITCore/Sources/BITCore/Helpers/Strings.swift
+
+xcassets:
+  inputs:
+    - publicBetaWallet/Resources/Assets.xcassets
+  outputs:
+    - templateName: swift5
+      output: publicBetaWallet/Resources/Assets.swift
+      
+plist:
+  inputs: publicBetaWallet/Info.plist
+  outputs:
+    templateName: runtime-swift5
+    output: publicBetaWallet/Resources/Plist.swift

@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "F18E7921-2941-4B53-8788-52BDCE35AD14",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:publicBetaWallet.xcodeproj",
+        "identifier" : "3A6C800BE77AE9EB918A5143",
+        "name" : "publicBetaWalletTests"
+      }
+    }
+  ],
+  "version" : 1
+}

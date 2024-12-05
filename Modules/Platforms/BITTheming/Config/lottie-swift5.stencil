@@ -1,0 +1,20 @@
+// swiftlint:disable all
+// Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
+
+{% if files %}
+{% set accessModifier %}{% if param.publicAccess %}public{% else %}internal{% endif %}{% endset %}
+{% set enumName %}{{param.enumName|default:"Lottie"}}{% endset %}
+import Foundation
+import Lottie
+
+// MARK: - Lottie Files Enum
+
+{{accessModifier}} enum {{enumName}} {
+  {% for file in files %}
+  {{accessModifier}} static let {{file.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = LottieView(animationFile: "{{file.name}}")
+  {% endfor %}
+}
+
+{% else %}
+// No files found
+{% endif %}

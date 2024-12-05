@@ -1,0 +1,60 @@
+// swift-tools-version: 5.9
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+
+import PackageDescription
+
+let package = Package(
+  name: "BITOpenID",
+  defaultLocalization: "en",
+  platforms: [
+    .iOS(.v15),
+  ],
+  products: [
+    .library(
+      name: "BITOpenID",
+      targets: ["BITOpenID"]),
+  ],
+  dependencies: [
+    .package(path: "../../Platforms/BITCore"),
+    .package(path: "../../Platforms/BITCrypto"),
+    .package(path: "../../Platforms/BITSdJWT"),
+    .package(path: "../../Platforms/BITJWT"),
+    .package(path: "../../Platforms/BITVault"),
+    .package(path: "../../Platforms/BITNetworking"),
+    .package(path: "../../Platforms/BITAnyCredentialFormat"),
+    .package(path: "../BITAppAuth"),
+    .package(url: "https://github.com/hmlongco/Factory", exact: "2.2.0"),
+    .package(url: "https://github.com/Matejkob/swift-spyable", revision: "8f78f36989bde9f06cc5a5254a6748c23c16b045"),
+    .package(url: "https://github.com/KittyMac/Sextant.git", revision: "e59c57e4fa19a02f336cd91b9f6cd8e4022e5ed0"),
+  ],
+  targets: [
+    .target(
+      name: "BITOpenID",
+      dependencies: [
+        .product(name: "BITAppAuth", package: "BITAppAuth"),
+        .product(name: "BITJWT", package: "BITJWT"),
+        .product(name: "BITVault", package: "BITVault"),
+        .product(name: "BITSdJWT", package: "BITSdJWT"),
+        .product(name: "BITCore", package: "BITCore"),
+        .product(name: "BITCrypto", package: "BITCrypto"),
+        .product(name: "BITNetworking", package: "BITNetworking"),
+        .product(name: "BITAnyCredentialFormat", package: "BITAnyCredentialFormat"),
+        .product(name: "Spyable", package: "swift-spyable"),
+        .product(name: "Factory", package: "Factory"),
+        .product(name: "Sextant", package: "Sextant"),
+        .product(name: "BITTestingCore", package: "BITCore"),
+      ],
+      resources: [.process("Resources")],
+      swiftSettings: [.define("DEBUG", .when(configuration: .debug))]),
+    .testTarget(
+      name: "BITOpenIDTests",
+      dependencies: [
+        "BITOpenID",
+        .product(name: "BITAnyCredentialFormat", package: "BITAnyCredentialFormat"),
+        .product(name: "BITTestingCore", package: "BITCore"),
+        .product(name: "BITSdJWTMocks", package: "BITSdJWT"),
+        .product(name: "BITJWT", package: "BITJWT"),
+        .product(name: "BITAnyCredentialFormatMocks", package: "BITAnyCredentialFormat"),
+      ],
+      swiftSettings: [.define("DEBUG", .when(configuration: .debug))]),
+  ])

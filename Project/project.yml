@@ -1,0 +1,31 @@
+name: publicBetaWallet
+
+options:
+  developmentLanguage: en
+  deploymentTarget: [iOS]
+  generateEmptyDirectories: true
+  
+configs:
+  Dev (debug): debug
+  Dev (release): release
+  Ref (debug): debug
+  Ref (release): release
+  Abn (debug): debug
+  Abn (release): release
+  Prod (debug): debug
+  Prod (release): release
+
+fileGroups: [
+  "Project/project.yml",
+  "Project/packages.yml",
+  "Project/targets.yml",
+  "Project/schemes.yml",
+
+  "TestPlans/UnitTestPlan.xctestplan",
+  "TestPlans/UITestPlan.xctestplan",
+  "TestPlans/FullTestPlan.xctestplan",
+
+  "Modules",
+
+  "Makefile"
+]

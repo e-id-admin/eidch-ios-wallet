@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "B4762AE3-6828-475E-AF29-355132662336",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:publicBetaWallet.xcodeproj",
+        "identifier" : "DD2E14501624858BE8C10844",
+        "name" : "publicBetaWalletUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -1,0 +1,76 @@
+import BITCredentialShared
+import BITOpenID
+import Factory
+import Foundation
+
+@MainActor
+extension Container {
+
+  // MARK: - Credential offer
+
+  var credentialOfferViewModel: ParameterFactory<(credential: Credential, trustStatement: TrustStatement?, state: CredentialOfferViewModel.State, router: CredentialOfferRouter.Routes), CredentialOfferViewModel> {
+    self { CredentialOfferViewModel(credential: $0, trustStatement: $1, state: $2, router: $3) }
+  }
+
+  var credentialOfferModule: ParameterFactory<(Credential, TrustStatement?), CredentialOfferModule> {
+    self { CredentialOfferModule(credential: $0, trustStatement: $1) }
+  }
+
+  // MARK: - Camera
+
+  var cameraPermissionViewModel: ParameterFactory<InvitationRouterRoutes, CameraPermissionViewModel> {
+    self { CameraPermissionViewModel(router: $0) }
+  }
+
+  var cameraViewModel: ParameterFactory<InvitationRouterRoutes, CameraViewModel> {
+    self { CameraViewModel(router: $0) }
+  }
+
+  var deeplinkViewModel: ParameterFactory<(URL, InvitationRouterRoutes), DeeplinkViewModel> {
+    self { DeeplinkViewModel(url: $0, router: $1) }
+  }
+}
+
+extension Container {
+
+  // MARK: Public
+
+  public var invitationRouter: Factory<InvitationRouter> {
+    self { InvitationRouter() }
+  }
+
+  public var validateCredentialOfferInvitationUrlUseCase: Factory<ValidateCredentialOfferInvitationUrlUseCaseProtocol> {
+    self { ValidateCredentialOfferInvitationUrlUseCase() }
+  }
+
+  public var checkInvitationTypeUseCase: Factory<CheckInvitationTypeUseCaseProtocol> {
+    self { CheckInvitationTypeUseCase() }
+  }
+
+  public var credentialOfferRouter: Factory<CredentialOfferRouter> {
+    self { CredentialOfferRouter() }
+  }
+
+  // MARK: Internal
+
+  var delayAfterAcceptingCredential: Factory<UInt64> {
+    self { 2_000_000_000 }
+  }
+
+  var scannerDelay: Factory<UInt64> {
+    self { 2_000_000_000 }
+  }
+
+  var credentialOfferHeaderViewModel: ParameterFactory<(CredentialIssuerDisplay, TrustStatus), CredentialOfferHeaderViewModel> {
+    self { CredentialOfferHeaderViewModel($0, credentialTrustStatus: $1) }
+  }
+
+  var getCredentialsCountUseCase: Factory<GetCredentialsCountUseCaseProtocol> {
+    self { GetCredentialsCountUseCase() }
+  }
+
+  var getCredentialIssuerDisplayUseCase: Factory<GetCredentialIssuerDisplayUseCaseProtocol> {
+    self { GetCredentialIssuerDisplayUseCase() }
+  }
+
+}

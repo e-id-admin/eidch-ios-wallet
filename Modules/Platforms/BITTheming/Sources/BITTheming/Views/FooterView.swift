@@ -1,0 +1,47 @@
+import Foundation
+import SwiftUI
+
+public struct FooterView<Content: View>: View {
+
+  // MARK: Lifecycle
+
+  public init(@ViewBuilder _ content: @escaping () -> Content) {
+    self.content = content
+  }
+
+  // MARK: Public
+
+  public var body: some View {
+    Group {
+      if #available(iOS 16, *), !sizeCategory.isAccessibilityCategory {
+        ViewThatFits(in: .horizontal) {
+          HStack(spacing: .x2) {
+            content()
+          }
+
+          VStack(spacing: .x2) {
+            content()
+          }
+        }
+      } else {
+        VStack(spacing: .x2) {
+          content()
+        }
+      }
+    }
+    .padding(.vertical, .x4)
+    .padding(.horizontal, .x6)
+    .if(horizontalSizeClass == .compact && verticalSizeClass == .regular, transform: {
+      $0.background(ThemingAssets.Materials.chrome.swiftUIColor)
+    })
+  }
+
+  // MARK: Internal
+
+  @Environment(\.horizontalSizeClass) var horizontalSizeClass
+  @Environment(\.verticalSizeClass) var verticalSizeClass
+  @Environment(\.sizeCategory) var sizeCategory
+
+  let content: () -> Content
+
+}

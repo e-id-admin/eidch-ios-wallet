@@ -1,0 +1,9 @@
+xcassets:
+  inputs:
+    - Sources/BITCore/Resources/CoreAssets.xcassets
+  outputs:
+    - templateName: swift5
+      output: Sources/BITCore/Module/CoreAssets.swift
+      params:
+        enumName: CoreAssets
+        publicAccess: true

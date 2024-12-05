@@ -1,0 +1,85 @@
+--acronyms ID,URL,UUID
+--allman false
+--assetliterals visual-width
+--asynccapturing 
+--beforemarks 
+--binarygrouping 4,8
+--categorymark "MARK: %c"
+--classthreshold 0
+--closingparen same-line
+--closurevoid remove
+--commas always
+--conflictmarkers reject
+--decimalgrouping 3,6
+--elseposition same-line
+--emptybraces no-space
+--enumnamespaces always
+--enumthreshold 20
+--exponentcase lowercase
+--exponentgrouping disabled
+--extensionacl on-declarations
+--extensionlength 0
+--extensionmark "MARK: - %t + %c"
+--fractiongrouping disabled
+--fragment false
+--funcattributes prev-line
+--generictypes 
+--groupedextension "MARK: %c"
+--guardelse auto
+--header strip
+--hexgrouping 4,8
+--hexliteralcase uppercase
+--ifdef no-indent
+--importgrouping testable-last
+--indent 2
+--indentcase false
+--indentstrings false
+--lifecycle 
+--lineaftermarks true
+--linebreaks lf
+--markcategories true
+--markextensions always
+--marktypes always
+--maxwidth none
+--modifierorder 
+--nevertrailing 
+--nospaceoperators 
+--nowrapoperators 
+--octalgrouping 4,8
+--operatorfunc spaced
+--organizetypes class,enum,extension,struct
+--patternlet inline
+--ranges no-space
+--redundanttype infer-locals-only
+--self remove
+--selfrequired 
+--semicolons inline
+--shortoptionals always
+--smarttabs enabled
+--someAny true
+--stripunusedargs always
+--structthreshold 20
+--swiftversion 5.7
+--tabwidth unspecified
+--throwcapturing 
+--trailingclosures 
+--trimwhitespace always
+--typeattributes prev-line
+--typeblanklines remove
+--typemark "MARK: - %t"
+--varattributes preserve
+--voidtype void
+--wraparguments before-first
+--wrapcollections before-first
+--wrapconditions before-first
+--wrapeffects preserve
+--wrapenumcases always
+--wrapparameters before-first
+--wrapreturntype if-multiline
+--wrapternary default
+--wraptypealiases preserve
+--xcodeindentation disabled
+--yodaswap always
+--disable andOperator,assertionFailures,blankLinesAtEndOfScope,blankLinesAtStartOfScope,braces,elseOnSameLine,emptyBraces,enumNamespaces,hoistAwait,initCoderUnavailable,leadingDelimiters,linebreakAtEndOfFile,linebreaks,modifierOrder,numberFormatting,redundantBackticks,redundantExtensionACL,redundantFileprivate,redundantPattern,redundantRawValues,redundantVoidReturnType,semicolons,sortDeclarations,spaceAroundBrackets,spaceAroundComments,spaceAroundGenerics,spaceAroundParens,spaceInsideBrackets,spaceInsideComments,spaceInsideGenerics,spaceInsideParens,strongOutlets,trailingClosures,unusedArguments,void,wrap,yodaConditions
+--enable isEmpty,markTypes,organizeDeclarations,sortSwitchCases,wrapSwitchCases
+--exclude Pods,Generated,vendor

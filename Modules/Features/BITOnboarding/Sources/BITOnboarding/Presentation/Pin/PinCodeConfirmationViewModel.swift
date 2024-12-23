@@ -82,17 +82,14 @@ public class PinCodeConfirmationViewModel: ObservableObject {
   }
 
   private func handleError(_ error: Error) {
-    var message = error.localizedDescription
-
     if attemptLeft <= 0 {
       delegate?.didTryTooManyAttempts()
       router.pop()
       return
     }
 
-    message += ". " + L10n.tkChangepasswordError1IosNote2(attemptLeft)
     withAnimation {
-      inputFieldMessage = message
+      inputFieldMessage = L10n.tkChangepasswordError1IosNote2(attemptLeft)
     }
   }
 

@@ -10,46 +10,18 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 public enum L10n {
-  /// Zurzeit sind keine Aktivitäten vorhanden
-  public static let activitiesEmptyStateText = L10n.tr("Localizable", "activities_empty_state_text", fallback: "Zurzeit sind keine Aktivitäten vorhanden")
-  /// Leere Aktivitäten
-  public static let activitiesEmptyStateTitle = L10n.tr("Localizable", "activities_empty_state_title", fallback: "Leere Aktivitäten")
-  /// Löschen
-  public static let activitiesItemDeleteButton = L10n.tr("Localizable", "activities_item_delete_button", fallback: "Löschen")
-  /// Nachweis empfangen
-  public static let activitiesItemSubtitleCredentialReceived = L10n.tr("Localizable", "activities_item_subtitle_credentialReceived", fallback: "Nachweis empfangen")
-  /// Nachweis präsentiert
-  public static let activitiesItemSubtitlePresentationAccepted = L10n.tr("Localizable", "activities_item_subtitle_presentationAccepted", fallback: "Nachweis präsentiert")
-  /// Nachweis nicht präsentiert
-  public static let activitiesItemSubtitlePresentationDeclined = L10n.tr("Localizable", "activities_item_subtitle_presentationDeclined", fallback: "Nachweis nicht präsentiert")
-  /// Aktivitäten
-  public static let activitiesTitle = L10n.tr("Localizable", "activities_title", fallback: "Aktivitäten")
-  /// Angefragte Daten
-  public static let activityDetailsClaimsTitle = L10n.tr("Localizable", "activity_details_claims_title", fallback: "Angefragte Daten")
-  /// Löschen
-  public static let activityDetailsMenuDeleteText = L10n.tr("Localizable", "activity_details_menu_delete_text", fallback: "Löschen")
-  /// Überprüfer
-  public static let activityDetailsVerifier = L10n.tr("Localizable", "activity_details_verifier", fallback: "Überprüfer")
   /// PublicBetaWallet
   public static let appName = L10n.tr("Localizable", "app_name", fallback: "PublicBetaWallet")
   /// Wenn Sie sich schneller anmelden möchten, aktivieren Sie Ihre biometrischen Daten, um dies zu tun.
   public static let biometricSetupDisabledContent = L10n.tr("Localizable", "biometricSetup _disabled_content", fallback: "Wenn Sie sich schneller anmelden möchten, aktivieren Sie Ihre biometrischen Daten, um dies zu tun.")
   /// Zugriff auf Ihre Einstellungen und Konfiguration Ihrer biometrischen Daten
   public static let biometricSetupDisabledDetail = L10n.tr("Localizable", "biometricSetup _disabled_detail", fallback: "Zugriff auf Ihre Einstellungen und Konfiguration Ihrer biometrischen Daten")
-  /// Biometrics
-  public static let biometricSetupBiometricsText = L10n.tr("Localizable", "biometricSetup_biometrics_text", fallback: "Biometrics")
-  /// Zu den Einstellungen
-  public static let biometricSetupDisabledEnableButton = L10n.tr("Localizable", "biometricSetup_disabled_enableButton", fallback: "Zu den Einstellungen")
-  /// Ohne Biometrics weiter
-  public static let biometricSetupDisabledSkipButton = L10n.tr("Localizable", "biometricSetup_disabled_skipButton", fallback: "Ohne Biometrics weiter")
   /// Biometrics deaktiviert
   public static let biometricSetupDisabledTitle = L10n.tr("Localizable", "biometricSetup_disabled_title", fallback: "Biometrics deaktiviert")
   /// Überspringen
   public static let biometricSetupDismissButton = L10n.tr("Localizable", "biometricSetup_dismissButton", fallback: "Überspringen")
   /// FaceID
   public static let biometricSetupFaceidText = L10n.tr("Localizable", "biometricSetup_faceid_text", fallback: "FaceID")
-  /// Die Verwendung biometrischer Daten ist vorübergehend gesperrt. Sie können versuchen, sie zu einem späteren Zeitpunkt zu aktivieren
-  public static let biometricSetupLockoutText = L10n.tr("Localizable", "biometricSetup_lockout_text", fallback: "Die Verwendung biometrischer Daten ist vorübergehend gesperrt. Sie können versuchen, sie zu einem späteren Zeitpunkt zu aktivieren")
   /// Biometrics registrieren
   public static let biometricSetupNoClass3ToSettingsButton = L10n.tr("Localizable", "biometricSetup_noClass3_toSettingsButton", fallback: "Biometrics registrieren")
   /// Sie können weiterhin Ihren Code verwenden, sollte es mit den Biometrics mal nicht klappen.
@@ -66,8 +38,6 @@ public enum L10n {
   public static let cameraQrcodeScannerSecondary = L10n.tr("Localizable", "camera_qrcode_scanner_secondary", fallback: "Zum Ausweisen oder zum Hinzufügen von Nachweisen.")
   /// Fortfahren
   public static let cameraPermissionContinueButton = L10n.tr("Localizable", "cameraPermission_continue_button", fallback: "Fortfahren")
-  /// Zurück zur Wallet
-  public static let cameraPermissionDeniedCloseButton = L10n.tr("Localizable", "cameraPermission_denied_closeButton", fallback: "Zurück zur Wallet")
   /// Verweigerter Kamerazugriff
   public static let cameraPermissionDeniedPrimary = L10n.tr("Localizable", "cameraPermission_denied_primary", fallback: "Verweigerter Kamerazugriff")
   /// Bitte ändern Sie die notwendigen Berechtigungen in den Geräteeinstellungen.
@@ -76,14 +46,6 @@ public enum L10n {
   public static let cameraPermissionDeniedSecondary = L10n.tr("Localizable", "cameraPermission_denied_secondary", fallback: "Bitte ändern Sie die notwendigen Berechtigungen in den Geräteeinstellungen.\n\nUm QR-Codes zu scannen, muss die pilotWallet auf die Kamera zugreifen.")
   /// Zu den Einstellungen
   public static let cameraPermissionDeniedSettingsButton = L10n.tr("Localizable", "cameraPermission_denied_settingsButton", fallback: "Zu den Einstellungen")
-  /// Weiter
-  public static let cameraPermissionNotDeterminedAllowButton = L10n.tr("Localizable", "cameraPermission_notDetermined_allowButton", fallback: "Weiter")
-  /// Ablehnen
-  public static let cameraPermissionNotDeterminedDenyButton = L10n.tr("Localizable", "cameraPermission_notDetermined_denyButton", fallback: "Ablehnen")
-  /// Damit Sie via QR-Code Nachweise erhalten und vorweisen können, müssen Sie den Zugriff auf Ihre Kamera gewähren.
-  public static let cameraPermissionNotDeterminedMessage = L10n.tr("Localizable", "cameraPermission_notDetermined_message", fallback: "Damit Sie via QR-Code Nachweise erhalten und vorweisen können, müssen Sie den Zugriff auf Ihre Kamera gewähren.")
-  /// Kamerazugriff
-  public static let cameraPermissionNotDeterminedTitle = L10n.tr("Localizable", "cameraPermission_notDetermined_title", fallback: "Kamerazugriff")
   /// Kamerazugriff
   public static let cameraPermissionPrimary = L10n.tr("Localizable", "cameraPermission_primary", fallback: "Kamerazugriff")
   /// Erlauben Sie den Zugriff auf die Kamera für das Scannen von QR-Codes, um Ausweise zu empfangen oder eine Überprüfung durchzuführen.
@@ -106,66 +68,14 @@ public enum L10n {
   public static let changeBiometricsPinDeactivationContentText = L10n.tr("Localizable", "change_biometrics_pin_deactivation_content_text", fallback: "Einloggen, um die Biometrics Deaktivierung zu bestätigen.")
   /// Biometrie
   public static let changeBiometricsTitle = L10n.tr("Localizable", "change_biometrics_title", fallback: "Biometrie")
-  /// Restliche Aktivitäten
-  public static let credentialActivitiesFooterText = L10n.tr("Localizable", "credential_activities_footer_text", fallback: "Restliche Aktivitäten")
-  /// Letzte Aktivitäten
-  public static let credentialActivitiesHeaderText = L10n.tr("Localizable", "credential_activities_header_text", fallback: "Letzte Aktivitäten")
-  /// Abbrechen
-  public static let credentialDeleteCancelButton = L10n.tr("Localizable", "credential_delete_cancel_button", fallback: "Abbrechen")
-  /// Nachweis entfernen
-  public static let credentialDeleteConfirmButton = L10n.tr("Localizable", "credential_delete_confirm_button", fallback: "Nachweis entfernen")
-  /// Wollen Sie den ausgewählten Nachweis wirklich entfernen? Ein erneutes Hinzufügen dieses Nachweises ist danach aus Sicherheitsgründen nicht mehr möglich.
-  ///
-  /// In dem Fall muss ein neuer Nachweis beim Strassenverkehrsamt bestellt werden.
-  ///
-  /// Beachten Sie, dass dabei alle Daten aus der pilotWallet gelöscht werden.
-  public static let credentialDeleteText = L10n.tr("Localizable", "credential_delete_text", fallback: "Wollen Sie den ausgewählten Nachweis wirklich entfernen? Ein erneutes Hinzufügen dieses Nachweises ist danach aus Sicherheitsgründen nicht mehr möglich.\n\nIn dem Fall muss ein neuer Nachweis beim Strassenverkehrsamt bestellt werden.\n\nBeachten Sie, dass dabei alle Daten aus der pilotWallet gelöscht werden.")
-  /// Nachweis endgültig entfernen
-  public static let credentialDeleteTitle = L10n.tr("Localizable", "credential_delete_title", fallback: "Nachweis endgültig entfernen")
-  /// Inhalt Nachweis
-  public static let credentialDetailNavigationTitle = L10n.tr("Localizable", "credential_detail_navigation_title", fallback: "Inhalt Nachweis")
-  /// Nachweisinfo
-  public static let credentialDetailTitle = L10n.tr("Localizable", "credential_detail_title", fallback: "Nachweisinfo")
-  /// Aktivitäten
-  public static let credentialMenuActivitiesText = L10n.tr("Localizable", "credential_menu_activities_text", fallback: "Aktivitäten")
-  /// Nachweis entfernen
-  public static let credentialMenuDeleteText = L10n.tr("Localizable", "credential_menu_delete_text", fallback: "Nachweis entfernen")
-  /// Inhalt Nachweis
-  public static let credentialMenuDetailsText = L10n.tr("Localizable", "credential_menu_details_text", fallback: "Inhalt Nachweis")
   /// Akzeptieren
   public static let credentialOfferAcceptButton = L10n.tr("Localizable", "credential_offer_acceptButton", fallback: "Akzeptieren")
   /// Inhalt
   public static let credentialOfferContentSectionTitle = L10n.tr("Localizable", "credential_offer_content_section_title", fallback: "Inhalt")
-  /// Zurück zur Wallet
-  public static let credentialOfferErrorBackButton = L10n.tr("Localizable", "credential_offer_error_back_button", fallback: "Zurück zur Wallet")
   /// Möchte 1 Nachweis ausstellen
   public static let credentialOfferHeaderSecondary = L10n.tr("Localizable", "credential_offer_header_secondary", fallback: "Möchte 1 Nachweis ausstellen")
-  /// Fehlerhafter Nachweis
-  public static let credentialOfferInvalidCredentialErrorTitle = L10n.tr("Localizable", "credential_offer_invalid_credential_error_title", fallback: "Fehlerhafter Nachweis")
-  /// möchte einen Nachweis ausstellen
-  public static let credentialOfferInvitation = L10n.tr("Localizable", "credential_offer_invitation", fallback: "möchte einen Nachweis ausstellen")
-  /// Abbrechen
-  public static let credentialOfferRefuseConfirmationCancelButton = L10n.tr("Localizable", "credential_offer_refuse_confirmation_cancelButton", fallback: "Abbrechen")
-  /// Wollen Sie den ausgewählten Nachweis wirklich löschen? Beachten Sie, dass Sie gelöschte Nachweise nicht wiederherstellen können.
-  ///
-  /// Einen neuen Nachweis müssen Sie bei Ihrem Strassenverkehrsamt bestellen.
-  ///
-  /// Beachten Sie, dass dabei alle Daten aus der pilotWallet gelöscht werden.
-  public static let credentialOfferRefuseConfirmationMessage = L10n.tr("Localizable", "credential_offer_refuse_confirmation_message", fallback: "Wollen Sie den ausgewählten Nachweis wirklich löschen? Beachten Sie, dass Sie gelöschte Nachweise nicht wiederherstellen können.\n\nEinen neuen Nachweis müssen Sie bei Ihrem Strassenverkehrsamt bestellen.\n\nBeachten Sie, dass dabei alle Daten aus der pilotWallet gelöscht werden.")
-  /// Anfrage ablehnen
-  public static let credentialOfferRefuseConfirmationRefuseButton = L10n.tr("Localizable", "credential_offer_refuse_confirmation_refuseButton", fallback: "Anfrage ablehnen")
-  /// Anfrage ablehnen
-  public static let credentialOfferRefuseConfirmationTitle = L10n.tr("Localizable", "credential_offer_refuse_confirmation_title", fallback: "Anfrage ablehnen")
   /// Anfrage ablehnen
   public static let credentialOfferRefuseButton = L10n.tr("Localizable", "credential_offer_refuseButton", fallback: "Anfrage ablehnen")
-  /// Sind Ihre Daten falsch? Bitte wenden Sie sich an Ihr Strassenverkehrsamt.
-  public static let credentialOfferSupportMessage = L10n.tr("Localizable", "credential_offer_support_message", fallback: "Sind Ihre Daten falsch? Bitte wenden Sie sich an Ihr Strassenverkehrsamt.")
-  /// Ungültig
-  public static let credentialStatusInvalid = L10n.tr("Localizable", "credential_status_invalid", fallback: "Ungültig")
-  /// Unbekannt
-  public static let credentialStatusUnknown = L10n.tr("Localizable", "credential_status_unknown", fallback: "Unbekannt")
-  /// Gültig
-  public static let credentialStatusValid = L10n.tr("Localizable", "credential_status_valid", fallback: "Gültig")
   /// Fehlermeldungen teilen
   public static let dataAnalysisScreenTitle = L10n.tr("Localizable", "dataAnalysis_screenTitle", fallback: "Fehlermeldungen teilen")
   /// Helfen Sie mit, die pilotWallet zu verbessern, indem Sie erlauben, dass folgende anonymisierte Fehlermeldungen dem Entwicklungsteam zur Verfügung stehen:
@@ -186,8 +96,6 @@ public enum L10n {
   public static let emptyStateErrorTitle = L10n.tr("Localizable", "emptyState_errorTitle", fallback: "Ups, irgendetwas ist schief gelaufen!")
   /// Für die gewählte Aktion ist eine Internetverbindung nötig. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es noch einmal.
   public static let emptyStateOfflineMessage = L10n.tr("Localizable", "emptyState_offlineMessage", fallback: "Für die gewählte Aktion ist eine Internetverbindung nötig. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es noch einmal.")
-  /// Noch einmal versuchen
-  public static let emptyStateOfflineRetryButton = L10n.tr("Localizable", "emptyState_offlineRetryButton", fallback: "Noch einmal versuchen")
   /// Fehlende Internetverbindung
   public static let emptyStateOfflineTitle = L10n.tr("Localizable", "emptyState_offlineTitle", fallback: "Fehlende Internetverbindung")
   /// Zurück
@@ -200,56 +108,16 @@ public enum L10n {
   public static let globalClose = L10n.tr("Localizable", "global_close", fallback: "Schliessen")
   /// Weiter
   public static let globalContinue = L10n.tr("Localizable", "global_continue", fallback: "Weiter")
-  /// Zurück zur Wallet
-  public static let globalErrorBackToHomeButton = L10n.tr("Localizable", "global_error_backToHome_button", fallback: "Zurück zur Wallet")
-  /// Los
-  public static let globalErrorConfirmButton = L10n.tr("Localizable", "global_error_confirm_button", fallback: "Los")
-  /// Ein Netzwerkaufruf hat nicht funktioniert.
-  public static let globalErrorNetworkMessage = L10n.tr("Localizable", "global_error_network_message", fallback: "Ein Netzwerkaufruf hat nicht funktioniert.")
-  /// Keine Internetverbindung
-  public static let globalErrorNetworkTitle = L10n.tr("Localizable", "global_error_network_title", fallback: "Keine Internetverbindung")
   /// Zu den Einstellungen
   public static let globalErrorNoDevicePinButton = L10n.tr("Localizable", "global_error_no_device_pin_button", fallback: "Zu den Einstellungen")
   /// Bitte definieren Sie einen Smartphone-Code, damit Sie die pilotWallet verwenden können.
   public static let globalErrorNoDevicePinMessage = L10n.tr("Localizable", "global_error_no_device_pin_message", fallback: "Bitte definieren Sie einen Smartphone-Code, damit Sie die pilotWallet verwenden können.")
   /// Fehlender Smartphone-Code
   public static let globalErrorNoDevicePinTitle = L10n.tr("Localizable", "global_error_no_device_pin_title", fallback: "Fehlender Smartphone-Code")
-  /// Nochmals versuchen
-  public static let globalErrorRetryButton = L10n.tr("Localizable", "global_error_retry_button", fallback: "Nochmals versuchen")
-  /// Bitte versuchen Sie es in ein paar Minuten nochmals.
-  public static let globalErrorUnexpectedMessage = L10n.tr("Localizable", "global_error_unexpected_message", fallback: "Bitte versuchen Sie es in ein paar Minuten nochmals.")
-  /// Ups, irgendetwas ist schief gelaufen!
-  public static let globalErrorUnexpectedTitle = L10n.tr("Localizable", "global_error_unexpected_title", fallback: "Ups, irgendetwas ist schief gelaufen!")
-  /// Etwas mit dem Wallet ging schief.
-  public static let globalErrorWalletMessage = L10n.tr("Localizable", "global_error_wallet_message", fallback: "Etwas mit dem Wallet ging schief.")
-  /// Wallet Fehler
-  public static let globalErrorWalletTitle = L10n.tr("Localizable", "global_error_wallet_title", fallback: "Wallet Fehler")
   /// n/a
   public static let globalNotAssigned = L10n.tr("Localizable", "global_not_assigned", fallback: "n/a")
   /// Nochmals versuchen
   public static let globalRetry = L10n.tr("Localizable", "global_retry", fallback: "Nochmals versuchen")
-  /// Ihre Wallet ist leer. Bitte wenden Sie sich an das Strassenverkehrsamt Appenzell Ausserrhoden.
-  public static let homeEmptyViewHadCredentialsText = L10n.tr("Localizable", "home_empty_view_had_credentials_text", fallback: "Ihre Wallet ist leer. Bitte wenden Sie sich an das Strassenverkehrsamt Appenzell Ausserrhoden.")
-  /// Schön, dass Sie beim Piloten zum elektronischen Lernfahrausweis in Appenzell Ausserrhoden dabei sind.
-  public static let homeEmptyViewNoCredentialsIntroText = L10n.tr("Localizable", "home_empty_view_no_credentials_intro_text", fallback: "Schön, dass Sie beim Piloten zum elektronischen Lernfahrausweis in Appenzell Ausserrhoden dabei sind.")
-  /// https://www.eid.admin.ch/de/pilotprojekte
-  public static let homeEmptyViewNoCredentialsMoreInfoLink = L10n.tr("Localizable", "home_empty_view_no_credentials_more_info_link", fallback: "https://www.eid.admin.ch/de/pilotprojekte")
-  /// Weitere Informationen
-  public static let homeEmptyViewNoCredentialsMoreInfoText = L10n.tr("Localizable", "home_empty_view_no_credentials_more_info_text", fallback: "Weitere Informationen")
-  /// Ich habe keine SMS oder QR-Code erhalten.
-  public static let homeEmptyViewNoCredentialsQrCodeText = L10n.tr("Localizable", "home_empty_view_no_credentials_qr_code_text", fallback: "Ich habe keine SMS oder QR-Code erhalten.")
-  /// https://forms.eid.admin.ch/elfa
-  public static let homeEmptyViewNoCredentialsScanLink = L10n.tr("Localizable", "home_empty_view_no_credentials_scan_link", fallback: "https://forms.eid.admin.ch/elfa")
-  /// Gratulation zur Theorieprüfung 🎉 Bitte SMS-Link anklicken oder QR-Code scannen, damit Sie Ihren elektronischen Lernfahrausweis in Ihre pilotWallet erhalten.
-  public static let homeEmptyViewNoCredentialsScanText = L10n.tr("Localizable", "home_empty_view_no_credentials_scan_text", fallback: "Gratulation zur Theorieprüfung 🎉 Bitte SMS-Link anklicken oder QR-Code scannen, damit Sie Ihren elektronischen Lernfahrausweis in Ihre pilotWallet erhalten.")
-  /// Ihr erster elektronischer Lernfahrausweis
-  public static let homeEmptyViewNoCredentialsTitle = L10n.tr("Localizable", "home_empty_view_no_credentials_title", fallback: "Ihr erster elektronischer Lernfahrausweis")
-  /// Alle anzeigen
-  public static let homeLastActivityHeaderButton = L10n.tr("Localizable", "home_last_activity_header_button", fallback: "Alle anzeigen")
-  /// LETZTE AKTIVITÄT
-  public static let homeLastActivityHeaderText = L10n.tr("Localizable", "home_last_activity_header_text", fallback: "LETZTE AKTIVITÄT")
-  /// Scannen
-  public static let homeQrCodeScanButton = L10n.tr("Localizable", "home_qr_code_scan_button", fallback: "Scannen")
   /// App Version
   public static let impressumAppVersion = L10n.tr("Localizable", "impressum_app_version", fallback: "App Version")
   /// Build Nummer
@@ -280,22 +148,6 @@ public enum L10n {
   public static let impressumMoreInformationTitle = L10n.tr("Localizable", "impressum_more_information_title", fallback: "Weitere Informationen")
   /// Impressum
   public static let impressumTitle = L10n.tr("Localizable", "impressum_title", fallback: "Impressum")
-  /// Leider ist bei der Ausstellung Ihres Nachweises ein Fehler aufgetreten. Der Nachweis kann nicht gespeichert werden.Bitte wenden Sie sich ans Strassenverkehrsamt Ausserrhoden.
-  public static let invitationErrorCredentialExpiredMessage = L10n.tr("Localizable", "invitation_error_credential_expired_message", fallback: "Leider ist bei der Ausstellung Ihres Nachweises ein Fehler aufgetreten. Der Nachweis kann nicht gespeichert werden.Bitte wenden Sie sich ans Strassenverkehrsamt Ausserrhoden.")
-  /// https://www.eid.admin.ch/de/hilfe-support
-  public static let invitationErrorCredentialExpiredMoreInfoLink = L10n.tr("Localizable", "invitation_error_credential_expired_more_info_link", fallback: "https://www.eid.admin.ch/de/hilfe-support")
-  /// Weitere Informationen
-  public static let invitationErrorCredentialExpiredMoreInfoTitle = L10n.tr("Localizable", "invitation_error_credential_expired_more_info_title", fallback: "Weitere Informationen")
-  /// Fehlerhafter Nachweis
-  public static let invitationErrorCredentialExpiredTitle = L10n.tr("Localizable", "invitation_error_credential_expired_title", fallback: "Fehlerhafter Nachweis ")
-  /// Leider ist bei der Ausstellung Ihres Nachweises etwas schief gelaufen.
-  ///
-  /// Bitte wenden Sie sich an das Strassenverkehrsamt Appenzell Ausserrhoden.
-  public static let invitationErrorCredentialMismatchMessage = L10n.tr("Localizable", "invitation_error_credential_mismatch_message", fallback: "Leider ist bei der Ausstellung Ihres Nachweises etwas schief gelaufen.\n\nBitte wenden Sie sich an das Strassenverkehrsamt Appenzell Ausserrhoden.")
-  /// Fehlerhafter Nachweis
-  public static let invitationErrorCredentialMismatchTitle = L10n.tr("Localizable", "invitation_error_credential_mismatch_title", fallback: "Fehlerhafter Nachweis ")
-  /// Fügen Sie bitten den Kontakt hinzu.
-  public static let invitationReviewTitle = L10n.tr("Localizable", "invitationReview_title", fallback: "Fügen Sie bitten den Kontakt hinzu.")
   /// Unsere App erlaubt es nicht, jailbroken Geräte zu verwenden. Um mögliche Sicherheitslücken zu vermeiden, empfehlen wir Ihnen, Ihr Gerät zu entjailbreaken.
   public static let jailbreakText = L10n.tr("Localizable", "jailbreak_text", fallback: "Unsere App erlaubt es nicht, jailbroken Geräte zu verwenden. Um mögliche Sicherheitslücken zu vermeiden, empfehlen wir Ihnen, Ihr Gerät zu entjailbreaken.")
   /// Wir haben einen Jailbreak auf Ihrem System entdeckt
@@ -314,18 +166,6 @@ public enum L10n {
   public static let licencesText = L10n.tr("Localizable", "licences_text", fallback: "Nachfolgend die Liste der von dieser App verwendeten Libraries und deren Softwarelizenzen.\n\nDie Lizenzen folgen den Richtlinien des BIT zur Einhaltung der Privatsphäre und aktuellster Sicherheitsstandards. Mit dieser Liste möchten wir die Transparenz gegenüber den Benutzern gewährleisten.")
   /// Lizenzen
   public static let licencesTitle = L10n.tr("Localizable", "licences_title", fallback: "Lizenzen")
-  /// Nochmals versuchen
-  public static let loginBiometricsRetryButton = L10n.tr("Localizable", "login_biometrics_retryButton", fallback: "Nochmals versuchen")
-  /// Mit Biometrie
-  public static let loginBiometricsSubtitle = L10n.tr("Localizable", "login_biometrics_subtitle", fallback: "Mit Biometrie")
-  /// Mit Pin anmelden
-  public static let loginBiometricsToPinButton = L10n.tr("Localizable", "login_biometrics_toPinButton", fallback: "Mit Pin anmelden")
-  /// In PublicBeta Wallet einloggen
-  public static let loginBiometricTitle = L10n.tr("Localizable", "login_biometricTitle", fallback: "In PublicBeta Wallet einloggen")
-  /// Der Zugangscode wurde fünf Mal falsch eingegeben.
-  public static let loginBlockedTitle = L10n.tr("Localizable", "login_blocked_title", fallback: "Der Zugangscode wurde fünf Mal falsch eingegeben.")
-  /// Los
-  public static let onboardingBiometricButtonText = L10n.tr("Localizable", "onboarding_biometric_button_text", fallback: "Los")
   /// Weiter
   public static let onboardingContinue = L10n.tr("Localizable", "onboarding_continue", fallback: "Weiter")
   /// Tour starten
@@ -338,14 +178,6 @@ public enum L10n {
   public static let onboardingIntroPrimaryAlt = L10n.tr("Localizable", "onboarding_intro_primary_alt", fallback: "Willkommen beim Onboarding zur Public Beta Wallet App. Ein sicheres Zuhause für Ihre Nachweise")
   /// Mit publicBeta haben Sie Ihre Nachweise immer griffbereit.
   public static let onboardingIntroSecondary = L10n.tr("Localizable", "onboarding_intro_secondary", fallback: "Mit publicBeta haben Sie Ihre Nachweise immer griffbereit.")
-  /// Der Code stimmt nicht überein. Versuchen Sie es erneut.
-  public static let onboardingPinCodeConfirmError = L10n.tr("Localizable", "onboarding_pin_code_confirm_error", fallback: "Der Code stimmt nicht überein. Versuchen Sie es erneut.")
-  /// Code bestätigen
-  public static let onboardingPinCodeConfirmPrimary = L10n.tr("Localizable", "onboarding_pin_code_confirm_primary", fallback: "Code bestätigen")
-  /// Den Code zur Bestätigung wiederholen.
-  public static let onboardingPinCodeConfirmationText = L10n.tr("Localizable", "onboarding_pin_code_confirmation_text", fallback: "Den Code zur Bestätigung wiederholen.")
-  /// Code bestätigen
-  public static let onboardingPinCodeConfirmationTitle = L10n.tr("Localizable", "onboarding_pin_code_confirmation_title", fallback: "Code bestätigen")
   /// Code eingeben
   public static let onboardingPinCodeEnterCodeButton = L10n.tr("Localizable", "onboarding_pin_code_enterCodeButton", fallback: "Code eingeben")
   /// Zu viele Fehlversuche. Bitte starten Sie den Prozess neu. Sichern Sie die App, um Ihre Daten zu schützen.
@@ -354,12 +186,6 @@ public enum L10n {
   public static let onboardingPinCodeErrorTooManyAttemptsTitle = L10n.tr("Localizable", "onboarding_pin_code_error_tooManyAttempts_title", fallback: "PIN-Fehler")
   /// Unknown error...
   public static let onboardingPinCodeErrorUnknown = L10n.tr("Localizable", "onboarding_pin_code_error_unknown", fallback: "Unknown error...")
-  /// App mit Code sichern
-  public static let onboardingPinCodePrimary = L10n.tr("Localizable", "onboarding_pin_code_primary", fallback: "App mit Code sichern")
-  /// Sichern Sie Ihre App, damit Ihre Nachweise geschützt sind.
-  public static let onboardingPinCodeSecondary = L10n.tr("Localizable", "onboarding_pin_code_secondary", fallback: "Sichern Sie Ihre App, damit Ihre Nachweise geschützt sind.")
-  /// Code eingeben
-  public static let onboardingPinCodeSetPrimary = L10n.tr("Localizable", "onboarding_pin_code_set_primary", fallback: "Code eingeben")
   /// Sichern Sie Ihre App, damit Ihre Nachweise geschützt sind.
   public static let onboardingPinCodeText = L10n.tr("Localizable", "onboarding_pin_code_text", fallback: "Sichern Sie Ihre App, damit Ihre Nachweise geschützt sind.")
   /// App mit Code sichern
@@ -380,20 +206,12 @@ public enum L10n {
   public static let onboardingPrivacyPrimary = L10n.tr("Localizable", "onboarding_privacy_primary", fallback: "Helfen Sie uns, besser zu werden")
   /// Erlauben Sie die Weitergabe anonymisierter Nutzungsdaten an unser Entwicklungsteam.
   public static let onboardingPrivacySecondary = L10n.tr("Localizable", "onboarding_privacy_secondary", fallback: "Erlauben Sie die Weitergabe anonymisierter Nutzungsdaten an unser Entwicklungsteam.")
-  /// Helfen Sie mit, Ihre pilotWallet zu verbessern. Erlauben Sie dafür die gelegentliche und anonyme Übermittlung der Diagnosedaten.
-  public static let onboardingPrivacyToggleText = L10n.tr("Localizable", "onboarding_privacy_toggle_text", fallback: "Helfen Sie mit, Ihre pilotWallet zu verbessern. Erlauben Sie dafür die gelegentliche und anonyme Übermittlung der Diagnosedaten.")
-  /// Mit QR-Code ausweisen
-  public static let onboardingQrCodePrimary = L10n.tr("Localizable", "onboarding_qrCode_primary", fallback: "Mit QR-Code ausweisen")
-  /// Scannen Sie den QR-Code Ihres Gegenübers. Die pilotWallet holt anschliessend Ihr Einverständnis ein, Ihre Daten zu übertragen.
-  public static let onboardingQrCodeSecondary = L10n.tr("Localizable", "onboarding_qrCode_secondary", fallback: "Scannen Sie den QR-Code Ihres Gegenübers. Die pilotWallet holt anschliessend Ihr Einverständnis ein, Ihre Daten zu übertragen. ")
   /// Abschliessen
   public static let onboardingReadyButtonText = L10n.tr("Localizable", "onboarding_ready_buttonText", fallback: "Abschliessen")
   /// Alles bereit
   public static let onboardingReadyPrimary = L10n.tr("Localizable", "onboarding_ready_primary", fallback: "Alles bereit")
   /// Die App ist bereit. Sie können weitere Tipps zur Bedienung erhalten oder diese später in der Hilfe nachlesen.
   public static let onboardingReadySecondary = L10n.tr("Localizable", "onboarding_ready_secondary", fallback: "Die App ist bereit. Sie können weitere Tipps zur Bedienung erhalten oder diese später in der Hilfe nachlesen.")
-  /// Tipps zur Bedienung
-  public static let onboardingReadyTertiary = L10n.tr("Localizable", "onboarding_ready_tertiary", fallback: "Tipps zur Bedienung")
   /// Die Schweizerische Eidgenossenschaft hat keinen Zugriff auf Ihre Daten.
   public static let onboardingSecurityDetails = L10n.tr("Localizable", "onboarding_security_details", fallback: "Die Schweizerische Eidgenossenschaft hat keinen Zugriff auf Ihre Daten.")
   /// Ihre Daten – bei Ihnen
@@ -406,14 +224,6 @@ public enum L10n {
   public static let onboardingSetupErrorPrimary = L10n.tr("Localizable", "onboarding_setupError_primary", fallback: "Etwas ist schiefgelaufen")
   /// Wir können die App im Moment nicht bereitstellen. Bitte versuchen Sie es  erneut.
   public static let onboardingSetupErrorSecondary = L10n.tr("Localizable", "onboarding_setupError_secondary", fallback: "Wir können die App im Moment nicht bereitstellen. Bitte versuchen Sie es  erneut.")
-  /// Überspringen
-  public static let onboardingSkip = L10n.tr("Localizable", "onboarding_skip", fallback: "Überspringen")
-  /// Ein sicheres Zuhause für Ihre Nachweise
-  public static let onboardingWalletPrimary = L10n.tr("Localizable", "onboarding_wallet_primary", fallback: "Ein sicheres Zuhause für Ihre Nachweise")
-  /// Mit publicBeta haben Sie Ihre Nachweise immer griffbereit.
-  public static let onboardingWalletSecondary = L10n.tr("Localizable", "onboarding_wallet_secondary", fallback: "Mit publicBeta haben Sie Ihre Nachweise immer griffbereit.")
-  /// Ein Service der Schweizerischen Eidgenossenschaft.
-  public static let onboardingWalletTertiary = L10n.tr("Localizable", "onboarding_wallet_tertiary", fallback: "Ein Service der Schweizerischen Eidgenossenschaft.")
   /// Aktueller Code
   public static let pinChangeCurrentPasswordTitle = L10n.tr("Localizable", "pin_change_current_password_title", fallback: "Aktueller Code")
   /// Neuen Code bestätigen
@@ -422,84 +232,24 @@ public enum L10n {
   public static let pinChangeNewPinTitle = L10n.tr("Localizable", "pin_change_new_pin_title", fallback: "Neuer Code")
   /// Code ändern
   public static let pinChangeTitle = L10n.tr("Localizable", "pin_change_title", fallback: "Code ändern")
-  /// Den Code zur Bestätigung wiederholen.
-  public static let pinSetupConfirmContent = L10n.tr("Localizable", "pinSetup_confirm_content", fallback: "Den Code zur Bestätigung wiederholen.")
-  /// Code bestätigen
-  public static let pinSetupConfirmTitle = L10n.tr("Localizable", "pinSetup_confirm_title", fallback: "Code bestätigen")
-  /// Sichern Sie Ihre pilotWallet, damit Ihre Nachweise geschützt sind.
-  public static let pinSetupContent = L10n.tr("Localizable", "pinSetup_content", fallback: "Sichern Sie Ihre pilotWallet, damit Ihre Nachweise geschützt sind.")
-  /// App mit Code sichern
-  public static let pinSetupTitle = L10n.tr("Localizable", "pinSetup_title", fallback: "App mit Code sichern")
   /// Daten übermitteln
   public static let presentationAcceptButtonText = L10n.tr("Localizable", "presentation_accept_button_text", fallback: "Daten übermitteln")
-  /// Angeforderte Daten
-  public static let presentationAttributesTitle = L10n.tr("Localizable", "presentation_attributes_title", fallback: "Angeforderte Daten")
   /// Die Verifizierung wurde abgebrochen. Ihre Daten wurden nicht übertragen.
   public static let presentationDeclinedMessage = L10n.tr("Localizable", "presentation_declined_message", fallback: "Die Verifizierung wurde abgebrochen. Ihre Daten wurden nicht übertragen.")
   /// Abgebrochene Verifizierung
   public static let presentationDeclinedTitle = L10n.tr("Localizable", "presentation_declined_title", fallback: "Abgebrochene Verifizierung")
   /// Anfrage ablehnen
   public static let presentationDenyButtonText = L10n.tr("Localizable", "presentation_deny_button_text", fallback: "Anfrage ablehnen")
-  /// Wenn Sie nach der Theorieprüfung einen QR-Code erhalten haben, scannen Sie diesen oder klicken Sie auf den SMS-Link. So erhalten Sie Ihren elektronischen Lernfahrausweis.
-  ///
-  /// Sie haben keinen QR-Code oder SMS erhalten?
-  public static let presentationErrorEmptyWalletMessage = L10n.tr("Localizable", "presentation_error_empty_wallet_message", fallback: "Wenn Sie nach der Theorieprüfung einen QR-Code erhalten haben, scannen Sie diesen oder klicken Sie auf den SMS-Link. So erhalten Sie Ihren elektronischen Lernfahrausweis.\n\nSie haben keinen QR-Code oder SMS erhalten?")
-  /// https://www.eid.admin.ch/de/hilfe-support
-  public static let presentationErrorEmptyWalletSupportLink = L10n.tr("Localizable", "presentation_error_empty_wallet_support_link", fallback: "https://www.eid.admin.ch/de/hilfe-support")
-  /// Hier finden Sie weitere Informationen
-  public static let presentationErrorEmptyWalletSupportText = L10n.tr("Localizable", "presentation_error_empty_wallet_support_text", fallback: "Hier finden Sie weitere Informationen")
-  /// Leere Wallet
-  public static let presentationErrorEmptyWalletTitle = L10n.tr("Localizable", "presentation_error_empty_wallet_title", fallback: "Leere Wallet")
-  /// Bitte versuchen Sie es in ein paar Minuten nochmals.
-  public static let presentationErrorMessage = L10n.tr("Localizable", "presentation_error_message", fallback: "Bitte versuchen Sie es in ein paar Minuten nochmals.")
-  /// Der angefragte Nachweis ist in Ihrer pilotWallet nicht verfügbar.
-  public static let presentationErrorNoCompatibleCredentialMessage = L10n.tr("Localizable", "presentation_error_no_compatible_credential_message", fallback: "Der angefragte Nachweis ist in Ihrer pilotWallet nicht verfügbar.")
-  /// Fehlender Nachweis
-  public static let presentationErrorNoCompatibleCredentialTitle = L10n.tr("Localizable", "presentation_error_no_compatible_credential_title", fallback: "Fehlender Nachweis")
-  /// Ups, irgendetwas ist schief gelaufen!
-  public static let presentationErrorTitle = L10n.tr("Localizable", "presentation_error_title", fallback: "Ups, irgendetwas ist schief gelaufen!")
-  /// Ihre übermittelten Daten
-  public static let presentationResultListTitle = L10n.tr("Localizable", "presentation_result_list_title", fallback: "Ihre übermittelten Daten")
-  /// Ihre Daten wurden erfolgreich übermittelt
-  public static let presentationResultTitle = L10n.tr("Localizable", "presentation_result_title", fallback: "Ihre Daten wurden erfolgreich übermittelt")
   /// Bitte wählen Sie den Nachweis aus, den Sie vorweisen möchten.
   public static let presentationSelectCredentialSubtitle = L10n.tr("Localizable", "presentation_select_credential_subtitle", fallback: "Bitte wählen Sie den Nachweis aus, den Sie vorweisen möchten.")
   /// Welchen Nachweis wollen Sie vorweisen?
   public static let presentationSelectCredentialTitle = L10n.tr("Localizable", "presentation_select_credential_title", fallback: "Welchen Nachweis wollen Sie vorweisen?")
-  /// Senden
-  public static let presentationSendButtonText = L10n.tr("Localizable", "presentation_send_button_text", fallback: "Senden")
-  /// Ihre Informationen wurden erfolgreich übermittelt, aber Ihr Nachweis wurde vom ausstellenden Strassenverkehrsamt als ungültig erklärt (z.B. suspendierter Nachweis).
-  ///
-  /// Für mehr Informationen melden Sie sich bitte dort.
-  public static let presentationValidationErrorMessage = L10n.tr("Localizable", "presentation_validationError_message", fallback: "Ihre Informationen wurden erfolgreich übermittelt, aber Ihr Nachweis wurde vom ausstellenden Strassenverkehrsamt als ungültig erklärt (z.B. suspendierter Nachweis).\n\nFür mehr Informationen melden Sie sich bitte dort.")
-  /// Ungültige Verifizierung
-  public static let presentationValidationErrorTitle = L10n.tr("Localizable", "presentation_validationError_title", fallback: "Ungültige Verifizierung")
   /// Unbekannter Verifizierer
   public static let presentationVerifierNameUnknown = L10n.tr("Localizable", "presentation_verifier_name_unknown", fallback: "Unbekannter Verifizierer")
-  /// möchte Ihren Nachweis überprüfen
-  public static let presentationVerifierText = L10n.tr("Localizable", "presentation_verifier_text", fallback: "möchte Ihren Nachweis überprüfen")
-  /// Der QR-Code ist ungültig
-  public static let qrScannerErrorMessage = L10n.tr("Localizable", "qrScanner_error_message", fallback: "Der QR-Code ist ungültig")
-  /// Licht ab
-  public static let qrScannerFlashLightButtonOff = L10n.tr("Localizable", "qrScanner_flash_light_button_off", fallback: "Licht ab")
-  /// Licht an
-  public static let qrScannerFlashLightButtonOn = L10n.tr("Localizable", "qrScanner_flash_light_button_on", fallback: "Licht an")
-  /// Bitte scannen Sie nur QR-Codes aus vertrauenswürdigen Quellen.
-  public static let qrScannerHint = L10n.tr("Localizable", "qrScanner_hint", fallback: "Bitte scannen Sie nur QR-Codes aus vertrauenswürdigen Quellen.")
-  /// Hinweis schliessen
-  public static let qrScannerHintCloseButton = L10n.tr("Localizable", "qrScanner_hint_close_button", fallback: "Hinweis schliessen")
-  /// Heute ist der Server etwas träge. Wir bitten Sie um etwas Geduld.
-  public static let qrScannerLoadingMessage = L10n.tr("Localizable", "qrScanner_loading_message", fallback: "Heute ist der Server etwas träge. Wir bitten Sie um etwas Geduld.")
-  /// QR-Scanner
-  public static let qrScannerTitle = L10n.tr("Localizable", "qrScanner_title", fallback: "QR-Scanner")
   /// Daten
   public static let securitySettingsAnalysisTitle = L10n.tr("Localizable", "securitySettings_analysisTitle", fallback: "Daten")
   /// Biometrie
   public static let securitySettingsBiometrics = L10n.tr("Localizable", "securitySettings_biometrics", fallback: "Biometrie")
-  /// Das Gerät verfügt über keine kompatible biometrische Hardware
-  public static let securitySettingsBiometricsNoHardware = L10n.tr("Localizable", "securitySettings_biometrics_noHardware", fallback: "Das Gerät verfügt über keine kompatible biometrische Hardware")
-  /// Ihre Biometrics wurden deaktiviert, weil Sie den Code geändert haben.
-  public static let securitySettingsBiometricsPinChanged = L10n.tr("Localizable", "securitySettings_biometrics_pinChanged", fallback: "Ihre Biometrics wurden deaktiviert, weil Sie den Code geändert haben.")
   /// Code ändern
   public static let securitySettingsChangePin = L10n.tr("Localizable", "securitySettings_changePin", fallback: "Code ändern")
   /// Weitere Informationen
@@ -516,8 +266,6 @@ public enum L10n {
   public static let securitySettingsShareAnalysisText = L10n.tr("Localizable", "securitySettings_shareAnalysis_text", fallback: "Helfen Sie mit, Ihre pilotWallet zu verbessern. Erlauben Sie dafür die gelegentliche und anonyme Übermittlung der Diagnosedaten.")
   /// Datenschutz & Sicherheit
   public static let securitySettingsTitle = L10n.tr("Localizable", "securitySettings_title", fallback: "Datenschutz & Sicherheit")
-  /// App Version
-  public static let settingsAppVersion = L10n.tr("Localizable", "settings_appVersion", fallback: "App Version")
   /// Kontakt
   public static let settingsContact = L10n.tr("Localizable", "settings_contact", fallback: "Kontakt")
   /// https://forms.eid.admin.ch/elfa
@@ -620,8 +368,8 @@ public enum L10n {
   public static let tkErrorInvalidrequestBody = L10n.tr("Localizable", "tk_error_invalidrequest_body", fallback: "Diese Überprüfung kann nicht durchgeführt werden.")
   /// Ungültige Überprüfung
   public static let tkErrorInvalidrequestTitle = L10n.tr("Localizable", "tk_error_invalidrequest_title", fallback: "Ungültige Überprüfung")
-  /// Dieser Nachweis kann nicht in die swiyu App hinzugefügt werden.
-  public static let tkErrorInvitationcredentialBody = L10n.tr("Localizable", "tk_error_invitationcredential_body", fallback: "Dieser Nachweis kann nicht in die swiyu App hinzugefügt werden.")
+  /// Dieser Nachweis kann nicht in die swiyu App hinzugefügt werden.
+  public static let tkErrorInvitationcredentialBody = L10n.tr("Localizable", "tk_error_invitationcredential_body", fallback: "Dieser Nachweis kann nicht in die swiyu App hinzugefügt werden.")
   /// Ungültiger Nachweis
   public static let tkErrorInvitationcredentialTitle = L10n.tr("Localizable", "tk_error_invitationcredential_title", fallback: "Ungültiger Nachweis")
   /// In Ihrer swiyu App hat es keinen passenden Nachweis.
@@ -792,8 +540,8 @@ public enum L10n {
   public static let tkHomeFirstuseBody = L10n.tr("Localizable", "tk_home_firstuse_body", fallback: "Fügen Sie Ausweise und Dokumente hinzu, indem Sie den QR-Code scannen oder den SMS-Link öffnen.")
   /// Leere Wallet
   public static let tkHomeFirstuseTitle = L10n.tr("Localizable", "tk_home_firstuse_title", fallback: "Leere Wallet")
-  /// Swiyu App Startbildschirm
-  public static let tkHomeHomescreenAlt = L10n.tr("Localizable", "tk_home_homescreen_alt", fallback: "Swiyu App Startbildschirm")
+  /// swiyu App Startbildschirm
+  public static let tkHomeHomescreenAlt = L10n.tr("Localizable", "tk_home_homescreen_alt", fallback: "swiyu App Startbildschirm")
   /// Wiederholen
   public static let tkLoginFacenotrecognised1Body = L10n.tr("Localizable", "tk_login_facenotrecognised1_body", fallback: "Wiederholen")
   /// Erneut mit Face ID versuchen
@@ -840,14 +588,6 @@ public enum L10n {
   public static let tkLoginSpinnerAlt = L10n.tr("Localizable", "tk_login_spinner_alt", fallback: "Erfolgreich eingeloggt. Bitte warten.")
   /// Die swiyu App ist gesperrt
   public static let tkLoginVariantBody = L10n.tr("Localizable", "tk_login_variant_body", fallback: "Die swiyu App ist gesperrt")
-  /// swiyu-Password eingeben, um Face ID zu aktivieren.
-  public static let tkMenuActivatingBiometricsIosBody = L10n.tr("Localizable", "tk_menu_activatingBiometrics_ios_body", fallback: "swiyu-Password eingeben, um Face ID zu aktivieren.")
-  /// Mit Face-ID entsperren
-  public static let tkMenuActivatingBiometricsIosTitle = L10n.tr("Localizable", "tk_menu_activatingBiometrics_ios_title", fallback: "Mit Face-ID entsperren")
-  /// swiyu-Password eingeben, um Face ID zu deaktivieren.
-  public static let tkMenuDeactivatingBiometricsIosNote = L10n.tr("Localizable", "tk_menu_deactivatingBiometrics_ios_note", fallback: "swiyu-Password eingeben, um Face ID zu deaktivieren.")
-  /// Face-ID deaktivieren
-  public static let tkMenuDeactivatingBiometricsIosTitle = L10n.tr("Localizable", "tk_menu_deactivatingBiometrics_ios_title", fallback: "Face-ID deaktivieren")
   /// App Absturz
   public static let tkMenuDiagnosticDataAppCrash = L10n.tr("Localizable", "tk_menu_diagnosticData_appCrash", fallback: "App Absturz")
   /// Beim Teilen von Diagnosedaten sendet swyiu gelegentlich anonyme, nicht personenbezogene Informationen. Diese helfen uns, die App stetig zu verbessern und Fehler schneller zu beheben. Ein Rückschluss auf Ihre Person ist nicht möglich.
@@ -866,6 +606,8 @@ public enum L10n {
   public static let tkMenuHomeListSettings = L10n.tr("Localizable", "tk_menu_homeList_settings", fallback: "Einstellungen")
   /// www.bit.admin.ch
   public static let tkMenuImprintAdminLinkText = L10n.tr("Localizable", "tk_menu_imprint_admin_link_text", fallback: "www.bit.admin.ch")
+  /// https://www.bit.admin.ch/de
+  public static let tkMenuImprintAdminLinkValue = L10n.tr("Localizable", "tk_menu_imprint_admin_link_value", fallback: "https://www.bit.admin.ch/de")
   /// App Version
   public static let tkMenuImprintAppVersion = L10n.tr("Localizable", "tk_menu_imprint_appVersion", fallback: "App Version")
   /// Build Nummer
@@ -877,6 +619,8 @@ public enum L10n {
   public static let tkMenuImprintDisclaimerNote = L10n.tr("Localizable", "tk_menu_imprint_disclaimer_note", fallback: "Die Autoren übernehmen keinerlei Haftung für die Zuverlässigkeit und Vollständigkeit der Informationen. Verweise und Links zu Websites Dritter liegen außerhalb unseres Verantwortungsbereichs.")
   /// www.github.com/admin-ch
   public static let tkMenuImprintGithubLinkText = L10n.tr("Localizable", "tk_menu_imprint_github_link_text", fallback: "www.github.com/admin-ch")
+  /// https://github.com/e-id-admin
+  public static let tkMenuImprintGithubLinkValue = L10n.tr("Localizable", "tk_menu_imprint_github_link_value", fallback: "https://github.com/e-id-admin")
   /// Die swiyu ist Open-Source. Ihr Quellcode kann auf GitHub eingesehen werden.
   public static let tkMenuImprintNote = L10n.tr("Localizable", "tk_menu_imprint_note", fallback: "Die swiyu ist Open-Source. Ihr Quellcode kann auf GitHub eingesehen werden.")
   /// Haftungsauschluss
@@ -886,7 +630,9 @@ public enum L10n {
   /// Herausgeber, Umsetzung und Betrieb
   public static let tkMenuImprintSubtitlePublisher = L10n.tr("Localizable", "tk_menu_imprint_subtitle_publisher", fallback: "Herausgeber, Umsetzung und Betrieb")
   /// Nutzungsbedingungen
-  public static let tkMenuImprintTermsOfUse = L10n.tr("Localizable", "tk_menu_imprint_termsOfUse", fallback: "Nutzungsbedingungen")
+  public static let tkMenuImprintTermsOfUseLinkText = L10n.tr("Localizable", "tk_menu_imprint_termsOfUse_link_text", fallback: "Nutzungsbedingungen")
+  /// https://www.eid.admin.ch/de/swiyu-terms
+  public static let tkMenuImprintTermsOfUseLinkValue = L10n.tr("Localizable", "tk_menu_imprint_termsOfUse_link_value", fallback: "https://www.eid.admin.ch/de/swiyu-terms")
   /// Impressum
   public static let tkMenuImprintTitle = L10n.tr("Localizable", "tk_menu_imprint_title", fallback: "Impressum")
   /// Sprache
@@ -909,16 +655,16 @@ public enum L10n {
   public static let tkMenuSecurityPrivacyDataProtectionShareData = L10n.tr("Localizable", "tk_menu_securityPrivacy_dataProtection_shareData", fallback: "Diagnosedaten teilen")
   /// Helfen Sie uns, swyiu zu verbessern, indem Sie die gelegentliche, anonyme Übermittlung von Informationen wie Fehlermeldungen und Abstürzen zulassen.
   public static let tkMenuSecurityPrivacyDataProtectionShareDataBody = L10n.tr("Localizable", "tk_menu_securityPrivacy_dataProtection_shareData_body", fallback: "Helfen Sie uns, swyiu zu verbessern, indem Sie die gelegentliche, anonyme Übermittlung von Informationen wie Fehlermeldungen und Abstürzen zulassen.")
-  /// Face-ID erfolgreich aktiviert
-  public static let tkMenuSecurityPrivacyIosStatusActivating = L10n.tr("Localizable", "tk_menu_securityPrivacy_ios_status_activating", fallback: "Face-ID erfolgreich aktiviert")
-  /// Face-ID erfolgreich deaktiviert
-  public static let tkMenuSecurityPrivacyIosStatusDeactivating = L10n.tr("Localizable", "tk_menu_securityPrivacy_ios_status_deactivating", fallback: "Face-ID erfolgreich deaktiviert")
-  /// Face-ID ist auf diesem Gerät nicht aktiviert. Gehen Sie in die Geräteeinstellungen um Biometrie zu aktivieren.
-  public static let tkMenuSecurityPrivacyMenuIosUnlockBody = L10n.tr("Localizable", "tk_menu_securityPrivacy_menu_ios_unlock_body", fallback: "Face-ID ist auf diesem Gerät nicht aktiviert. Gehen Sie in die Geräteeinstellungen um Biometrie zu aktivieren.")
+  /// Face ID erfolgreich aktiviert
+  public static let tkMenuSecurityPrivacyIosStatusActivating = L10n.tr("Localizable", "tk_menu_securityPrivacy_ios_status_activating", fallback: "Face ID erfolgreich aktiviert")
+  /// Face ID erfolgreich deaktiviert
+  public static let tkMenuSecurityPrivacyIosStatusDeactivating = L10n.tr("Localizable", "tk_menu_securityPrivacy_ios_status_deactivating", fallback: "Face ID erfolgreich deaktiviert")
+  /// Face ID ist auf diesem Gerät nicht aktiviert. Gehen Sie in die Geräteeinstellungen um Biometrie zu aktivieren.
+  public static let tkMenuSecurityPrivacyMenuIosUnlockBody = L10n.tr("Localizable", "tk_menu_securityPrivacy_menu_ios_unlock_body", fallback: "Face ID ist auf diesem Gerät nicht aktiviert. Gehen Sie in die Geräteeinstellungen um Biometrie zu aktivieren.")
   /// Passwort ändern
   public static let tkMenuSecurityPrivacySecurityChangePassword = L10n.tr("Localizable", "tk_menu_securityPrivacy_security_changePassword", fallback: "Passwort ändern")
-  /// Mit Face-ID entsperren
-  public static let tkMenuSecurityPrivacySecurityIosUnlock = L10n.tr("Localizable", "tk_menu_securityPrivacy_security_ios_unlock", fallback: "Mit Face-ID entsperren")
+  /// Mit Face ID entsperren
+  public static let tkMenuSecurityPrivacySecurityIosUnlock = L10n.tr("Localizable", "tk_menu_securityPrivacy_security_ios_unlock", fallback: "Mit Face ID entsperren")
   /// Datenschutz & Privatsphäre
   public static let tkMenuSecurityPrivacySubtitleDataProtection = L10n.tr("Localizable", "tk_menu_securityPrivacy_subtitle_dataProtection", fallback: "Datenschutz & Privatsphäre")
   /// Sicherheit
@@ -979,6 +725,8 @@ public enum L10n {
   public static let tkOnboardingImprovementBody = L10n.tr("Localizable", "tk_onboarding_improvement_body", fallback: "Profitieren Sie von einer App, die auf Ihre Bedürfnisse abgestimmt ist. Möchten Sie dafür Ihre anonymen Nutzungsdaten mit dem Entwicklungsteam teilen?")
   /// Datenschutz und Sicherheit
   public static let tkOnboardingImprovementLinkText = L10n.tr("Localizable", "tk_onboarding_improvement_link_text", fallback: "Datenschutz und Sicherheit")
+  /// https://www.eid.admin.ch/de/swiyu-privacy
+  public static let tkOnboardingImprovementLinkValue = L10n.tr("Localizable", "tk_onboarding_improvement_link_value", fallback: "https://www.eid.admin.ch/de/swiyu-privacy")
   /// Anonym zur Verbesserung der App beitragen
   public static let tkOnboardingImprovementTitle = L10n.tr("Localizable", "tk_onboarding_improvement_title", fallback: "Anonym zur Verbesserung der App beitragen")
   /// Dank der swiyu App tragen Sie Ihre Ausweise immer bei sich auf Ihrem Handy.
@@ -1102,21 +850,20 @@ public enum L10n {
   /// Wenn Sie den Nachweis jetzt ablehnen, wird er sofort ungültig.
   ///
   /// Um einen neuen Nachweis zu erhalten, müssen Sie ihn erneut bestellen.
-  public static let tkReceiveDeny1Body = L10n.tr("Localizable", "tk_receive_deny1_body", fallback: "Wenn Sie den Nachweis jetzt ablehnen, wird er sofort ungültig. \n\nUm einen neuen Nachweis zu erhalten, müssen Sie ihn erneut bestellen.")
+  public static let tkReceiveDeny1Body = L10n.tr("Localizable", "tk_receive_deny1_body", fallback: "Wenn Sie den Nachweis jetzt ablehnen, wird er sofort ungültig.\n\nUm einen neuen Nachweis zu erhalten, müssen Sie ihn erneut bestellen.")
   /// Nachweis ablehnen
   public static let tkReceiveDeny1Primarybutton = L10n.tr("Localizable", "tk_receive_deny1_primarybutton", fallback: "Nachweis ablehnen")
   /// Nachweis ablehnen?
   public static let tkReceiveDeny1Title = L10n.tr("Localizable", "tk_receive_deny1_title", fallback: "Nachweis ablehnen?")
   /// Nachweis abgelehnt
   public static let tkReceiveDeny2Title = L10n.tr("Localizable", "tk_receive_deny2_title", fallback: "Nachweis abgelehnt")
-  /// Sie können den Nachweis entweder hinzufügen oder ablehnen.
+  /// Sie können den Nachweis entweder hinzufügen oder ablehnen.
   ///
   /// Falls Sie den Nachweis akzeptieren möchten:
-  ///
   /// 1. Öffnen Sie die Detailansicht des fehlerhaften Nachweises.
-  /// 2. Klicken Sie erneut auf «Falsche Daten melden».
+  /// 2. Klicken Sie erneut auf «Falsche Daten melden».
   /// 3. Folgen Sie der Anleitung.
-  public static let tkReceiveIncorrectdataBody = L10n.tr("Localizable", "tk_receive_incorrectdata_body", fallback: "Sie können den Nachweis entweder hinzufügen oder ablehnen.\n\nFalls Sie den Nachweis akzeptieren möchten:\n\n1. Öffnen Sie die Detailansicht des fehlerhaften Nachweises.\n2. Klicken Sie erneut auf «Falsche Daten melden».\n3. Folgen Sie der Anleitung.")
+  public static let tkReceiveIncorrectdataBody = L10n.tr("Localizable", "tk_receive_incorrectdata_body", fallback: "Sie können den Nachweis entweder hinzufügen oder ablehnen.\n\nFalls Sie den Nachweis akzeptieren möchten:\n1. Öffnen Sie die Detailansicht des fehlerhaften Nachweises.\n2. Klicken Sie erneut auf «Falsche Daten melden».\n3. Folgen Sie der Anleitung.")
   /// Aussteller:in
   public static let tkReceiveIncorrectdataIssuer = L10n.tr("Localizable", "tk_receive_incorrectdata_issuer", fallback: "Aussteller:in")
   /// Falsche Daten melden
@@ -1136,8 +883,8 @@ public enum L10n {
   /// Aus Sicherheitsgründen können Sie die swiyu App auf diesem Gerät nicht benutzen.
   public static let tkUnsafedeviceUnsafeBody = L10n.tr("Localizable", "tk_unsafedevice_unsafe_body", fallback: "Aus Sicherheitsgründen können Sie die swiyu App auf diesem Gerät nicht benutzen.")
   /// Falls Sie die swiyu App nutzen möchten:
-  /// Setzen Sie dieses Gerät auf die Werkseinstellungen zurück oder installieren Sie die Original-Firmware.
-  public static let tkUnsafedeviceUnsafeSmallbody = L10n.tr("Localizable", "tk_unsafedevice_unsafe_smallbody", fallback: "Falls Sie die swiyu App nutzen möchten:\nSetzen Sie dieses Gerät auf die Werkseinstellungen zurück oder installieren Sie die Original-Firmware.")
+  /// Setzen Sie dieses Gerät auf die Werkseinstellungen zurückoder installieren Sie die Original-Firmware.
+  public static let tkUnsafedeviceUnsafeSmallbody = L10n.tr("Localizable", "tk_unsafedevice_unsafe_smallbody", fallback: "Falls Sie die swiyu App nutzen möchten:\nSetzen Sie dieses Gerät auf die Werkseinstellungen zurückoder installieren Sie die Original-Firmware.")
   /// Die swiyu App kann nicht benutzt werden
   public static let tkUnsafedeviceUnsafeTitle = L10n.tr("Localizable", "tk_unsafedevice_unsafe_title", fallback: "Die swiyu App kann nicht benutzt werden")
   /// App aktualisieren
@@ -1170,59 +917,14 @@ public enum L10n {
     L10n.tr("Localizable", "biometricSetup_title", String(describing: p1), fallback: "%@ verwenden")
   }
 
-  /// %@ angetippt
-  public static func globalTapped(_ p1: Any) -> String {
-    L10n.tr("Localizable", "global_tapped", String(describing: p1), fallback: "%@ angetippt")
-  }
-
-  /// Sie können es in %@ erneut versuchen.
-  public static func loginBlockedDescription(_ p1: Any) -> String {
-    L10n.tr("Localizable", "login_blocked_description", String(describing: p1), fallback: "Sie können es in %@ erneut versuchen.")
-  }
-
-  /// Möchten Sie %@ zum Entsperren der pilotWallet aktivieren?
-  public static func onboardingBiometricInfo(_ p1: Any) -> String {
-    L10n.tr("Localizable", "onboarding_biometric_info", String(describing: p1), fallback: "Möchten Sie %@ zum Entsperren der pilotWallet aktivieren?")
-  }
-
   /// Sie können weiterhin Ihren Code verwenden, sollte es mit der %@ mal nicht klappen.
   public static func onboardingBiometricPermissionReason(_ p1: Any) -> String {
     L10n.tr("Localizable", "onboarding_biometric_permission_reason", String(describing: p1), fallback: "Sie können weiterhin Ihren Code verwenden, sollte es mit der %@ mal nicht klappen.")
   }
 
-  /// %@ verwenden
-  public static func onboardingBiometricText(_ p1: Any) -> String {
-    L10n.tr("Localizable", "onboarding_biometric_text", String(describing: p1), fallback: "%@ verwenden")
-  }
-
-  /// %@ verwenden
-  public static func onboardingBiometricTitle(_ p1: Any) -> String {
-    L10n.tr("Localizable", "onboarding_biometric_title", String(describing: p1), fallback: "%@ verwenden")
-  }
-
-  /// Pin-Code stimmt nicht überein, Sie haben noch %@ Möglichkeiten übrig
-  public static func onboardingPinCodeConfirmationAttemptsAltText(_ p1: Any) -> String {
-    L10n.tr("Localizable", "onboarding_pin_code_confirmation_attempts_altText", String(describing: p1), fallback: "Pin-Code stimmt nicht überein, Sie haben noch %@ Möglichkeiten übrig")
-  }
-
-  /// Noch %@ Versuche
-  public static func onboardingPinCodeConfirmationAttemptsText(_ p1: Any) -> String {
-    L10n.tr("Localizable", "onboarding_pin_code_confirmation_attempts_text", String(describing: p1), fallback: "Noch %@ Versuche")
-  }
-
-  /// Pincode enthält %@ Einträge von insgesamt %@
-  public static func onboardingPinCodeDotsAltText(_ p1: Any, _ p2: Any) -> String {
-    L10n.tr("Localizable", "onboarding_pin_code_dots_altText", String(describing: p1), String(describing: p2), fallback: "Pincode enthält %@ Einträge von insgesamt %@")
-  }
-
   /// %@, Doppeltippen zum Schließen
   public static func onboardingPinCodeErrorAltText(_ p1: Any) -> String {
     L10n.tr("Localizable", "onboarding_pin_code_error_altText", String(describing: p1), fallback: "%@, Doppeltippen zum Schließen")
-  }
-
-  /// %@, Doppeltippen zum Schließen
-  public static func storageSetupErrorAltText(_ p1: Any) -> String {
-    L10n.tr("Localizable", "storageSetup_error_altText", String(describing: p1), fallback: "%@, Doppeltippen zum Schließen")
   }
 
   /// Das Passwort ist falsch. Sie haben noch %@ Versuche.
@@ -1270,6 +972,26 @@ public enum L10n {
     L10n.tr("Localizable", "tk_login_passwordfailed_ios_subtitle", String(describing: p1), fallback: "Sie haben noch %@ Versuche")
   }
 
+  /// swiyu-Password eingeben, um %@ zu aktivieren.
+  public static func tkMenuActivatingBiometricsIosBody(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_menu_activatingBiometrics_ios_body", String(describing: p1), fallback: "swiyu-Password eingeben, um %@ zu aktivieren.")
+  }
+
+  /// Mit  %@  entsperren
+  public static func tkMenuActivatingBiometricsIosTitle(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_menu_activatingBiometrics_ios_title", String(describing: p1), fallback: "Mit  %@  entsperren")
+  }
+
+  /// swiyu-Password eingeben, um %@ zu deaktivieren.
+  public static func tkMenuDeactivatingBiometricsIosNote(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_menu_deactivatingBiometrics_ios_note", String(describing: p1), fallback: "swiyu-Password eingeben, um %@ zu deaktivieren.")
+  }
+
+  /// %@ deaktivieren
+  public static func tkMenuDeactivatingBiometricsIosTitle(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_menu_deactivatingBiometrics_ios_title", String(describing: p1), fallback: "%@ deaktivieren")
+  }
+
   /// Pin Code enthält %@ Zeichen von insgesamt sechs
   public static func tkOnboardingCode3Alt(_ p1: Any) -> String {
     L10n.tr("Localizable", "tk_onboarding_code3_alt", String(describing: p1), fallback: "Pin Code enthält %@ Zeichen von insgesamt sechs")
@@ -1290,9 +1012,9 @@ public enum L10n {
     L10n.tr("Localizable", "tk_present_multiplecredentials_ios_subtitle", String(describing: p1), fallback: "Möchte %@ Angaben lesen")
   }
 
-  /// Möchte %@ Nachweis ausstellen
+  /// möchte %@ Nachweis(e) ausstellen
   public static func tkReceiveApprovalIosSubtitle(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_receive_approval_ios_subtitle", String(describing: p1), fallback: "Möchte %@ Nachweis ausstellen")
+    L10n.tr("Localizable", "tk_receive_approval_ios_subtitle", String(describing: p1), fallback: "möchte %@ Nachweis(e) ausstellen")
   }
 
 }

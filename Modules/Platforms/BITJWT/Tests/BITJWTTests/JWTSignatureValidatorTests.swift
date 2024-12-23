@@ -25,12 +25,12 @@ final class JWTSignatureValidatorTests: XCTestCase {
   }
 
   func testValidate_WithOneValidPublicKey_ShouldReturnTrue() async throws {
-    spyDidResolver.getJWKSFromReturnValue = [.Mock.validSample]
+    spyDidResolver.getJWKSFromKeyIdentifierReturnValue = [.Mock.validSample]
     let mockSecKey = SecKeyTestsHelper.createPrivateKey()
     jwtHelper.getSecKeyCurveXYReturnValue = mockSecKey
     jwtHelper.hasValidSignatureJwtUsingReturnValue = true
 
-    let result = try await validator.validate(.Mock.sample, from: issuer)
+    let result = try await validator.validate(.Mock.sample, did: issuer, kid: kid)
 
     XCTAssertTrue(result)
     XCTAssertEqual(JWT.Mock.sample.raw, jwtHelper.hasValidSignatureJwtUsingReceivedArguments?.jwt.raw)
@@ -38,7 +38,7 @@ final class JWTSignatureValidatorTests: XCTestCase {
   }
 
   func testValidate_WithMultipleJWKsOneValid_ShouldReturnTrue() async throws {
-    spyDidResolver.getJWKSFromReturnValue = [.Mock.invalidSample, .Mock.invalidSample, .Mock.validSample]
+    spyDidResolver.getJWKSFromKeyIdentifierReturnValue = [.Mock.invalidSample, .Mock.invalidSample, .Mock.validSample]
 
     var hasValidSignatureJwtCount = 0
     jwtHelper.getSecKeyCurveXYReturnValue = SecKeyTestsHelper.createPrivateKey()
@@ -51,44 +51,37 @@ final class JWTSignatureValidatorTests: XCTestCase {
       }
     }
 
-    let result = try await validator.validate(.Mock.sample, from: issuer)
+    let result = try await validator.validate(.Mock.sample, did: issuer, kid: kid)
 
-    XCTAssertTrue(spyDidResolver.getJWKSFromCalled)
+    XCTAssertEqual(spyDidResolver.getJWKSFromKeyIdentifierReceivedArguments?.did, issuer)
+    XCTAssertEqual(spyDidResolver.getJWKSFromKeyIdentifierReceivedArguments?.keyIdentifier, kid)
     XCTAssertTrue(jwtHelper.getSecKeyCurveXYCalled)
     XCTAssertEqual(jwtHelper.hasValidSignatureJwtUsingCallsCount, 3)
     XCTAssertTrue(result)
   }
 
-  func testValidate_WithNoIssuerOnJWT_ShouldReturnFalse() async throws {
-    let result = try await validator.validate(.Mock.noIssuerSample)
-
-    XCTAssertFalse(result)
-    XCTAssertFalse(spyDidResolver.getJWKSFromCalled)
-    XCTAssertFalse(jwtHelper.getSecKeyCurveXYCalled)
-    XCTAssertFalse(jwtHelper.hasValidSignatureJwtUsingCalled)
-  }
-
   func testValidate_WithNoValidPublicKey_ShouldReturnFalse() async throws {
     jwtHelper.getSecKeyCurveXYReturnValue = SecKeyTestsHelper.createPrivateKey()
-    spyDidResolver.getJWKSFromReturnValue = [.Mock.invalidSample, .Mock.invalidSample, .Mock.invalidSample]
+    spyDidResolver.getJWKSFromKeyIdentifierReturnValue = [.Mock.invalidSample, .Mock.invalidSample, .Mock.invalidSample]
     jwtHelper.hasValidSignatureJwtUsingReturnValue = false
 
-    let result = try await validator.validate(.Mock.sample, from: issuer)
+    let result = try await validator.validate(.Mock.sample, did: issuer, kid: kid)
 
     XCTAssertFalse(result)
-    XCTAssertTrue(spyDidResolver.getJWKSFromCalled)
+    XCTAssertEqual(spyDidResolver.getJWKSFromKeyIdentifierReceivedArguments?.did, issuer)
+    XCTAssertEqual(spyDidResolver.getJWKSFromKeyIdentifierReceivedArguments?.keyIdentifier, kid)
     XCTAssertTrue(jwtHelper.getSecKeyCurveXYCalled)
-    XCTAssertTrue(jwtHelper.hasValidSignatureJwtUsingCalled)
+    XCTAssertEqual(jwtHelper.hasValidSignatureJwtUsingReceivedArguments?.jwt, .Mock.sample)
   }
 
   func testValidate_WithNoPublicKey_ShouldReturnFalse() async throws {
     jwtHelper.hasValidSignatureJwtUsingReturnValue = true
-    spyDidResolver.getJWKSFromReturnValue = []
+    spyDidResolver.getJWKSFromKeyIdentifierReturnValue = []
 
-    let result = try await validator.validate(.Mock.sample, from: issuer)
+    let result = try await validator.validate(.Mock.sample, did: issuer, kid: kid)
 
     XCTAssertFalse(result)
-    XCTAssertTrue(spyDidResolver.getJWKSFromCalled)
+    XCTAssertTrue(spyDidResolver.getJWKSFromKeyIdentifierCalled)
     XCTAssertFalse(jwtHelper.getSecKeyCurveXYCalled)
     XCTAssertFalse(jwtHelper.hasValidSignatureJwtUsingCalled)
   }
@@ -102,5 +95,6 @@ final class JWTSignatureValidatorTests: XCTestCase {
   // swiftlint:enable all
 
   private let issuer: String = "did:example:123456789"
+  private let kid: String = "did:example:123456789#key-01"
 
 }

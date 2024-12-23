@@ -22,7 +22,7 @@ public struct SecureField: View {
     .submitLabel(submitLabel)
     .frame(height: 52)
     .padding(.horizontal, .x3)
-    .background(ThemingAssets.Grays.white.swiftUIColor)
+    .background(ThemingAssets.Background.primary.swiftUIColor)
     .cornerRadius(10)
   }
 

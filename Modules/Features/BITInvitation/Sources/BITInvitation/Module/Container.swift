@@ -61,10 +61,6 @@ extension Container {
     self { 2_000_000_000 }
   }
 
-  var credentialOfferHeaderViewModel: ParameterFactory<(CredentialIssuerDisplay, TrustStatus), CredentialOfferHeaderViewModel> {
-    self { CredentialOfferHeaderViewModel($0, credentialTrustStatus: $1) }
-  }
-
   var getCredentialsCountUseCase: Factory<GetCredentialsCountUseCaseProtocol> {
     self { GetCredentialsCountUseCase() }
   }

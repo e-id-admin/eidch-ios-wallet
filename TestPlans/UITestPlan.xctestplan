@@ -14,9 +14,9 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:publicBetaWallet.xcodeproj",
+        "containerPath" : "container:swiyu.xcodeproj",
         "identifier" : "DD2E14501624858BE8C10844",
-        "name" : "publicBetaWalletUITests"
+        "name" : "swiyuUITests"
       }
     }
   ],

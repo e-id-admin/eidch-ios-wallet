@@ -23,8 +23,11 @@
   "nonce": "95319ae6e05a49f6b1b868a52388c134",
   "response_uri": "https://verifier.domain.ch/request-object/af3fe16e-3c77-4b35-a6d1-0f06657c4318/response-data",
   "response_mode": "direct_post",
-  "client_metadata": {
-    "client_name": "Dummy Multipass",
-    "logo_uri": "https://image.noelshack.com/fichiers/2024/07/1/1707731598-flag.png"
+  "client_metadata":{
+    "client_name": "Verifier",
+    "client_name#de": "DE Verifier",
+    "client_name#fr-CH": "FR Verifier",
+    "logo_uri": "www.examle.com/logo.png",
+    "logo_uri#fr": "www.examle.com/french-logo.png"
   }
 }

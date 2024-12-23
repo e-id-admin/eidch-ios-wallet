@@ -10,6 +10,7 @@ extension RequestObject {
 
     enum VcSdJwt {
       static let sample: RequestObject = Mocker.decode(fromFile: "request-object-multipass", bundle: Bundle.module)
+      static let sampleIT: RequestObject = Mocker.decode(fromFile: "request-object-multipass-it", bundle: Bundle.module)
       static let sampleWithoutInputDescriptors: RequestObject = Mocker.decode(fromFile: "request-object-without-input-descriptors", bundle: Bundle.module)
       static let sampleMultipassExtraField: RequestObject = Mocker.decode(fromFile: "request-object-multipass-plus-extra-field", bundle: Bundle.module)
       static let unsupportedResponseTypeSample: RequestObject = Mocker.decode(fromFile: "request-object-unsupported-response-type", bundle: Bundle.module)
@@ -20,6 +21,7 @@ extension RequestObject {
 
       static let jsonSampleData: Data = Mocker.getData(fromFile: "request-object-multipass", bundle: Bundle.module) ?? Data()
       static let sampleWithoutClientMetadataData: Data = Mocker.getData(fromFile: "request-object-multipass-no-metadata", bundle: Bundle.module) ?? Data()
+      static let sampleWithUnsupportedClientMetadata: Data = Mocker.getData(fromFile: "request-object-multipass-unsupported-metadata", bundle: Bundle.module) ?? Data()
 
       static let sampleWithoutAnyConstraintsFieldsFilename = "request-object-no-constraints-fields"
       static let sampleWithMissingConstraintsFieldsFilename = "request-object-missing-constraints-fields"

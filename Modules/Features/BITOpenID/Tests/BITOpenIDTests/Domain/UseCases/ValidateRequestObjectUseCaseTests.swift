@@ -69,12 +69,14 @@ final class ValidateRequestObjectUseCaseTests: XCTestCase {
 
   func testValidationJwtRequestObjectSuccess() async {
     let mockRequestObject: JWTRequestObject = .Mock.sample
-    jwtSignatureValidator.validateFromReturnValue = true
+    jwtSignatureValidator.validateDidKidReturnValue = true
 
     let result = await useCase.execute(mockRequestObject)
 
     XCTAssertTrue(result)
-    XCTAssertEqual(jwtSignatureValidator.validateFromReceivedArguments?.did, mockRequestObject.jwt.kid?.components(separatedBy: "#").first)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.jwt, mockRequestObject.jwt)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.kid, mockRequestObject.jwt.kid)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.did, mockRequestObject.clientId)
   }
 
   func testValidationJwtRequestObjectWrongAlgorithm() async {
@@ -95,22 +97,26 @@ final class ValidateRequestObjectUseCaseTests: XCTestCase {
 
   func testValidationJwtRequestObjectFailure() async {
     let mockRequestObject: JWTRequestObject = .Mock.sample
-    jwtSignatureValidator.validateFromThrowableError = TestingError.error
+    jwtSignatureValidator.validateDidKidThrowableError = TestingError.error
 
     let result = await useCase.execute(mockRequestObject)
 
     XCTAssertFalse(result)
-    XCTAssertTrue(jwtSignatureValidator.validateFromCalled)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.jwt, mockRequestObject.jwt)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.kid, mockRequestObject.jwt.kid)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.did, mockRequestObject.clientId)
   }
 
   func testValidationJwtRequestObjectInvalidSignature() async {
     let mockRequestObject: JWTRequestObject = .Mock.sample
-    jwtSignatureValidator.validateFromReturnValue = false
+    jwtSignatureValidator.validateDidKidReturnValue = false
 
     let result = await useCase.execute(mockRequestObject)
 
     XCTAssertFalse(result)
-    XCTAssertEqual(jwtSignatureValidator.validateFromReceivedArguments?.jwt, mockRequestObject.jwt)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.jwt, mockRequestObject.jwt)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.kid, mockRequestObject.jwt.kid)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.did, mockRequestObject.clientId)
   }
 
   // MARK: Private

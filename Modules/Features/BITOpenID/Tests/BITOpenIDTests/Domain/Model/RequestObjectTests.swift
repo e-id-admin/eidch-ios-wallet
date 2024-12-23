@@ -16,13 +16,36 @@ final class RequestObjectTests: XCTestCase {
     XCTAssertNotNil(mockRequestObject.presentationDefinition)
     XCTAssertFalse(mockRequestObject.responseUri.isEmpty)
     XCTAssertNotNil(mockRequestObject.clientMetadata)
+    XCTAssertNotNil(mockRequestObject.clientMetadata?.clientName)
+    XCTAssertNotNil(mockRequestObject.clientMetadata?.logoUri)
+
     guard
       let firstInputDescriptor = mockRequestObject.presentationDefinition.inputDescriptors.first,
-      let formats = firstInputDescriptor.formats else
-    {
-      XCTFail("No input descriptor.formats")
-      return
+      let formats = firstInputDescriptor.formats
+    else {
+      return XCTFail("No input descriptor.formats")
     }
+
+    XCTAssertFalse(formats.isEmpty)
+  }
+
+  func testDecodingVcSdJwtRequestObjectWithUnsupportedClientMetadata() throws {
+    let mockRequestObjectData = RequestObject.Mock.VcSdJwt.sampleWithUnsupportedClientMetadata
+    let mockRequestObject = try JSONDecoder().decode(RequestObject.self, from: mockRequestObjectData)
+
+    XCTAssertNotNil(mockRequestObject.presentationDefinition)
+    XCTAssertFalse(mockRequestObject.responseUri.isEmpty)
+    XCTAssertNotNil(mockRequestObject.clientMetadata)
+    XCTAssertNil(mockRequestObject.clientMetadata?.clientName)
+    XCTAssertNil(mockRequestObject.clientMetadata?.logoUri)
+
+    guard
+      let firstInputDescriptor = mockRequestObject.presentationDefinition.inputDescriptors.first,
+      let formats = firstInputDescriptor.formats
+    else {
+      return XCTFail("No input descriptor.formats")
+    }
+
     XCTAssertFalse(formats.isEmpty)
   }
 

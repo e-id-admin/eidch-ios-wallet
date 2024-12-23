@@ -25,7 +25,7 @@ extension TrustStatus {
     case .verified:
       ThemingAssets.Brand.Core.firGreen.swiftUIColor
     case .unverified:
-      ThemingAssets.Brand.Bright.yellowLabel.swiftUIColor
+      ThemingAssets.Brand.Core.navyBlue.swiftUIColor
     }
   }
 }

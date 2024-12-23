@@ -36,6 +36,7 @@ enum Assets {
   static let statusUnknown = ImageAsset(name: "StatusUnknown")
   static let statusValid = ImageAsset(name: "StatusValid")
   static let trustBadge = ImageAsset(name: "TrustBadge")
+  static let unknownIcon = ImageAsset(name: "UnknownIcon")
   static let warning = ImageAsset(name: "Warning")
   static let federalLogo = ImageAsset(name: "federal-logo")
   static let xmarkCircle = ImageAsset(name: "xmark-circle")

@@ -1,4 +1,5 @@
 import BITAppAuth
+import BITL10n
 import Factory
 import Foundation
 
@@ -30,7 +31,8 @@ class PrivacyViewModel: ObservableObject {
   @Published var isBiometricChangeFlowPresented: Bool = false
 
   @Published var isLoading: Bool = false
-  @Published var isPinCodeChangedPresented: Bool = false
+  @Published var isToastPresented: Bool = false
+  @Published var toastMessage: String?
 
   func fetchBiometricStatus() {
     isBiometricEnabled = (isBiometricUsageAllowedUseCase.execute() && hasBiometricAuthUseCase.execute())
@@ -62,6 +64,10 @@ class PrivacyViewModel: ObservableObject {
     isLoading = false
   }
 
+  func clearToast() {
+    toastMessage = nil
+  }
+
   // MARK: Private
 
   private var hasBiometricAuthUseCase: HasBiometricAuthUseCaseProtocol
@@ -76,7 +82,19 @@ class PrivacyViewModel: ObservableObject {
 extension PrivacyViewModel: ChangePinCodeDelegate {
 
   public func didChangePinCode() {
-    isPinCodeChangedPresented = true
+    toastMessage = L10n.tkChangepasswordSuccessfulNotification
+    isToastPresented = true
+  }
+
+}
+
+// MARK: BiometricChangeDelegate
+
+extension PrivacyViewModel: BiometricChangeDelegate {
+
+  func didBiometricStatusChange(to isEnabled: Bool) {
+    toastMessage = isEnabled ? L10n.tkMenuSecurityPrivacyIosStatusActivating : L10n.tkMenuSecurityPrivacyIosStatusDeactivating
+    isToastPresented = true
   }
 
 }

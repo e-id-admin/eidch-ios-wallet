@@ -1,3 +1,3 @@
 # BITDataStore
 
-Swift Package **DataStore** module of the publicBetaWallet App.
+Swift Package **DataStore** module of the swiyu App.

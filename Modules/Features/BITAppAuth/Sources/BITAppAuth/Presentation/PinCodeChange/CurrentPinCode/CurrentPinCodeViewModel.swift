@@ -90,7 +90,7 @@ class CurrentPinCodeViewModel: ObservableObject, Vibrating {
       return lockWallet()
     }
 
-    let message = PinCodeError.wrongPinCode.localizedDescription + ". " + L10n.tkChangepasswordError1IosNote2(attemptLeft)
+    let message = L10n.tkChangepasswordError1IosNote2(attemptLeft)
     withAnimation {
       vibrate()
       inputFieldMessage = message

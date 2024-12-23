@@ -5,6 +5,5 @@ import Spyable
 
 @Spyable
 public protocol JWTSignatureValidatorProtocol {
-  func validate(_ jwt: JWT) async throws -> Bool
-  func validate(_ jwt: JWT, from did: String) async throws -> Bool
+  func validate(_ jwt: JWT, did: String, kid: String) async throws -> Bool
 }

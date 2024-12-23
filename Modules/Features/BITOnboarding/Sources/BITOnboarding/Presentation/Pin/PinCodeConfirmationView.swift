@@ -80,6 +80,7 @@ struct PinCodeConfirmationView: View {
 
       if let message = viewModel.inputFieldMessage {
         inputFieldMessage(message)
+          .padding(.horizontal, .x3)
       }
     }
   }
@@ -91,6 +92,7 @@ struct PinCodeConfirmationView: View {
 
       if let message = viewModel.inputFieldMessage {
         inputFieldMessage(message)
+          .padding(.horizontal, .x3)
       }
     }
     .padding(.top, sizeCategory.isAccessibilityCategory ? 0 : 100)

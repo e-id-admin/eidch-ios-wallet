@@ -2,20 +2,20 @@
 import PackageDescription
 
 let package = Package(
-  name: "publicBetaWallet-Danger",
+  name: "swiyu-Danger",
   defaultLocalization: "en",
   products: [
-    .library(name: "DangerDeps", type: .dynamic, targets: ["publicBetaWallet-Danger"]),
+    .library(name: "DangerDeps", type: .dynamic, targets: ["swiyu-Danger"]),
   ],
   dependencies: [
     .package(url: "https://github.com/danger/swift.git", from: "3.15.0"),
   ],
   targets: [
     .target(
-      name: "publicBetaWallet-Danger",
+      name: "swiyu-Danger",
       dependencies: [
         .product(name: "Danger", package: "swift"),
       ],
-      path: "publicBetaWallet",
+      path: "swiyu",
       sources: ["Resources/DangerProxy.swift"]),
   ])

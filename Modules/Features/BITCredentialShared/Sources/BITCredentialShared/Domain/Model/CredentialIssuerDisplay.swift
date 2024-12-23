@@ -10,7 +10,7 @@ public struct CredentialIssuerDisplay: Codable, Equatable, DisplayLocalizable {
 
   // MARK: Lifecycle
 
-  public init(id: UUID = .init(), locale: String? = nil, name: String, credentialId: UUID?, image: Data?) {
+  public init(id: UUID = .init(), locale: String? = nil, name: String? = nil, credentialId: UUID?, image: Data?) {
     self.id = id
     self.locale = locale ?? UserLocale.defaultLocaleIdentifier
     self.name = name
@@ -38,7 +38,7 @@ public struct CredentialIssuerDisplay: Codable, Equatable, DisplayLocalizable {
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     id = try container.decode(UUID.self, forKey: .id)
-    name = try container.decode(String.self, forKey: .name)
+    name = try container.decodeIfPresent(String.self, forKey: .name)
     locale = try container.decodeIfPresent(String.self, forKey: .locale) ?? UserLocale.defaultLocaleIdentifier
     credentialId = try container.decodeIfPresent(UUID.self, forKey: .credentialId)
     image = try container.decodeIfPresent(Data.self, forKey: .image)
@@ -47,7 +47,7 @@ public struct CredentialIssuerDisplay: Codable, Equatable, DisplayLocalizable {
   // MARK: Public
 
   public var id: UUID
-  public var name: String
+  public var name: String?
   public var locale: UserLocale?
   public var credentialId: UUID?
   public var image: Data?

@@ -4,7 +4,7 @@
 XCODEGEN := xcodegen
 SWIFTGEN := swiftgen
 SWIFTFORMAT := swiftformat
-PROJECT := publicBetaWallet.xcodeproj
+PROJECT := swiyu.xcodeproj
 
 # ANSI color codes for better readability in supported terminals
 RESET_COLOR := \033[0m

@@ -1,6 +1,6 @@
-![24 github_banner-publicbeta v0 2](https://github.com/e-id-admin/eidch-ios-wallet/blob/main/24.github_banner-publicbeta.v0.2.jpg)
+![Public Beta banner](https://github.com/e-id-admin/eidch-public-beta/blob/main/assets/github-banner-publicbeta.jpg)
 
-# Public Beta Wallet - iOS
+# swiyu - iOS wallet
 
 An official Swiss Government project made by the [Federal Office of Information Technology, Systems and Telecommunication FOITT](https://www.bit.admin.ch/)
 as part of the electronic identity (E-ID) project.
@@ -34,7 +34,7 @@ make setup
 The `make` command will set everything up and provide you with an up and running project.
 
 Once in Xcode:
-- Select the `publicBetaWallet Dev` scheme
+- Select the `swiyu Dev` scheme
 - Be aware that it's more appropriate to run on real devices rather than in Simulator because of several restrictions and KeyChain usage
 - Finally, just build & run in Xcode with `command + R`
 

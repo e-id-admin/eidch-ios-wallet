@@ -24,14 +24,16 @@ final class ValidateTrustStatementUseCaseTests: XCTestCase {
     }
 
     trustRegistryRepository.getTrustedDidsReturnValue = trustedDids
-    jwtSignatureValidator.validateReturnValue = true
+    jwtSignatureValidator.validateDidKidReturnValue = true
     tokenStatusListValidator.validateIssuerReturnValue = .valid
 
     let result = await useCase.execute(mockTrustStatement)
 
     XCTAssertTrue(result)
     XCTAssertTrue(trustRegistryRepository.getTrustedDidsCalled)
-    XCTAssertEqual(jwtSignatureValidator.validateReceivedInvocations.first?.raw, mockTrustStatement.raw)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.jwt.raw, mockTrustStatement.raw)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.did, mockTrustStatement.issuer)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.kid, mockTrustStatement.kid)
     XCTAssertEqual(tokenStatusListValidator.validateIssuerReceivedArguments?.issuer, mockTrustStatement.issuer)
     XCTAssertEqual(tokenStatusListValidator.validateIssuerReceivedArguments?.anyStatus.type, mockTrustStatement.status?.type)
   }
@@ -42,13 +44,12 @@ final class ValidateTrustStatementUseCaseTests: XCTestCase {
     }
 
     trustRegistryRepository.getTrustedDidsReturnValue = trustedDids
-    jwtSignatureValidator.validateReturnValue = true
+    jwtSignatureValidator.validateDidKidReturnValue = true
 
     let result = await useCase.execute(mockTrustStatement)
 
     XCTAssertFalse(result)
     XCTAssertTrue(trustRegistryRepository.getTrustedDidsCalled)
-    XCTAssertFalse(jwtSignatureValidator.validateCalled)
   }
 
   func testValidateNotValidSignatureTrustStatement() async throws {
@@ -57,13 +58,15 @@ final class ValidateTrustStatementUseCaseTests: XCTestCase {
     }
 
     trustRegistryRepository.getTrustedDidsReturnValue = trustedDids
-    jwtSignatureValidator.validateReturnValue = false
+    jwtSignatureValidator.validateDidKidReturnValue = false
 
     let result = await useCase.execute(mockTrustStatement)
 
     XCTAssertFalse(result)
     XCTAssertTrue(trustRegistryRepository.getTrustedDidsCalled)
-    XCTAssertEqual(jwtSignatureValidator.validateReceivedInvocations.first?.raw, mockTrustStatement.raw)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.jwt.raw, mockTrustStatement.raw)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.did, mockTrustStatement.issuer)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.kid, mockTrustStatement.kid)
   }
 
   func testValidateValidatorThrowsTrustStatement() async throws {
@@ -72,13 +75,15 @@ final class ValidateTrustStatementUseCaseTests: XCTestCase {
     }
 
     trustRegistryRepository.getTrustedDidsReturnValue = trustedDids
-    jwtSignatureValidator.validateThrowableError = TestingError.error
+    jwtSignatureValidator.validateDidKidThrowableError = TestingError.error
 
     let result = await useCase.execute(mockTrustStatement)
 
     XCTAssertFalse(result)
     XCTAssertTrue(trustRegistryRepository.getTrustedDidsCalled)
-    XCTAssertEqual(jwtSignatureValidator.validateReceivedInvocations.first?.raw, mockTrustStatement.raw)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.jwt.raw, mockTrustStatement.raw)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.did, mockTrustStatement.issuer)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.kid, mockTrustStatement.kid)
   }
 
   func testValidateTrustStatementWithNotValidStatus() async throws {
@@ -86,7 +91,7 @@ final class ValidateTrustStatementUseCaseTests: XCTestCase {
       fatalError("Cannot decode trust statement")
     }
 
-    jwtSignatureValidator.validateReturnValue = true
+    jwtSignatureValidator.validateDidKidReturnValue = true
     trustRegistryRepository.getTrustedDidsReturnValue = trustedDids
     tokenStatusListValidator.validateIssuerReturnValue = .revoked
 
@@ -94,7 +99,9 @@ final class ValidateTrustStatementUseCaseTests: XCTestCase {
 
     XCTAssertFalse(result)
     XCTAssertTrue(trustRegistryRepository.getTrustedDidsCalled)
-    XCTAssertEqual(jwtSignatureValidator.validateReceivedInvocations.first?.raw, mockTrustStatement.raw)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.jwt.raw, mockTrustStatement.raw)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.did, mockTrustStatement.issuer)
+    XCTAssertEqual(jwtSignatureValidator.validateDidKidReceivedArguments?.kid, mockTrustStatement.kid)
     XCTAssertEqual(tokenStatusListValidator.validateIssuerReceivedArguments?.issuer, mockTrustStatement.issuer)
     XCTAssertEqual(tokenStatusListValidator.validateIssuerReceivedArguments?.anyStatus.type, mockTrustStatement.status?.type)
   }

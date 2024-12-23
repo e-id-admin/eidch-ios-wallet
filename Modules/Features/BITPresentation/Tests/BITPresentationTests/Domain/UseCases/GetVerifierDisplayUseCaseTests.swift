@@ -27,7 +27,6 @@ final class GetVerifierDisplayUseCaseTests: XCTestCase {
   func testExecuteWithoutTrustStatement() {
     let verifierDisplay = useCase.execute(for: mockRequestObject.clientMetadata, trustStatement: nil)
 
-    XCTAssertEqual(verifierDisplay?.name, mockRequestObject.clientMetadata?.clientName)
     XCTAssertEqual(verifierDisplay?.trustStatus, .unverified)
   }
 

@@ -40,7 +40,8 @@ struct FetchVcSdJwtCredentialUseCase: FetchAnyCredentialUseCaseProtocol {
 
     guard
       let vcSdJwt = try? VcSdJwt(from: credentialResponse.rawCredential),
-      try await jwtSignatureValidator.validate(vcSdJwt)
+      let kid = vcSdJwt.kid,
+      try await jwtSignatureValidator.validate(vcSdJwt, did: vcSdJwt.issuer, kid: kid)
     else {
       throw FetchCredentialError.verificationFailed
     }

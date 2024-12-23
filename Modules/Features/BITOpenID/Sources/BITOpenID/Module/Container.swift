@@ -183,6 +183,10 @@ extension Container {
     self { FetchTrustStatementUseCase() }
   }
 
+  public var baseRegistryDomainPattern: Factory<String> {
+    self { #"^did:tdw:[^:]+:([^:]+\.swiyu(-int)?\.admin\.ch):[^:]+"# }
+  }
+
   // MARK: Internal
 
   var trustRegistryRepository: Factory<TrustRegistryRepositoryProtocol> {
@@ -195,10 +199,6 @@ extension Container {
 
   var bundleInfoDictionary: Factory<[String: Any]?> {
     self { Bundle.main.infoDictionary }
-  }
-
-  var baseRegistryDomainPattern: Factory<String> {
-    self { #"^did:tdw:[^:]+:([^:]+\.swiyu(-int)?\.admin\.ch):[^:]+"# }
   }
 
 }

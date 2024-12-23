@@ -10,7 +10,13 @@ struct CurrentPinCodeView: View {
   }
 
   var body: some View {
-    ChangePinCodeFormView(pinCode: $viewModel.pinCode, fieldTitle: L10n.tkChangepasswordStep1Note1, inputFieldState: viewModel.inputFieldState, inputFieldMessage: viewModel.inputFieldMessage, attempts: viewModel.attempts, onPressNext: viewModel.submit)
+    PinCodeFormView(
+      pinCode: $viewModel.pinCode,
+      fieldTitle: L10n.tkChangepasswordStep1Note1,
+      inputFieldState: viewModel.inputFieldState,
+      inputFieldMessage: viewModel.inputFieldMessage,
+      attempts: viewModel.attempts,
+      onPressNext: viewModel.submit)
       .onAppear { viewModel.onAppear() }
       .navigationTitle(L10n.tkGlobalChangepassword)
   }

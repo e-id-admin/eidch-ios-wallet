@@ -6,13 +6,13 @@
 
 xcassets:
   inputs:
-    - publicBetaWallet/Resources/Assets.xcassets
+    - swiyu/Resources/Assets.xcassets
   outputs:
     - templateName: swift5
-      output: publicBetaWallet/Resources/Assets.swift
+      output: swiyu/Resources/Assets.swift
       
 plist:
-  inputs: publicBetaWallet/Info.plist
+  inputs: swiyu/Info.plist
   outputs:
     templateName: runtime-swift5
-    output: publicBetaWallet/Resources/Plist.swift
+    output: swiyu/Resources/Plist.swift

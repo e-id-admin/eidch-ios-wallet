@@ -10,7 +10,7 @@ struct ConfirmPinCodeView: View {
   }
 
   var body: some View {
-    ChangePinCodeFormView(
+    PinCodeFormView(
       pinCode: $viewModel.pinCode,
       fieldTitle: L10n.tkChangepasswordStep3Note1,
       inputFieldState: viewModel.inputFieldState,

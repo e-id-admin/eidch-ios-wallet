@@ -32,7 +32,7 @@ final class FetchVcSdJwtCredentialUseCaseTests: XCTestCase {
     let mockCredentialResponse: CredentialResponse = .Mock.sample
 
     spyRepository.fetchCredentialFromCredentialRequestBodyAcccessTokenReturnValue = mockCredentialResponse
-    spyJWTSignatureValidator.validateReturnValue = true
+    spyJWTSignatureValidator.validateDidKidReturnValue = true
     jwtContextHelper.jwtUsingKeyPairTypeReturnValue = mockJWT
 
     _ = try await useCase.execute(for: mockFetchCredentialContext)
@@ -47,16 +47,15 @@ final class FetchVcSdJwtCredentialUseCaseTests: XCTestCase {
       XCTFail("fetchCredential no arguments received")
     }
 
-    XCTAssertEqual(spyJWTSignatureValidator.validateReceivedInvocations.first?.raw, mockCredentialResponse.rawCredential)
+    XCTAssertEqual(spyJWTSignatureValidator.validateDidKidReceivedArguments?.jwt.raw, mockCredentialResponse.rawCredential)
   }
 
   func testFetchHappyPathWithoutHolderBinding() async throws {
-    let mockJWT: JWT = .Mock.sample
     let mockCredentialResponse: CredentialResponse = .Mock.sample
     let context = FetchCredentialContext.Mock.sampleVcSdJwtWithoutHolderBinding
 
     spyRepository.fetchCredentialFromCredentialRequestBodyAcccessTokenReturnValue = mockCredentialResponse
-    spyJWTSignatureValidator.validateReturnValue = true
+    spyJWTSignatureValidator.validateDidKidReturnValue = true
 
     _ = try await useCase.execute(for: context)
 
@@ -69,7 +68,7 @@ final class FetchVcSdJwtCredentialUseCaseTests: XCTestCase {
       XCTFail("fetchCredential no arguments received")
     }
 
-    XCTAssertEqual(spyJWTSignatureValidator.validateReceivedInvocations.first?.raw, mockCredentialResponse.rawCredential)
+    XCTAssertEqual(spyJWTSignatureValidator.validateDidKidReceivedArguments?.jwt.raw, mockCredentialResponse.rawCredential)
     XCTAssertNil(spyRepository.fetchCredentialFromCredentialRequestBodyAcccessTokenReceivedArguments?.credentialRequestBody.proof)
   }
 
@@ -78,7 +77,7 @@ final class FetchVcSdJwtCredentialUseCaseTests: XCTestCase {
     let mockCredentialResponse: CredentialResponse = .Mock.sample
 
     spyRepository.fetchCredentialFromCredentialRequestBodyAcccessTokenReturnValue = mockCredentialResponse
-    spyJWTSignatureValidator.validateReturnValue = false
+    spyJWTSignatureValidator.validateDidKidReturnValue = false
     jwtContextHelper.jwtUsingKeyPairTypeReturnValue = mockJWT
 
     do {
@@ -95,7 +94,7 @@ final class FetchVcSdJwtCredentialUseCaseTests: XCTestCase {
         XCTFail("fetchCredential no arguments received")
       }
 
-      XCTAssertEqual(spyJWTSignatureValidator.validateReceivedInvocations.first?.raw, mockCredentialResponse.rawCredential)
+      XCTAssertEqual(spyJWTSignatureValidator.validateDidKidReceivedArguments?.jwt.raw, mockCredentialResponse.rawCredential)
       XCTAssertEqual(spyRepository.fetchCredentialFromCredentialRequestBodyAcccessTokenReceivedArguments?.credentialRequestBody.proof?.jwt, mockJWT.raw)
     } catch {
       XCTFail("Another error was expected")

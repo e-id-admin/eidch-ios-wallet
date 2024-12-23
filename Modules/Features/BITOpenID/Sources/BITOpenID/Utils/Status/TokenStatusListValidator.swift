@@ -41,15 +41,16 @@ struct TokenStatusListValidator: AnyStatusCheckValidatorProtocol {
 
   private func isValidStatusJwt(_ jwt: JWT, issuer: String, statusListUri: String) async throws -> Bool {
     guard
+      let iss = jwt.iss,
+      let kid = jwt.kid,
       jwt.type == Self.statusListType,
       jwt.issuedAt != nil,
       jwt.subject == statusListUri,
-      jwt.iss != nil,
-      jwt.iss == issuer
+      iss == issuer
     else {
       return false
     }
-    guard try await jwtSignatureValidator.validate(jwt) else {
+    guard try await jwtSignatureValidator.validate(jwt, did: iss, kid: kid) else {
       return false
     }
     guard let expiredAt = jwt.expiredAt else { return true }
@@ -60,10 +61,10 @@ struct TokenStatusListValidator: AnyStatusCheckValidatorProtocol {
 extension StatusCode {
   var credentialStatus: VcStatus {
     switch self {
-    case 0: return .valid
-    case 1: return .revoked
-    case 2: return .suspended
-    default: return .unsupported
+    case 0: .valid
+    case 1: .revoked
+    case 2: .suspended
+    default: .unsupported
     }
   }
 }

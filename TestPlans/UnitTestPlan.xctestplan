@@ -15,9 +15,9 @@
     {
       "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:publicBetaWallet.xcodeproj",
+        "containerPath" : "container:swiyu.xcodeproj",
         "identifier" : "F618D0FC6F5F3ABA236DD8E7",
-        "name" : "publicBetaWalletTests"
+        "name" : "swiyuTests"
       }
     },
     {

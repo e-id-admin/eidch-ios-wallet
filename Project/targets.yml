@@ -1,18 +1,18 @@
 targets:
 
-  publicBetaWallet:
+  swiyu:
     type: application
     platform: iOS
     deploymentTarget: "15.0"
     sources:
-      - path: ../publicBetaWallet
+      - path: ../swiyu
         excludes:
           - "**/*.sh"
     scheme:
       testTargets:
-        - publicBetaWalletTests 
+        - swiyuTests 
     info:
-      path: ../publicBetaWallet/Info.plist
+      path: ../swiyu/Info.plist
       properties:
         LSHasLocalizedDisplayName: true
         ITSAppUsesNonExemptEncryption: false
@@ -53,8 +53,8 @@ targets:
                 - UISceneConfigurationName: Default Configuration
                   UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
 
-        NSCameraUsageDescription: 'publicBetaWallet app would like to use your camera to scan QRCodes.'
-        NSFaceIDUsageDescription: 'publicBetaWallet app would like to use your biometric references to access secured resources.'
+        NSCameraUsageDescription: 'swiyu app would like to use your camera to scan QRCodes.'
+        NSFaceIDUsageDescription: 'swiyu app would like to use your biometric references to access secured resources.'
 
         NSAppTransportSecurity:
           NSAllowsArbitraryLoads: false
@@ -100,7 +100,7 @@ targets:
         CURRENT_PROJECT_VERSION: 1
         MARKETING_VERSION: 0.1
         SWIFT_VERSION: 5.7
-        PRODUCT_NAME: publicBetaWallet
+        PRODUCT_NAME: swiyu
 
         ALWAYS_SEARCH_USER_PATHS: NO
         CLANG_ANALYZER_NONNULL: YES
@@ -290,7 +290,7 @@ targets:
           DYNATRACE_USER_OPT_IN: true
 
         Prod (release):
-          PRODUCT_NAME: "publicBetaWallet"
+          PRODUCT_NAME: "swiyu"
           ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
           PRODUCT_BUNDLE_IDENTIFIER: ch.admin.foitt.swiyu
           CODE_SIGN_IDENTITY: iPhone Distribution
@@ -341,49 +341,49 @@ targets:
       - path: ../Scripts/format_generated_files.sh
         name: Format generated files
         inputFiles:
-          - $(SRCROOT)/publicBetaWallet/Resources/Assets.swift
+          - $(SRCROOT)/swiyu/Resources/Assets.swift
         outputFiles:
-          - "/tmp/publicBetaWalletDummyOutputFileFormatGeneratedFiles.txt"
+          - "/tmp/swiyuDummyOutputFileFormatGeneratedFiles.txt"
       - path: ../Scripts/swiftlint.sh
         name: SwiftLint
         outputFiles:
-          - "/tmp/publicBetaWalletDummyOutputFileSwiftLint.txt"
+          - "/tmp/swiyuDummyOutputFileSwiftLint.txt"
       - path: ../Scripts/swiftformat.sh
         name: SwiftFormat
         outputFiles:
-          - "/tmp/publicBetaWalletDummyOutputFileSwiftFormat.txt"
+          - "/tmp/swiyuDummyOutputFileSwiftFormat.txt"
       - path: ../Scripts/xcode_formatting.sh
         name: xCode formatting
         outputFiles:
-          - "/tmp/publicBetaWalletDummyOutputFileXcodeFormatting.txt"
+          - "/tmp/swiyuDummyOutputFileXcodeFormatting.txt"
       - path: ../Scripts/swift_package_list.sh
         name: Swift packages list
         outputFiles:
-          - "/tmp/publicBetaWalletDummyOutputFileSwiftPackagesList.txt"
+          - "/tmp/swiyuDummyOutputFileSwiftPackagesList.txt"
 
-  publicBetaWalletTests:
+  swiyuTests:
     type: bundle.unit-test
     platform: iOS
     deploymentTarget: "15.0"
-    sources: ../publicBetaWalletTests
+    sources: ../swiyuTests
     dependencies:
-      - target: publicBetaWallet
+      - target: swiyu
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
-        TEST_HOST: $(BUILT_PRODUCTS_DIR)/publicBetaWallet.app/publicBetaWallet
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/swiyu.app/swiyu
     info:
-      path: ../publicBetaWalletTests/Info.plist
+      path: ../swiyuTests/Info.plist
       properties:
           CFBundleVersion: $(CURRENT_PROJECT_VERSION)
           CFBundleShortVersionString: $(MARKETING_VERSION)
 
-  publicBetaWalletUITests:
+  swiyuUITests:
       type: bundle.ui-testing
       platform: iOS
-      sources: ../publicBetaWalletUITests
+      sources: ../swiyuUITests
       dependencies:
-        - target: publicBetaWallet
+        - target: swiyu
         - package: BITAppAuth
         - package: BITAppVersion
         - package: BITOnboarding
@@ -403,7 +403,7 @@ targets:
               - "DEBUG"
               - "UITEST"
       info:
-        path: ../publicBetaWalletUITests/Info.plist
+        path: ../swiyuUITests/Info.plist
         properties:
           CFBundleVersion: $(CURRENT_PROJECT_VERSION)
           CFBundleShortVersionString: $(MARKETING_VERSION)

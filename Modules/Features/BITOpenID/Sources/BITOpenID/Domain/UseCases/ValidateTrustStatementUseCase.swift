@@ -13,12 +13,13 @@ struct ValidateTrustStatementUseCase: ValidateTrustStatementUseCaseProtocol {
       guard
         let issuer = trustStatement.iss,
         try isDidTrusted(issuer),
-        let statusList = trustStatement.statusList
+        let statusList = trustStatement.statusList,
+        let kid = trustStatement.kid
       else {
         return false
       }
 
-      if try await jwtSignatureValidator.validate(trustStatement) {
+      if try await jwtSignatureValidator.validate(trustStatement, did: issuer, kid: kid) {
         return await tokenStatusListValidator.validate(statusList, issuer: issuer) == .valid
       }
 

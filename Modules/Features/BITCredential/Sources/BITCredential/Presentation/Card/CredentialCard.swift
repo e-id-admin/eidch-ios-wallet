@@ -149,7 +149,21 @@ public struct CredentialCard<Header: View>: View {
 
       Spacer()
 
-      CredentialStatusBadge(status: credential.status)
+      if #available(iOS 16.0, *) {
+        ViewThatFits {
+          HStack {
+            badges()
+          }
+
+          VStack {
+            badges()
+          }
+        }
+      } else {
+        HStack {
+          badges()
+        }
+      }
     }
     .padding(.x5)
   }
@@ -178,6 +192,21 @@ public struct CredentialCard<Header: View>: View {
       .opacity(0.15)
       .blur(radius: 6)
       .scaleEffect(x: 0.8, y: 0.5, anchor: .bottomLeading)
+  }
+
+  @ViewBuilder
+  private func badges() -> some View {
+    if credential.environment == .demo {
+      Badge {
+        Text(L10n.tkGlobalCredentialStatusDemo)
+      }
+      .badgeStyle(.bezeledGray)
+      .colorScheme(.light)
+      .accessibilityLabel(L10n.tkGlobalCredentialStatusDemoAlt)
+    }
+
+    CredentialStatusBadge(status: credential.status)
+      .colorScheme(colorScheme)
   }
 
 }

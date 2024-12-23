@@ -173,12 +173,12 @@ extension InformationView {
   private func card() -> some View {
     if let backgroundImage {
       Card(background: .image(backgroundImage), image: image)
-        .foregroundStyle(ThemingAssets.Brand.Core.white.swiftUIColor)
+        .foregroundStyle(ThemingAssets.Grays.white.swiftUIColor)
         .accessibilityHidden(true)
         .accessibilityIdentifier(AccessibilityIdentifier.image.rawValue)
     } else if let backgroundColor {
       Card(background: .color(backgroundColor), image: image)
-        .foregroundStyle(ThemingAssets.Brand.Core.white.swiftUIColor)
+        .foregroundStyle(ThemingAssets.Grays.white.swiftUIColor)
         .accessibilityHidden(true)
         .accessibilityIdentifier(AccessibilityIdentifier.image.rawValue)
     }

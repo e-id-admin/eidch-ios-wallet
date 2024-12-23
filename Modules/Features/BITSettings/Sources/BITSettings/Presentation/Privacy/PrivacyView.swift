@@ -23,20 +23,25 @@ public struct PrivacyView: View {
         .font(.custom.body)
         .navigationTitle(L10n.securitySettingsTitle)
     }
-    .popup(isPresented: $viewModel.isPinCodeChangedPresented) {
-      Text(L10n.tkChangepasswordSuccessfulNotification)
-        .font(.custom.footnote)
-        .foregroundStyle(ThemingAssets.Brand.Bright.firGreenLabel.swiftUIColor)
-        .padding(.horizontal, .x3)
-        .padding(.vertical, .x2)
-        .background(ThemingAssets.Brand.Bright.firGreen.swiftUIColor)
-        .clipShape(.capsule)
+    .popup(isPresented: $viewModel.isToastPresented) {
+      if let toastMessage = viewModel.toastMessage {
+        Text(toastMessage)
+          .font(.custom.footnote)
+          .foregroundStyle(ThemingAssets.Brand.Bright.firGreenLabel.swiftUIColor)
+          .padding(.horizontal, .x3)
+          .padding(.vertical, .x2)
+          .background(ThemingAssets.Brand.Bright.firGreen.swiftUIColor)
+          .clipShape(.capsule)
+      }
     } customize: {
       $0
         .type(.floater())
         .position(.bottom)
         .autohideIn(3)
         .animation(.easeInOut)
+        .dismissCallback {
+          viewModel.clearToast()
+        }
     }
   }
 
@@ -92,7 +97,7 @@ public struct PrivacyView: View {
           EmptyView()
         }
 
-        NavigationLink(destination: BiometricChangeFlowView(isPresented: $viewModel.isBiometricChangeFlowPresented, isBiometricEnabled: viewModel.isBiometricEnabled), isActive: $viewModel.isBiometricChangeFlowPresented) {
+        NavigationLink(destination: BiometricChangeModuleWrapper(delegate: viewModel), isActive: $viewModel.isBiometricChangeFlowPresented) {
           EmptyView()
         }
 

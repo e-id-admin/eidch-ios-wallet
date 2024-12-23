@@ -19,14 +19,14 @@ define: &test_plans
 
 define: &targets
   targets:
-    publicBetaWallet: all
+    swiyu: all
 
 #####
 ##### Schemes
 #####
 
 schemes:
-  publicBetaWallet Dev:
+  swiyu Dev:
     build:
       <<: *targets
     run:
@@ -41,10 +41,10 @@ schemes:
       config: Dev (debug)
     archive:
       config: Dev (release)
-      customArchiveName: publicBetaWallet-Dev
+      customArchiveName: swiyu-Dev
       revealArchiveInOrganizer: true
 
-  publicBetaWallet Ref:
+  swiyu Ref:
     build:
       <<: *targets
     run:
@@ -59,10 +59,10 @@ schemes:
       config: Ref (debug)
     archive:
       config: Ref (release)
-      customArchiveName: publicBetaWallet-Ref
+      customArchiveName: swiyu-Ref
       revealArchiveInOrganizer: true
 
-  publicBetaWallet Abn:
+  swiyu Abn:
     build:
       <<: *targets
     run:
@@ -77,10 +77,10 @@ schemes:
       config: Abn (debug)
     archive:
       config: Abn (release)
-      customArchiveName: publicBetaWallet-Abn
+      customArchiveName: swiyu-Abn
       revealArchiveInOrganizer: true
 
-  publicBetaWallet Prod:
+  swiyu Prod:
     build:
       <<: *targets
     run:
@@ -95,10 +95,10 @@ schemes:
       config: Prod (debug)
     archive:
       config: Prod (release)
-      customArchiveName: publicBetaWallet-Prod
+      customArchiveName: swiyu-Prod
       revealArchiveInOrganizer: true
 
-  publicBetaWallet UITests:
+  swiyu UITests:
     build:
       <<: *targets
     run:
@@ -106,7 +106,7 @@ schemes:
     test:
       config: Dev (debug)
       targets:
-        - publicBetaWalletUITests
+        - swiyuUITests
       commandLineArguments: 
         <<: *launch_arguments
         -disable-secure-enclave: true
@@ -117,5 +117,5 @@ schemes:
       config: Dev (debug)
     archive:
       config: Dev (release)
-      customArchiveName: publicBetaWallet-Runner
+      customArchiveName: swiyu-Runner
       revealArchiveInOrganizer: true

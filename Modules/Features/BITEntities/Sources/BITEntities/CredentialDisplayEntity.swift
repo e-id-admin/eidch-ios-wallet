@@ -13,7 +13,6 @@ public class CredentialDisplayEntity: Object {
   @Persisted public var logoUrl: String?
   @Persisted public var summary: String?
   @Persisted public var backgroundColor: String?
-  @Persisted public var textColor: String?
   @Persisted(originProperty: "displays")
   public var credential: LinkingObjects<CredentialEntity>
 

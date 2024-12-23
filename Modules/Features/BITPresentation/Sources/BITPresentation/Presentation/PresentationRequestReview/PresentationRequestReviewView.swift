@@ -155,7 +155,9 @@ public struct PresentationRequestReviewView: View {
 
   @ViewBuilder
   private func trustHeader() -> some View {
-    if let verifierDisplay = viewModel.verifierDisplay, let name = verifierDisplay.name {
+    if let verifierDisplay = viewModel.verifierDisplay {
+      let name = verifierDisplay.name ?? L10n.presentationVerifierNameUnknown
+
       if let imageData = verifierDisplay.logo {
         TrustHeaderView(name: name, trustStatus: verifierDisplay.trustStatus, subtitle: L10n.tkGlobalCheckcredential, imageData: imageData)
       } else if let imageUri = verifierDisplay.logoUri {

@@ -34,6 +34,8 @@ public struct TrustHeaderView: View {
             image(imageData)
           } else if let imageUrl {
             webImage(imageUrl)
+          } else {
+            Assets.unknownIcon.swiftUIImage
           }
         }
 
@@ -50,6 +52,7 @@ public struct TrustHeaderView: View {
               .font(.custom.body)
               .foregroundStyle(trustStatus.color)
               .accessibilityLabel(trustStatus.description)
+              .padding(.top, 2)
           }
         }
 

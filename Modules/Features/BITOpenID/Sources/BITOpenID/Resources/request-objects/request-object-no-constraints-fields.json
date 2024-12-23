@@ -30,7 +30,10 @@
       ]
    },
    "client_metadata":{
-      "client_name":"Dev Test",
-      "logo_uri":"www.example.ico"
+     "client_name": "Verifier",
+     "client_name#de": "DE Verifier",
+     "client_name#fr-CH": "FR Verifier",
+     "logo_uri": "www.examle.com/logo.png",
+     "logo_uri#fr": "www.examle.com/french-logo.png"
    }
 }

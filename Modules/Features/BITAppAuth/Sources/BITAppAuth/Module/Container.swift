@@ -48,8 +48,16 @@ extension Container {
     self { ConfirmPinCodeViewModel(router: $0) }
   }
 
-  var biometricChangeFlowViewModel: ParameterFactory<(Binding<Bool>, Bool), BiometricChangeFlowViewModel> {
-    self { BiometricChangeFlowViewModel(isPresented: $0, isBiometricEnabled: $1) }
+  var biometricChangeModule: Factory<BiometricChangeModule> {
+    self { BiometricChangeModule() }
+  }
+
+  var biometricChangeViewModel: ParameterFactory<BiometricChangeRouterRoutes, BiometricChangeViewModel> {
+    self { BiometricChangeViewModel(router: $0) }
+  }
+
+  var biometricChangeRouter: Factory<BiometricChangeRouter> {
+    self { BiometricChangeRouter() }
   }
 
   var noDevicePinCodeViewModel: ParameterFactory<NoDevicePinCodeRouterRoutes, NoDevicePinCodeViewModel> {

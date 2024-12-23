@@ -49,8 +49,7 @@ struct ValidateRequestObjectUseCase: ValidateRequestObjectUseCaseProtocol {
     guard
       jwtRequestObject.jwt.algorithm == JWTAlgorithm.ES256.rawValue,
       let kid = jwtRequestObject.jwt.kid,
-      let updatedKid = kid.components(separatedBy: "#").first,
-      (try? await jwtSignatureValidator.validate(jwtRequestObject.jwt, from: updatedKid)) ?? false
+      (try? await jwtSignatureValidator.validate(jwtRequestObject.jwt, did: jwtRequestObject.clientId, kid: kid)) ?? false
     else {
       return false
     }

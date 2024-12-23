@@ -28,7 +28,7 @@ class PresentationRequestReviewViewModelTests: XCTestCase {
 
     XCTAssertFalse(viewModel.isLoading)
     XCTAssertEqual(viewModel.verifierDisplay?.trustStatus, .unverified)
-    XCTAssertEqual(viewModel.verifierDisplay?.name, "Ref Test")
+    XCTAssertEqual(viewModel.verifierDisplay?.name, "EN Verifier")
   }
 
   @MainActor

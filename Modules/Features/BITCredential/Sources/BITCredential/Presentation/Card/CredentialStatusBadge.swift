@@ -17,16 +17,19 @@ public struct CredentialStatusBadge: View {
 
   public var body: some View {
     VStack {
-      Badge { Label(title: { Text(status.text) }, icon: {
-        if !sizeCategory.isAccessibilityCategory {
-          status.image
-            .resizable()
-            .scaledToFit()
-            .frame(width: Defaults.imageWidth, height: Defaults.imageHeight)
-        }
-      }) }
-      .accessibilityLabel(status.textAlt)
-      .badgeStyle(AnyBadgeStyle(style: status.style))
+      Badge {
+        Label(title: {
+          Text(status.text)
+        }, icon: {
+          if !sizeCategory.isAccessibilityCategory {
+            status.image
+              .resizable()
+              .scaledToFit()
+              .frame(width: Defaults.imageWidth, height: Defaults.imageHeight)
+          }
+        }) }
+        .accessibilityLabel(status.textAlt)
+        .badgeStyle(AnyBadgeStyle(style: status.style))
     }
   }
 

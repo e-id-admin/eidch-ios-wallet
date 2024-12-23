@@ -73,7 +73,7 @@ public class LoginViewModel: ObservableObject {
   let attemptsLimit: Int
 
   var inputFieldMessage: String {
-    "\(pinCodeState == .error ? L10n.tkLoginPasswordfailedNotification : "") \(L10n.tkChangepasswordError1IosNote2(attemptsLeft))"
+    "\(pinCodeState == .error ? L10n.tkLoginPasswordfailedNotification : "") \(L10n.tkLoginPasswordfailedIosSubtitle(attemptsLeft))"
   }
 
   var timeLeft: String? {

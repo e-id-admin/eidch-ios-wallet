@@ -34,6 +34,7 @@ struct ToggleMenuCell: View {
               .tint(ThemingAssets.accentColor.swiftUIColor)
               .labelsHidden()
               .disabled(isLoading)
+              .allowsHitTesting(false)
               .onTapGesture {
                 onTap?()
               }

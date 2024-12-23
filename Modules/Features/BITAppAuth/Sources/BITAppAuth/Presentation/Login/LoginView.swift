@@ -219,6 +219,7 @@ extension LoginView {
       }
 
       attemptsMessageView()
+        .padding(.horizontal, .x3)
     }
   }
 
@@ -240,6 +241,7 @@ extension LoginView {
     VStack(alignment: .leading) {
       secureField()
       attemptsMessageView()
+        .padding(.horizontal, .x3)
     }
     .accessibilityElement(children: .combine)
 

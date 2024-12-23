@@ -66,12 +66,73 @@ public typealias Verifier = ClientMetadata
 // MARK: - ClientMetadata
 
 public struct ClientMetadata: Decodable, Equatable {
-  public let clientName: String?
-  public let logoUri: URL?
 
-  enum CodingKeys: String, CodingKey {
-    case clientName = "client_name"
-    case logoUri = "logo_uri"
+  // MARK: Lifecycle
+
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
+    clientName = try LocalizedDisplay(from: container, withBaseKey: "client_name")
+    logoUri = try LocalizedDisplay(from: container, withBaseKey: "logo_uri")
+  }
+
+  // MARK: Public
+
+  public let clientName: LocalizedDisplay?
+  public let logoUri: LocalizedDisplay?
+
+  // MARK: Internal
+
+  struct DynamicCodingKeys: CodingKey {
+    var stringValue: String
+    var intValue: Int? { nil }
+
+    init?(stringValue: String) {
+      self.stringValue = stringValue
+    }
+
+    init?(intValue: Int) {
+      nil
+    }
+  }
+}
+
+// MARK: ClientMetadata.LocalizedDisplay
+
+extension ClientMetadata {
+
+  public struct LocalizedDisplay: Decodable, Equatable {
+
+    // MARK: Lifecycle
+
+    init?(from container: KeyedDecodingContainer<DynamicCodingKeys>, withBaseKey baseKey: String) throws {
+      for key in container.allKeys where key.stringValue.hasPrefix(baseKey) {
+        let language = key.stringValue.components(separatedBy: Self.separator).dropFirst().joined(separator: Self.separator)
+        if let value = try? container.decode(String.self, forKey: key) {
+          values[String(language)] = value
+        }
+      }
+
+      if values.isEmpty {
+        return nil
+      }
+    }
+
+    // MARK: Public
+
+    public func value(for locale: String) -> String? {
+      values[locale]
+    }
+
+    public func fallback() -> String? {
+      values[""]
+    }
+
+    // MARK: Private
+
+    private static let separator: String = "#"
+
+    private var values: [String: String] = [:]
+
   }
 }
 

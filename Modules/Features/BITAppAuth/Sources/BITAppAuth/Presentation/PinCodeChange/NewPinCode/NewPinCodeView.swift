@@ -16,7 +16,12 @@ struct NewPinCodeView: View {
   // MARK: Internal
 
   var body: some View {
-    ChangePinCodeFormView(pinCode: $viewModel.pinCode, fieldTitle: L10n.tkGlobalNewpassword, inputFieldState: viewModel.inputFieldState, inputFieldMessage: viewModel.inputFieldMessage, onPressNext: viewModel.submit)
+    PinCodeFormView(
+      pinCode: $viewModel.pinCode,
+      fieldTitle: L10n.tkGlobalNewpassword,
+      inputFieldState: viewModel.inputFieldState,
+      inputFieldMessage: viewModel.inputFieldMessage,
+      onPressNext: viewModel.submit)
       .navigationTitle(L10n.tkGlobalNewpassword)
       .popup(isPresented: $viewModel.isToastPresented) {
         Text(L10n.tkChangepasswordError4Notification)

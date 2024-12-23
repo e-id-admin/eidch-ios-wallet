@@ -189,7 +189,7 @@ extension CredentialOfferView {
   @ViewBuilder
   private func issuerHeader() -> some View {
     if let issuer = viewModel.issuerDisplay {
-      TrustHeaderView(name: issuer.name, trustStatus: viewModel.issuerTrustStatus, subtitle: L10n.credentialOfferHeaderSecondary, imageData: issuer.image)
+      TrustHeaderView(name: issuer.name ?? L10n.tkErrorNotregisteredTitle, trustStatus: viewModel.issuerTrustStatus, subtitle: L10n.credentialOfferHeaderSecondary, imageData: issuer.image)
         .padding(.horizontal, .x6)
         .padding(.top, .x3)
         .accessibilitySortPriority(500)

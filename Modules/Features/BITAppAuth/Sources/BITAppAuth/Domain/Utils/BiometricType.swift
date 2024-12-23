@@ -23,7 +23,7 @@ public enum BiometricType {
     switch self {
     case .faceID: L10n.biometricSetupFaceidText
     case .touchID: L10n.biometricSetupTouchidText
-    case .none: ""
+    case .none: "Biometrics"
     }
   }
 
@@ -39,7 +39,7 @@ public enum BiometricType {
     switch self {
     case .faceID: "faceid"
     case .touchID: "touchid"
-    case .none: ""
+    case .none: "faceid"
     }
   }
 }

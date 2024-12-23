@@ -85,18 +85,15 @@ public class ConfirmPinCodeViewModel: ObservableObject, Vibrating {
   }
 
   private func handleError(_ error: Error) {
-    var message = error.localizedDescription
-
     if attemptLeft <= 0 {
       router.context.newPinCodeDelegate?.didFail()
       router.pop()
       return
     }
 
-    message += ". " + L10n.tkChangepasswordError1IosNote2(attemptLeft)
     withAnimation {
       inputFieldState = .error
-      inputFieldMessage = message
+      inputFieldMessage = L10n.tkChangepasswordError1IosNote2(attemptLeft)
     }
   }
 

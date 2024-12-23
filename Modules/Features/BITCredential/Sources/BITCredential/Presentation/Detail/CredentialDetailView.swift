@@ -156,10 +156,10 @@ extension CredentialDetailView {
 
         VStack(alignment: .leading) {
           HStack(spacing: .x2) {
-            Text(issuer.name)
+            Text(issuer.name ?? L10n.tkErrorNotregisteredTitle)
               .font(.custom.body)
               .foregroundColor(ThemingAssets.Label.primary.swiftUIColor)
-              .accessibilityLabel(issuer.name)
+              .accessibilityLabel(issuer.name ?? L10n.tkErrorNotregisteredTitle)
               .multilineTextAlignment(.leading)
           }
           .padding(.trailing, .x6)

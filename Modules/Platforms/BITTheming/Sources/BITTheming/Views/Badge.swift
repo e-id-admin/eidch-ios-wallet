@@ -91,6 +91,22 @@ extension View {
   }
 }
 
+// MARK: - BezeledGrayBadgeStyle
+
+public struct BezeledGrayBadgeStyle: BadgeStyle {
+  public func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .padding(.horizontal, .x3)
+      .padding(.vertical, .x2)
+      .background(ThemingAssets.Brand.Bright.navyBlue.swiftUIColor)
+      .foregroundStyle(ThemingAssets.Brand.Bright.navyBlueLabel.swiftUIColor)
+  }
+}
+
+extension BadgeStyle where Self == BezeledGrayBadgeStyle {
+  public static var bezeledGray: BezeledGrayBadgeStyle { BezeledGrayBadgeStyle() }
+}
+
 // MARK: - DefaultBadgeStyle
 
 public struct DefaultBadgeStyle: BadgeStyle {
@@ -98,7 +114,7 @@ public struct DefaultBadgeStyle: BadgeStyle {
     configuration.label
       .padding(.horizontal, .x3)
       .padding(.vertical, .x2)
-      .background(Color.white.opacity(0.16))
+      .background(Color.white.opacity(0.8))
   }
 }
 
@@ -176,7 +192,6 @@ public struct OutlineBadgeStyle: BadgeStyle {
         RoundedRectangle(cornerRadius: 50)
           .stroke(.white.opacity(0.5), lineWidth: 1)
       }
-      .colorScheme(.light)
   }
 }
 

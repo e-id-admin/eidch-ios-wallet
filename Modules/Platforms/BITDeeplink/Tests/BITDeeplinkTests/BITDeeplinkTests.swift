@@ -41,7 +41,7 @@ final class DeeplinkTests: XCTestCase {
     let manager = DeeplinkManager(allowedRoutes: RegisteredDeeplink.allCases)
     XCTAssertEqual(manager.routes.count, RegisteredDeeplink.allCases.count)
 
-    let deeplink: URL = .init(string: "\(deeplinkScheme)://detail-page")!
+    let deeplink = URL(string: "\(deeplinkScheme)://detail-page")!
 
     let routes = try manager.dispatch(deeplink)
     XCTAssertEqual(routes.count, 2)
@@ -51,7 +51,7 @@ final class DeeplinkTests: XCTestCase {
     let manager = DeeplinkManager(allowedRoutes: RegisteredDeeplink.allCases)
     XCTAssertEqual(manager.routes.count, RegisteredDeeplink.allCases.count)
 
-    let deeplink: URL = .init(string: "\(deeplinkScheme)://detail-page")!
+    let deeplink = URL(string: "\(deeplinkScheme)://detail-page")!
 
     let route = try manager.dispatchFirst(deeplink)
     XCTAssertEqual(route, .detailPage)
@@ -61,7 +61,7 @@ final class DeeplinkTests: XCTestCase {
     let manager = DeeplinkManager(allowedRoutes: RegisteredDeeplink.allCases)
     XCTAssertEqual(manager.routes.count, RegisteredDeeplink.allCases.count)
 
-    let deeplink: URL = .init(string: "\(deeplinkScheme)://menu")!
+    let deeplink = URL(string: "\(deeplinkScheme)://menu")!
 
     let route = try manager.dispatchFirst(deeplink)
     XCTAssertEqual(route, .menu)
@@ -71,7 +71,7 @@ final class DeeplinkTests: XCTestCase {
     let manager = DeeplinkManager(allowedRoutes: [RegisteredDeeplink.detailPage])
     XCTAssertEqual(manager.routes.count, 1)
 
-    let deeplink: URL = .init(string: "\(deeplinkScheme)://menu")!
+    let deeplink = URL(string: "\(deeplinkScheme)://menu")!
 
     do {
       let _ = try manager.dispatchFirst(deeplink)
@@ -85,7 +85,7 @@ final class DeeplinkTests: XCTestCase {
     let manager = DeeplinkManager(allowedRoutes: [RegisteredDeeplink.detailPage])
     XCTAssertEqual(manager.routes.count, 1)
 
-    let deeplink: URL = .init(string: "\(deeplinkScheme)://detail-page")!
+    let deeplink = URL(string: "\(deeplinkScheme)://detail-page")!
 
     let route = try manager.dispatchFirst(deeplink)
     XCTAssertEqual(route, .detailPage)
@@ -95,7 +95,7 @@ final class DeeplinkTests: XCTestCase {
     let manager = DeeplinkManager(allowedRoutes: RegisteredDeeplink.allCases)
     XCTAssertEqual(manager.routes.count, RegisteredDeeplink.allCases.count)
 
-    let deeplink: URL = .init(string: "test-not-found://route")!
+    let deeplink = URL(string: "test-not-found://route")!
 
     do {
       let _ = try manager.dispatchFirst(deeplink)

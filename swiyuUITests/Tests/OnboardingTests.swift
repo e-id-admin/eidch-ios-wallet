@@ -7,12 +7,14 @@ import XCTest
 
 final class OnboardingTests: XCTestCase {
 
-  var app: XCUIApplication = .init()
+  var app = XCUIApplication()
 
   override func setUp() {
     super.setUp()
     app = XCUIApplication()
     app.launch()
+    XCUIDevice.shared.orientation = .portrait
+    XCTAssertTrue(XCUIDevice.shared.orientation.isPortrait)
   }
 
   override func tearDown() {
@@ -29,79 +31,79 @@ final class OnboardingTests: XCTestCase {
 
   func testAppOpensOnStartScreen() {
     let welcomeIntroductionScreen = WelcomeIntroductionScreen(app: app)
-    welcomeIntroductionScreen.assert()
+    welcomeIntroductionScreen.assertDisplayed()
   }
 
   func testBasicNavigation() {
     let welcomeIntroductionScreen = WelcomeIntroductionScreen(app: app)
-    welcomeIntroductionScreen.assert()
-    welcomeIntroductionScreen.continueButton.tap()
-
-    let credentialIntroductionScreen = CredentialIntroductionScreen(app: app)
-    credentialIntroductionScreen.assert()
-    credentialIntroductionScreen.continueButton.tap()
+    welcomeIntroductionScreen.assertDisplayed()
+    welcomeIntroductionScreen.primaryButton.tap()
 
     let securityIntroductionScreen = SecurityIntroductionScreen(app: app)
-    securityIntroductionScreen.assert()
-    securityIntroductionScreen.continueButton.tap()
+    securityIntroductionScreen.assertDisplayed()
+    securityIntroductionScreen.primaryButton.tap()
+
+    let credentialIntroductionScreen = CredentialIntroductionScreen(app: app)
+    credentialIntroductionScreen.assertDisplayed()
+    credentialIntroductionScreen.primaryButton.tap()
 
     let privacyPermissionScreen = PrivacyPermissionScreen(app: app)
-    privacyPermissionScreen.assert()
+    privacyPermissionScreen.assertDisplayed()
   }
 
   func testBacknavigation() {
     let welcomeIntroductionScreen = WelcomeIntroductionScreen(app: app)
-    welcomeIntroductionScreen.assert()
-    welcomeIntroductionScreen.continueButton.tap()
-
-    let credentialIntroductionScreen = CredentialIntroductionScreen(app: app)
-    credentialIntroductionScreen.assert()
-    credentialIntroductionScreen.continueButton.tap()
+    welcomeIntroductionScreen.assertDisplayed()
+    welcomeIntroductionScreen.primaryButton.tap()
 
     let securityIntroductionScreen = SecurityIntroductionScreen(app: app)
-    securityIntroductionScreen.assert()
-    securityIntroductionScreen.continueButton.tap()
+    securityIntroductionScreen.assertDisplayed()
+    securityIntroductionScreen.primaryButton.tap()
+
+    let credentialIntroductionScreen = CredentialIntroductionScreen(app: app)
+    credentialIntroductionScreen.assertDisplayed()
+    credentialIntroductionScreen.primaryButton.tap()
 
     let privacyPermissionScreen = PrivacyPermissionScreen(app: app)
-    privacyPermissionScreen.assert()
+    privacyPermissionScreen.assertDisplayed()
     privacyPermissionScreen.acceptButton.tap()
 
     let pinCodeInformationScreen = PinCodeInformationScreen(app: app)
-    pinCodeInformationScreen.assert()
+    pinCodeInformationScreen.assertDisplayed()
     pinCodeInformationScreen.backButton.tap()
 
-    privacyPermissionScreen.assert()
+    privacyPermissionScreen.assertDisplayed()
     privacyPermissionScreen.backButton.tap()
 
-    securityIntroductionScreen.assert()
-    securityIntroductionScreen.backButton.tap()
-
-    credentialIntroductionScreen.assert()
+    credentialIntroductionScreen.assertDisplayed()
     credentialIntroductionScreen.backButton.tap()
 
-    welcomeIntroductionScreen.assert()
+    securityIntroductionScreen.assertDisplayed()
+    securityIntroductionScreen.backButton.tap()
+
+    welcomeIntroductionScreen.assertDisplayed()
   }
 
   func testPincodeEntry() {
     let welcomeIntroductionScreen = WelcomeIntroductionScreen(app: app)
-    welcomeIntroductionScreen.assert()
-    welcomeIntroductionScreen.continueButton.tap()
-
-    let credentialIntroductionScreen = CredentialIntroductionScreen(app: app)
-    credentialIntroductionScreen.assert()
-    credentialIntroductionScreen.continueButton.tap()
+    welcomeIntroductionScreen.assertDisplayed()
+    welcomeIntroductionScreen.primaryButton.tap()
 
     let securityIntroductionScreen = SecurityIntroductionScreen(app: app)
-    securityIntroductionScreen.assert()
-    securityIntroductionScreen.continueButton.tap()
+    securityIntroductionScreen.assertDisplayed()
+    securityIntroductionScreen.primaryButton.tap()
+
+    let credentialIntroductionScreen = CredentialIntroductionScreen(app: app)
+    credentialIntroductionScreen.assertDisplayed()
+    credentialIntroductionScreen.primaryButton.tap()
 
     let privacyPermissionScreen = PrivacyPermissionScreen(app: app)
-    privacyPermissionScreen.assert()
+    privacyPermissionScreen.assertDisplayed()
     privacyPermissionScreen.acceptButton.tap()
 
     let pinCodeInformationScreen = PinCodeInformationScreen(app: app)
-    pinCodeInformationScreen.assert()
-    pinCodeInformationScreen.continueButton.tap()
+    pinCodeInformationScreen.assertDisplayed()
+    pinCodeInformationScreen.primaryButton.tap()
 
     let enterPinScreen = EnterPinScreen(app: app)
     XCTAssertTrue(enterPinScreen.pinField.waitForExistence(timeout: 1))
@@ -110,6 +112,43 @@ final class OnboardingTests: XCTestCase {
     XCTAssertTrue(enterPinScreen.pinField.waitForExistence(timeout: 1))
     enterPinScreen.enterPin(pin: "123456")
 
+  }
+
+  func testDynatraceDeclineNavigation() {
+    let privacyPermissionScreen = PrivacyPermissionScreen(app: app)
+    privacyPermissionScreen.navigateFromAppStartToScreen()
+    privacyPermissionScreen.declineButton.tap()
+
+    let pinCodeInformationScreen = PinCodeInformationScreen(app: app)
+    pinCodeInformationScreen.assertDisplayed()
+
+  }
+
+  func testDynatraceAcceptThenDeclineNavigation() {
+    let welcomeIntroductionScreen = WelcomeIntroductionScreen(app: app)
+    welcomeIntroductionScreen.assertDisplayed()
+    welcomeIntroductionScreen.primaryButton.tap()
+
+    let securityIntroductionScreen = SecurityIntroductionScreen(app: app)
+    securityIntroductionScreen.assertDisplayed()
+    securityIntroductionScreen.primaryButton.tap()
+
+    let credentialIntroductionScreen = CredentialIntroductionScreen(app: app)
+    credentialIntroductionScreen.assertDisplayed()
+    credentialIntroductionScreen.primaryButton.tap()
+
+    let privacyPermissionScreen = PrivacyPermissionScreen(app: app)
+    privacyPermissionScreen.assertDisplayed()
+    privacyPermissionScreen.declineButton.tap()
+
+    let pinCodeInformationScreen = PinCodeInformationScreen(app: app)
+    pinCodeInformationScreen.assertDisplayed()
+    pinCodeInformationScreen.backButton.tap()
+
+    privacyPermissionScreen.assertDisplayed()
+    privacyPermissionScreen.acceptButton.tap()
+
+    pinCodeInformationScreen.assertDisplayed()
   }
 
 }

@@ -15,7 +15,7 @@ enum SdJWTError: Error {
 
 /// https://www.ietf.org/archive/id/draft-ietf-oauth-selective-disclosure-jwt-12.html
 
-public class SdJWT: JWT {
+open class SdJWT: JWT {
 
   // MARK: Lifecycle
 
@@ -29,7 +29,7 @@ public class SdJWT: JWT {
   public convenience init(from rawSdJWT: String, rawDisclosures: String) throws {
     guard let rawJWT = rawSdJWT.separatedByDisclosures.first else { throw SdJWTError.invalidJWTPayload }
     let separator = String(SdJWT.disclosuresSeparator)
-    let combinedJwtAndDisclosures = [String(rawJWT), rawDisclosures].joined(separator: separator)
+    let combinedJwtAndDisclosures = rawDisclosures.isEmpty ? String(rawJWT) : [String(rawJWT), rawDisclosures].joined(separator: separator)
     let rawString = combinedJwtAndDisclosures.appending(separator)
     try self.init(from: rawString)
   }

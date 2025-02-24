@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITCredential
 @testable import BITCredentialMocks
 @testable import BITCredentialShared
@@ -78,10 +77,20 @@ final class CredentialDetailViewModelTests: XCTestCase {
     XCTAssertFalse(mockRouter.closeCalled)
   }
 
+  @MainActor
+  func testWillResignActive() async {
+    viewModel.isDeleteCredentialAlertPresented = true
+
+    NotificationCenter.default.post(name: UIApplication.willResignActiveNotification, object: nil, userInfo: nil)
+
+    try? await Task.sleep(nanoseconds: 200_000_000)
+    XCTAssertFalse(viewModel.isDeleteCredentialAlertPresented)
+  }
+
   // MARK: Private
 
   // swiftlint:disable all
-  private let credential: Credential = .Mock.sample
+  private let credential = Credential.Mock.sample
   private var mockRouter = CredentialDetailRouterMock()
   private var viewModel: CredentialDetailViewModel!
   private var deleteCredentialUseCase = DeleteCredentialUseCaseProtocolSpy()

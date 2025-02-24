@@ -3,7 +3,6 @@ import Factory
 import Foundation
 import OSLog
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITLocalAuthentication
 

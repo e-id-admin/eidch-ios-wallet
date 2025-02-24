@@ -23,7 +23,12 @@ extension CredentialMetadata {
 
       vct = try container.decode(String.self, forKey: .vct)
       scope = try container.decodeIfPresent(String.self, forKey: .scope)
-      cryptographicBindingMethodsSupported = try container.decodeIfPresent([String].self, forKey: .cryptographicBindingMethodsSupported)
+
+      let cryptographicBindingMethods = try container.decodeIfPresent([String].self, forKey: .cryptographicBindingMethodsSupported)
+      cryptographicBindingMethodsSupported = cryptographicBindingMethods?.compactMap { CryptographicBindingMethod(rawValue: $0) }
+      if cryptographicBindingMethods != nil, cryptographicBindingMethodsSupported?.isEmpty == true {
+        throw AnyCredentialConfigurationSupportedError.invalidCryptographicBindingMethod
+      }
       credentialSigningAlgValuesSupported = try container.decodeIfPresent([String].self, forKey: .credentialSigningAlgValuesSupported)
 
       var proofTypes = [ProofType]()
@@ -44,7 +49,7 @@ extension CredentialMetadata {
 
       for claim in metadataClaims.claims {
         let index = orderClaims?.firstIndex(where: { $0 == claim.key }) ?? 0
-        claims.append(.init(from: claim, order: index))
+        claims.append(CredentialMetadata.Claim(from: claim, order: index))
       }
     }
 
@@ -52,7 +57,7 @@ extension CredentialMetadata {
 
     public let format: String
     public let scope: String?
-    public let cryptographicBindingMethodsSupported: [String]?
+    public let cryptographicBindingMethodsSupported: [CryptographicBindingMethod]?
     public let credentialSigningAlgValuesSupported: [String]?
 
     public let vct: String

@@ -1,7 +1,8 @@
 import BITNetworking
 import Factory
 import XCTest
-
+@testable import BITAnalytics
+@testable import BITAnalyticsMocks
 @testable import BITAnyCredentialFormat
 @testable import BITCredentialShared
 @testable import BITCrypto
@@ -34,6 +35,7 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
     XCTAssertEqual(body.vpToken, Self.mockVpToken)
     XCTAssertEqual(body.presentationSubmission.definitionId, mockRequestObject.presentationDefinition.id)
     XCTAssertEqual(body.presentationSubmission.descriptorMap, mockDescriptorMaps)
+    XCTAssertEqual(analyticsProvider.logCounter, 0)
   }
 
   func testCreatePresentationRequestBody_WithoutKeyBinding_ReturnsBody() throws {
@@ -44,6 +46,7 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
     XCTAssertEqual(body.vpToken, Self.mockVpToken)
     XCTAssertEqual(body.presentationSubmission.definitionId, mockRequestObject.presentationDefinition.id)
     XCTAssertEqual(body.presentationSubmission.descriptorMap, mockDescriptorMaps)
+    XCTAssertEqual(analyticsProvider.logCounter, 0)
   }
 
   func testCreatePresentationRequestBody_CreateAnyCredentialUseCaseThrows_ThrowsError() throws {
@@ -52,6 +55,7 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
     XCTAssertThrowsError(try generator.generate(for: CompatibleCredential.Mock.BITWithoutKeyBinding, requestObject: mockRequestObject, inputDescriptor: mockInputDescriptor)) { error in
       XCTAssertEqual(error as? TestingError, .error)
       XCTAssertTrue(spyCreateAnyCredentialUseCase.executeFromFormatCalled)
+      XCTAssertEqual(analyticsProvider.logCounter, 0)
     }
   }
 
@@ -61,6 +65,7 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
     XCTAssertThrowsError(try generator.generate(for: CompatibleCredential.Mock.BIT, requestObject: mockRequestObject, inputDescriptor: mockInputDescriptor)) { error in
       XCTAssertEqual(error as? TestingError, .error)
       XCTAssertTrue(spyKeyManager.getPrivateKeyWithIdentifierAlgorithmQueryCalled)
+      XCTAssertEqual(analyticsProvider.logCounter, 1)
     }
   }
 
@@ -70,6 +75,7 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
     XCTAssertThrowsError(try generator.generate(for: CompatibleCredential.Mock.BIT, requestObject: mockRequestObject, inputDescriptor: mockInputDescriptor)) { error in
       XCTAssertEqual(error as? TestingError, .error)
       XCTAssertTrue(spyVpTokenGenerator.generateRequestObjectCredentialKeyPairFieldsCalled)
+      XCTAssertEqual(analyticsProvider.logCounter, 0)
     }
   }
 
@@ -79,6 +85,7 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
     XCTAssertThrowsError(try generator.generate(for: CompatibleCredential.Mock.BIT, requestObject: mockRequestObject, inputDescriptor: mockInputDescriptor)) { error in
       XCTAssertEqual(error as? TestingError, .error)
       XCTAssertTrue(spyAnyDescriptorMapGenerator.generateUsingVcFormatCalled)
+      XCTAssertEqual(analyticsProvider.logCounter, 0)
     }
   }
 
@@ -100,6 +107,8 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
   private var spyAuthContext: LAContextProtocolSpy!
   private var spyCreateAnyCredentialUseCase: CreateAnyCredentialUseCaseProtocolSpy!
   private var spyAnyDescriptorMapGenerator: AnyDescriptorMapGeneratorProtocolSpy!
+  private var analytics: AnalyticsProtocol!
+  private var analyticsProvider: MockProvider!
 
   // swiftlint:enable all
 
@@ -109,12 +118,17 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
     spyVpTokenGenerator = AnyVpTokenGeneratorProtocolSpy()
     spyCreateAnyCredentialUseCase = CreateAnyCredentialUseCaseProtocolSpy()
     spyAnyDescriptorMapGenerator = AnyDescriptorMapGeneratorProtocolSpy()
+    analyticsProvider = MockProvider()
+    analytics = Analytics()
 
     Container.shared.keyManager.register { self.spyKeyManager }
     Container.shared.authContext.register { self.spyAuthContext }
     Container.shared.anyVpTokenGenerator.register { self.spyVpTokenGenerator }
     Container.shared.createAnyCredentialUseCase.register { self.spyCreateAnyCredentialUseCase }
     Container.shared.anyDescriptorMapGenerator.register { self.spyAnyDescriptorMapGenerator }
+    Container.shared.analytics.register { self.analytics }
+
+    analytics.register(analyticsProvider)
   }
 
   private func success() {

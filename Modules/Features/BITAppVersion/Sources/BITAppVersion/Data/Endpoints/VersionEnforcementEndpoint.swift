@@ -47,4 +47,13 @@ extension VersionEnforcementEndpoint: TargetType {
     }
   }
 
+  #if DEBUG
+  var sampleData: Data {
+    switch self {
+    case .configuration:
+      VersionEnforcement.Mock.sampleData
+    }
+  }
+  #endif
+
 }

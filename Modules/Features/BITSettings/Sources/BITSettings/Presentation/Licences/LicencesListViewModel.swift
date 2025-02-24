@@ -73,7 +73,7 @@ public class LicencesListViewModel: StateMachine<LicencesListViewModel.State, Li
 
   @Published var packages: [PackageDependency] = []
   @Published var selectedPackage: PackageDependency?
-  @Published var isPackageDetailPresented: Bool = false
+  @Published var isPackageDetailPresented = false
 
   // MARK: Private
 

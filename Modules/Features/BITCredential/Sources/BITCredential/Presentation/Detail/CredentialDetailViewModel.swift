@@ -2,6 +2,7 @@ import BITAnalytics
 import BITCredentialShared
 import Factory
 import Foundation
+import UIKit
 
 // MARK: - CredentialDetailViewModel
 
@@ -23,6 +24,7 @@ class CredentialDetailViewModel: ObservableObject {
     self.router = router
     self.deleteCredentialUseCase = deleteCredentialUseCase
     credentialBody = CredentialDetailBody(from: credential)
+    configureObservers()
   }
 
   // MARK: Internal
@@ -33,7 +35,7 @@ class CredentialDetailViewModel: ObservableObject {
   }
 
   @Published var credentialBody: CredentialDetailBody
-  @Published var isDeleteCredentialAlertPresented: Bool = false
+  @Published var isDeleteCredentialAlertPresented = false
 
   @Published var credential: Credential {
     didSet {
@@ -79,5 +81,13 @@ class CredentialDetailViewModel: ObservableObject {
     }
 
     self.credential = credential
+  }
+
+  private func configureObservers() {
+    NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { _ in
+      Task { @MainActor [weak self] in
+        self?.isDeleteCredentialAlertPresented = false
+      }
+    }
   }
 }

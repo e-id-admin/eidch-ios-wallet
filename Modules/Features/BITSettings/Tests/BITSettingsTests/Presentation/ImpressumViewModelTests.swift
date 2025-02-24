@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITAppVersion
 @testable import BITSettings
 @testable import BITTestingCore
@@ -55,5 +54,5 @@ final class ImpressumViewModelTests: XCTestCase {
   private var getBuildNumberUseCase: GetBuildNumberUseCaseProtocolSpy!
 
   private var viewModel: ImpressumViewModel!
-  //swiftlint:enable all
+  // swiftlint:enable all
 }

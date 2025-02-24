@@ -11,37 +11,37 @@ private struct ButtonPlaygrounds: View {
       Section("Basic") {
         section(style: .basic, text: "Tap on me ! Oh oui")
       }
-      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 
       Section("Bezeled") {
         section(style: .bezeled, text: "Accept")
       }
-      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 
       Section("bezeledLight") {
         section(style: .bezeledLight)
       }
-      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
       Section("filledPrimary") {
         section(style: .filledPrimary)
       }
-      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 
       Section("filledSecondary") {
         section(style: .filledSecondary)
       }
-      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 
       Section("filledDestructive") {
         section(style: .filledDestructive)
       }
-      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 
       Section("material") {
         section(style: .material)
           .background(.blue)
       }
-      .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
     }
   }
 

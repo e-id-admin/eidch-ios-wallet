@@ -1,6 +1,13 @@
 import BITCore
 import Foundation
 
+// MARK: - RequestObjectError
+
+enum RequestObjectError: Error {
+  case invalidPayload
+  case invalidInputDescriptorFormat
+}
+
 // MARK: - RequestObject
 
 /// A srtructure representing OpenID Authorization Request
@@ -129,7 +136,7 @@ extension ClientMetadata {
 
     // MARK: Private
 
-    private static let separator: String = "#"
+    private static let separator = "#"
 
     private var values: [String: String] = [:]
 
@@ -175,6 +182,7 @@ public struct InputDescriptor: Decodable, Equatable {
     if let vcSdJwt = try formatContainer.decodeIfPresent(VcSdJwtFormat.self, forKey: .vcSdJwt) {
       formats.append(.vcSdJwt(vcSdJwt))
     }
+    if formats.isEmpty { throw RequestObjectError.invalidPayload }
 
     self.formats = formats
   }
@@ -184,7 +192,7 @@ public struct InputDescriptor: Decodable, Equatable {
   public let id: String
   public let name: String?
   public let purpose: String?
-  public let formats: [Format]?
+  public let formats: [Format]
   public let constraints: Constraints
 
   public static func == (lhs: InputDescriptor, rhs: InputDescriptor) -> Bool {
@@ -208,7 +216,7 @@ public struct InputDescriptor: Decodable, Equatable {
 // MARK: - Constraints
 
 public struct Constraints: Codable, Equatable {
-  public let fields: [Field]?
+  public let fields: [Field]
   public let limitDisclosure: LimitDisclosure?
 
   enum CodingKeys: String, CodingKey {
@@ -218,11 +226,8 @@ public struct Constraints: Codable, Equatable {
 
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    fields = try container.decodeIfPresent([Field].self, forKey: .fields)
+    fields = try container.decode([Field].self, forKey: .fields)
     limitDisclosure = try container.decodeIfPresent(LimitDisclosure.self, forKey: .limitDisclosure)
-
-    guard let fields else { throw DecodingError.keyNotFound(CodingKeys.fields, .init(codingPath: [CodingKeys.fields], debugDescription: "Missing fields in constraints")) }
-    guard !fields.isEmpty else { throw DecodingError.dataCorruptedError(forKey: .fields, in: container, debugDescription: "Fields must be present & contain at least a valid element") }
   }
 }
 
@@ -250,24 +255,6 @@ public struct Field: Codable, Equatable {
   public let name: String?
   public var optional: Bool?
 
-  public func matching(valuesIn values: [Any]) -> [CodableValue] {
-    if values.isEmpty { return [] }
-
-    guard let pattern = filter?.pattern, let type = filter?.type else {
-      return values.compactMap { try? CodableValue(anyValue: $0) }
-    }
-
-    return values.compactMap {
-      let string = String(describing: $0)
-
-      guard let range = string.range(of: pattern, options: .regularExpression) else {
-        return nil
-      }
-
-      return CodableValue(value: String(string[range]), as: type)
-    }
-  }
-
   // MARK: Internal
 
   enum CodingKeys: String, CodingKey {
@@ -278,6 +265,15 @@ public struct Field: Codable, Equatable {
     case name
     case optional
   }
+
+  func isMatching(_ value: Any) -> Bool {
+    guard path.contains(Self.vctPath) else { return true } // we ignore filters for paths that are not vct
+    return filter?.isMatching(value) ?? true
+  }
+
+  // MARK: Private
+
+  private static let vctPath = "$.vct"
 
 }
 
@@ -291,7 +287,21 @@ public enum LimitDisclosure: String, Codable, Equatable {
 // MARK: - Filter
 
 public struct Filter: Codable, Equatable {
-  public let type, pattern: String
+  public let const: String?
+  public let type: String
+
+  func isMatching(_ value: Any) -> Bool {
+    guard isSupported() else { return true } // we ignore unsupported filters
+    guard let stringValue = value as? String else { return false }
+    return stringValue == const
+  }
+
+  private func isSupported() -> Bool {
+    guard type == Self.stringType, let const else { return false }
+    return !const.isEmpty
+  }
+
+  private static let stringType = "string"
 }
 
 // MARK: - Format
@@ -307,7 +317,7 @@ public enum Format: FormatType, Decodable {
     if let vcSdJwt = try container.decodeIfPresent(VcSdJwtFormat.self, forKey: .vcSdJwt) {
       self = .vcSdJwt(vcSdJwt)
     } else {
-      throw DecodingError.dataCorrupted(.init(codingPath: [CodingKeys.vcSdJwt], debugDescription: ""))
+      throw RequestObjectError.invalidInputDescriptorFormat
     }
   }
 

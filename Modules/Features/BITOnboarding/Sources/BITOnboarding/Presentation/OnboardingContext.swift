@@ -11,4 +11,5 @@ public class OnboardingContext {
 
   var pincode: String?
   weak var pinCodeDelegate: PinCodeDelegate?
+  var analyticsOptIn = false
 }

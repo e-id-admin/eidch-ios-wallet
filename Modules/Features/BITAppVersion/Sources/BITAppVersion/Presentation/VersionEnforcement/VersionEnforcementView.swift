@@ -49,12 +49,8 @@ struct VersionEnforcementView: View {
 
   @ViewBuilder
   private func content() -> some View {
-    if #available(iOS 16, *) {
-      ViewThatFits(in: .vertical) {
-        contentLayout()
-        scrollableContentLayout()
-      }
-    } else {
+    ViewThatFits(in: .vertical) {
+      contentLayout()
       scrollableContentLayout()
     }
   }

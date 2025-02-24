@@ -5,7 +5,6 @@ import Factory
 // MARK: - AnyVpTokenGeneratorError
 
 enum AnyVpTokenGeneratorError: Error {
-  case claimsMismatch
   case invalidFormat
 }
 

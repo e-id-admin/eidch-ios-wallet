@@ -42,11 +42,11 @@ extension OpenIDEndpoint: TargetType {
   var path: String {
     switch self {
     case .metadata:
-      "/.well-known/openid-credential-issuer"
+      ".well-known/openid-credential-issuer"
     case .openIdConfiguration:
-      "/.well-known/openid-configuration"
+      ".well-known/openid-configuration"
     case .trustStatements(_, let did):
-      "/api/v1/truststatements/\(did)"
+      "api/v1/truststatements/\(did)"
     case .accessToken,
          .credential,
          .publicKeyInfo,
@@ -109,4 +109,20 @@ extension OpenIDEndpoint: TargetType {
       NetworkHeader.statusList.raw
     }
   }
+
+  #if DEBUG
+  var sampleData: Data {
+    switch self {
+    case .metadata:
+      CredentialMetadata.Mock.sampleData
+    case .openIdConfiguration:
+      OpenIdConfiguration.Mock.sampleData
+    case .accessToken:
+      AccessToken.Mock.sampleData
+    case .credential:
+      CredentialResponse.Mock.sampleData
+    default: Data()
+    }
+  }
+  #endif
 }

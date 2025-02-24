@@ -7,7 +7,7 @@ let package = Package(
   name: "BITOpenID",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v15),
+    .iOS(.v16),
   ],
   products: [
     .library(
@@ -22,6 +22,7 @@ let package = Package(
     .package(path: "../../Platforms/BITVault"),
     .package(path: "../../Platforms/BITNetworking"),
     .package(path: "../../Platforms/BITAnyCredentialFormat"),
+    .package(path: "../../Platforms/BITAnalytics"),
     .package(path: "../BITAppAuth"),
     .package(url: "https://github.com/hmlongco/Factory", exact: "2.2.0"),
     .package(url: "https://github.com/Matejkob/swift-spyable", revision: "8f78f36989bde9f06cc5a5254a6748c23c16b045"),
@@ -36,6 +37,7 @@ let package = Package(
         .product(name: "BITVault", package: "BITVault"),
         .product(name: "BITSdJWT", package: "BITSdJWT"),
         .product(name: "BITCore", package: "BITCore"),
+        .product(name: "BITAnalytics", package: "BITAnalytics"),
         .product(name: "BITCrypto", package: "BITCrypto"),
         .product(name: "BITNetworking", package: "BITNetworking"),
         .product(name: "BITAnyCredentialFormat", package: "BITAnyCredentialFormat"),
@@ -55,6 +57,7 @@ let package = Package(
         .product(name: "BITSdJWTMocks", package: "BITSdJWT"),
         .product(name: "BITJWT", package: "BITJWT"),
         .product(name: "BITAnyCredentialFormatMocks", package: "BITAnyCredentialFormat"),
+        .product(name: "BITAnalyticsMocks", package: "BITAnalytics"),
       ],
       swiftSettings: [.define("DEBUG", .when(configuration: .debug))]),
   ])

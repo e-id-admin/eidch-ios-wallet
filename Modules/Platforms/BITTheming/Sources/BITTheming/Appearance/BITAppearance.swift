@@ -52,7 +52,7 @@ extension BITAppearance {
     let backImage = ThemingAssets.back.image
       .withRenderingMode(.alwaysOriginal)
       .withAlignmentRectInsets(
-        .init(top: 0, left: -.x3, bottom: .x1, right: 0)
+        UIEdgeInsets(top: 0, left: -.x3, bottom: .x1, right: 0)
       )
     backImage.accessibilityLabel = L10n.globalBack
     appearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
@@ -63,7 +63,7 @@ extension BITAppearance {
 
   // MARK: Private
 
-  //MARK: - UI components
+  // MARK: - UI components
 
   private static func registerFonts() {
     FontFamily.registerAllCustomFonts()

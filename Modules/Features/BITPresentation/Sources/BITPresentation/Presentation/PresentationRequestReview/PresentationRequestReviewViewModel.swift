@@ -2,125 +2,106 @@ import BITAnalytics
 import BITCore
 import Combine
 import Factory
+import Foundation
 
 // MARK: - PresentationRequestReviewViewModel
 
-/// `important`: The implementation supports and takes only the first input descriptor give by the context
+/// `important`: The implementation supports and takes only the first input descriptor given by the context
 ///
-/// The supports of multiple input descriptor has to be defined.
+/// The support of multiple input descriptors has to be defined.
 @MainActor
-public class PresentationRequestReviewViewModel: StateMachine<PresentationRequestReviewViewModel.State, PresentationRequestReviewViewModel.Event> {
+public class PresentationRequestReviewViewModel: ObservableObject {
 
   // MARK: Lifecycle
 
-  public init(
-    _ initialState: State = .results,
+  init(
     context: PresentationRequestContext,
     router: PresentationRouterRoutes = Container.shared.presentationRouter())
   {
     self.context = context
     self.router = router
 
-    if
-      let inputDescriptorId = context.requestObject.presentationDefinition.inputDescriptors.first?.id,
-      let credential = context.selectedCredentials[inputDescriptorId]
+    guard
+      let inputDescriptor = context.requestObject.presentationDefinition.inputDescriptors.first,
+      let credential = context.selectedCredentials[inputDescriptor.id] else
     {
-      self.credential = credential
-      super.init(initialState)
-    } else {
-      super.init(.invalidCredentialError)
+      fatalError("Credential for input descriptor not found")
     }
+    self.credential = credential
 
     guard let trustStatement = context.trustStatement else {
-      verifierDisplay = .init(verifier: context.requestObject.clientMetadata, trustStatus: .unverified)
+      verifierDisplay = VerifierDisplay(verifier: context.requestObject.clientMetadata, trustStatus: .unverified)
       return
     }
-
     verifierDisplay = getVerifierDisplayUseCase.execute(for: context.requestObject.clientMetadata, trustStatement: trustStatement)
-  }
-
-  // MARK: Public
-
-  public enum State: Equatable {
-    case results
-    case error
-    case invalidCredentialError
-  }
-
-  public enum Event: AnalyticsEventProtocol {
-    case close
-    case deny
-    case submit
-    case onSuccess
-    case setError(_ error: Error)
-
-    case retry
-    case didDenyPresentation
-  }
-
-  override public func reducer(_ state: inout State, _ event: Event) -> AnyPublisher<Event, Never>? {
-    switch event {
-    case .close,
-         .didDenyPresentation:
-      router.close()
-
-    case .deny:
-      return AnyPublisher.run(withDelay: 0.5) {
-        try await self.denyPresentationUseCase.execute(context: self.context, error: .clientRejected)
-      } onSuccess: {
-        .didDenyPresentation
-      } onError: { _ in
-        .didDenyPresentation
-      }
-
-    case .submit:
-      isLoading = true
-
-      return AnyPublisher.run(withDelay: 0.5) {
-        try await self.submitPresentationUseCase.execute(context: self.context)
-      } onSuccess: {
-        .onSuccess
-      } onError: { error in
-        .setError(error)
-      }
-
-    case .onSuccess:
-      router.close()
-
-    case .setError(let error):
-      isLoading = false
-      stateError = error
-      analytics.log(error)
-
-      guard let presentationError = error as? SubmitPresentationError, presentationError == .credentialInvalid else {
-        state = .error
-        return nil
-      }
-
-      state = .invalidCredentialError
-
-    case .retry:
-      state = .results
-      stateError = nil
-    }
-
-    return nil
   }
 
   // MARK: Internal
 
-  @Published var isLoading: Bool = false
+  enum ViewState: Equatable {
+    case result
+    case loading
+  }
+
+  @Published var state = ViewState.result
+  @Published var showLoadingMessage = false
 
   var verifierDisplay: VerifierDisplay?
-  var context: PresentationRequestContext
-  var credential: CompatibleCredential?
+  let credential: CompatibleCredential
+  var denyTask: Task<Void, Error>?
+
+  func submit() async {
+    state = .loading
+    startDelayedLoadingMessageTask()
+    do {
+      try await submitPresentationUseCase.execute(context: context)
+      router.presentationResultState(with: .success(claims: credential.requestedClaims), context: context)
+    } catch {
+      handleSubmitError(error)
+    }
+  }
+
+  func deny() async {
+    denyTask = Task.detached(priority: .background) { [weak self] in
+      guard let self else { return }
+      try? await denyPresentationUseCase.execute(context: context, error: .clientRejected)
+    }
+    router.presentationResultState(with: .deny, context: context)
+  }
 
   // MARK: Private
+
+  private var context: PresentationRequestContext
 
   private let router: PresentationRouterRoutes
   @Injected(\.analytics) private var analytics: AnalyticsProtocol
   @Injected(\.submitPresentationUseCase) private var submitPresentationUseCase: SubmitPresentationUseCaseProtocol
   @Injected(\.denyPresentationUseCase) private var denyPresentationUseCase: DenyPresentationUseCaseProtocol
   @Injected(\.getVerifierDisplayUseCase) private var getVerifierDisplayUseCase: GetVerifierDisplayUseCaseProtocol
+  @Injected(\.loadingMessageDelay) private var loadingMessageDelay: Double
+
+  private func startDelayedLoadingMessageTask() {
+    Timer.scheduledTimer(withTimeInterval: loadingMessageDelay, repeats: false, block: { _ in
+      Task { @MainActor [weak self] in
+        guard let self else { return }
+        if case .loading = state {
+          showLoadingMessage = true
+        } else {
+          showLoadingMessage = false
+        }
+      }
+    })
+  }
+
+  private func handleSubmitError(_ error: Error) {
+    showLoadingMessage = false
+    analytics.log(error)
+    if let presentationError = error as? PresentationError, presentationError == .presentationCancelled {
+      router.presentationResultState(with: .cancelled, context: context)
+    } else {
+      router.presentationResultState(with: .error, context: context)
+    }
+    state = .result
+  }
 
 }

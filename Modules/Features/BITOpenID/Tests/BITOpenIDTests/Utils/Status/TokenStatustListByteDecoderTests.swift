@@ -1,7 +1,6 @@
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITOpenID
 
 // MARK: - TokenStatusListByteDecoderTests

@@ -2,7 +2,6 @@ import BITCore
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITAppAuth
 
 // swiftlint:disable all

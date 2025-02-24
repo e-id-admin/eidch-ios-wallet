@@ -29,7 +29,7 @@ final class LoginBiometricUseCaseTests: XCTestCase {
   }
 
   func testHappyPath() async throws {
-    let mockUniquePassphraseData: Data = .init()
+    let mockUniquePassphraseData = Data()
     spyRequestBiometricAuthUseCase.executeReasonContextClosure = { _, _ in }
     spyUniquePassphraseManager.getUniquePassphraseAuthMethodContextReturnValue = mockUniquePassphraseData
 

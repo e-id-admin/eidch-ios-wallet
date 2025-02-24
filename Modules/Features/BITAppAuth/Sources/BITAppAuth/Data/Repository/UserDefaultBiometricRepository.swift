@@ -4,7 +4,7 @@ public struct UserDefaultBiometricRepository: BiometricRepositoryProtocol {
 
   public init() {}
 
-  let key: String = "isBiometricUsageAllowed"
+  let key = "isBiometricUsageAllowed"
 
   public func allowBiometricUsage(_ allow: Bool) throws {
     UserDefaults.standard.set(allow, forKey: key)

@@ -13,7 +13,7 @@ open class StateMachine<State, Event>: NSObject, ObservableObject where State: E
 
   public init(_ initialState: State) {
     state = initialState
-    bag = .init()
+    bag = Set<AnyCancellable>()
   }
 
   // MARK: Open

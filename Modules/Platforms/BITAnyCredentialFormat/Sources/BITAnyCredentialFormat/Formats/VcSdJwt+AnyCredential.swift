@@ -20,6 +20,10 @@ extension VcSdJwt: AnyCredential {
   public var status: (any AnyStatus)? {
     statusList
   }
+
+  public var validUntil: Date? {
+    expiredAt
+  }
 }
 
 // MARK: - SdJWTClaim + AnyClaim

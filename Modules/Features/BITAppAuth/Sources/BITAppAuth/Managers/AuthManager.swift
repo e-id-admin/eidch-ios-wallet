@@ -32,7 +32,7 @@ public class AuthManager: AuthManagerProtocol {
   public var isLoginRequired: Bool {
     var value = false
     if
-      let interval = backgroundStateDate?.timeIntervalSince(.init()),
+      let interval = backgroundStateDate?.timeIntervalSince(Date()),
       interval < -loginRequiredAfterIntervalThreshold
     {
       value.toggle()
@@ -41,7 +41,7 @@ public class AuthManager: AuthManagerProtocol {
   }
 
   public func entersBackgroundState() {
-    backgroundStateDate = .init()
+    backgroundStateDate = Date()
   }
 
   public func registerLogin() {

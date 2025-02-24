@@ -4,12 +4,11 @@ import Foundation
 
 extension PinCodeError: LocalizedError {
   public var errorDescription: String? {
-    let minimumSize = Container.shared.pinCodeMinimumSize()
-    return switch self {
-    case .tooShort: L10n.tkOnboardingPasswordErrorTooShort(minimumSize)
+    switch self {
+    case .tooShort: L10n.tkOnboardingPasswordlengthNotification
     case .empty: L10n.tkOnboardingPasswordErrorEmpty
     case .mismatch,
-         .wrongPinCode: L10n.tkOnboardingPasswordErrorMismatch
+         .wrongPinCode: L10n.tkOnboardingNopasswordmismatchNotification
     }
   }
 }

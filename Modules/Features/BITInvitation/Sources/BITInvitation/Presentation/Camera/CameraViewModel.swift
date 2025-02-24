@@ -1,6 +1,7 @@
 import AVFoundation
 import BITAnalytics
 import BITAnyCredentialFormat
+import BITCore
 import BITCredential
 import BITCredentialShared
 import BITL10n
@@ -15,7 +16,7 @@ import SwiftUI
 // MARK: - CameraViewModel
 
 @MainActor
-class CameraViewModel: ObservableObject {
+class CameraViewModel: ObservableObject, Vibrating {
 
   // MARK: Lifecycle
 
@@ -44,15 +45,15 @@ class CameraViewModel: ObservableObject {
 
   // MARK: Public
 
-  @Published public var isTipPresented: Bool = true
+  @Published public var isTipPresented = true
   @Published public var qrScannerError: Error? = nil
-  @Published public var isScannerActive: Bool = true
-  @Published public var isLoading: Bool = false
-  @Published public var isPopupErrorPresented: Bool = false
+  @Published public var isScannerActive = true
+  @Published public var isLoading = false
+  @Published public var isPopupErrorPresented = false
 
   @Published public var offer: CredentialOffer?
 
-  @Published public var isTorchEnabled: Bool = false {
+  @Published public var isTorchEnabled = false {
     didSet {
       isTorchEnabled ? cameraManager.flashlight.turnOn() : cameraManager.flashlight.turnOff()
     }
@@ -61,31 +62,24 @@ class CameraViewModel: ObservableObject {
   // MARK: Internal
 
   enum CameraError: Error {
-    case noCredentialsInWallet
-    case noCompatibleCredentials
+    case emptyWallet
+    case compatibleCredentialNotFound
 
-    case noInternetConnexion
+    case noConnection
     case expiredInvitation
-    case unavailableCredential
-    case unknownQRCode
+    case unknownIssuer
+    case validationFailed
+    case invalidQRCode
 
-    case invalidRequestObject
+    case invalidPresentationRequest
   }
 
   @ObservedObject var cameraManager = CameraManager()
 
-  var session: AVCaptureSession = .init()
+  var session = AVCaptureSession()
 
   @Published var credential: Credential?
   @Published var qrCodeObject: AVMetadataMachineReadableCodeObject?
-
-  func openExternalLink() {
-    guard let invitationError = qrScannerError as? CameraError, let link = invitationError.link, let url = URL(string: link) else {
-      return
-    }
-
-    router.openExternalLink(url: url)
-  }
 
   func close() {
     router.close()
@@ -117,14 +111,15 @@ class CameraViewModel: ObservableObject {
     guard
       !isLoading,
       let urlString = object.stringValue,
+      urlString != previousUrl,
       let url = URL(string: urlString)
     else { return }
-    vibrate()
-    cameraManager.stop()
+    previousUrl = urlString
+    vibrate(.success)
 
     Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { [weak self] _ in
       DispatchQueue.main.async { [weak self] in
-        self?.cameraManager.start()
+        self?.previousUrl = nil
       }
     }
 
@@ -161,9 +156,10 @@ class CameraViewModel: ObservableObject {
 
   private var invitationURL: URL?
   private var router: InvitationRouterRoutes
-  private var processPresentation: Bool = false
-  private var processCredentialOffer: Bool = false
+  private var processPresentation = false
+  private var processCredentialOffer = false
   private var bag: Set<AnyCancellable> = []
+  private var previousUrl: String?
 
   @Injected(\.scannerDelay) private var scannerDelay: UInt64
   @Injected(\.analytics) private var analytics: AnalyticsProtocol
@@ -195,6 +191,7 @@ class CameraViewModel: ObservableObject {
 
   private func checkInvitationType(_ url: URL) async throws -> InvitationType {
     isScannerActive = false
+    isPopupErrorPresented = false
     isLoading = true
 
     try? await Task.sleep(nanoseconds: 500_000_000)
@@ -204,45 +201,50 @@ class CameraViewModel: ObservableObject {
   }
 
   private func handleError(_ error: Error) {
+    vibrate(.error)
     isLoading = false
-
     analytics.log(error)
 
     if let error = error as? NetworkError {
       switch error.status {
       case .noConnection:
-        qrScannerError = CameraError.noInternetConnexion
+        qrScannerError = CameraError.noConnection
       default:
-        qrScannerError = CameraError.unknownQRCode
+        qrScannerError = CameraError.invalidQRCode
       }
-    } else if error as? FetchCredentialError == .expiredInvitation {
-      isTorchEnabled = false
-      invitationURL = nil
-
-      qrScannerError = CameraError.expiredInvitation
-    } else if
-      error as? FetchCredentialError == .verificationFailed
-    {
-      isTorchEnabled = false
-      invitationURL = nil
-      qrScannerError = CameraError.unavailableCredential
-    } else if error as? CompatibleCredentialsError == .noCredentialsInWallet {
-      isTorchEnabled = false
-      invitationURL = nil
-      qrScannerError = CameraError.noCredentialsInWallet
-    } else if error as? CompatibleCredentialsError == .noCompatibleCredentials {
-      isTorchEnabled = false
-      invitationURL = nil
-      qrScannerError = CameraError.noCompatibleCredentials
+    } else if let fetchError = error as? FetchCredentialError {
+      resetTorchAndInvitation()
+      switch fetchError {
+      case .expiredInvitation:
+        qrScannerError = CameraError.expiredInvitation
+      case .unknownIssuer:
+        qrScannerError = CameraError.unknownIssuer
+      case .validationFailed:
+        qrScannerError = CameraError.validationFailed
+      default:
+        qrScannerError = CameraError.invalidQRCode
+      }
+    } else if let credentialsError = error as? CompatibleCredentialsError {
+      resetTorchAndInvitation()
+      switch credentialsError {
+      case .emptyWallet:
+        qrScannerError = CameraError.emptyWallet
+      case .compatibleCredentialNotFound:
+        qrScannerError = CameraError.compatibleCredentialNotFound
+      }
     } else {
-      invitationURL = nil
-      qrScannerError = CameraError.unknownQRCode
+      invitationURL = nil // Keep the torch enabled
+      qrScannerError = CameraError.invalidQRCode
     }
 
     showErrorView()
-
     processPresentation = false
     processCredentialOffer = false
+  }
+
+  private func resetTorchAndInvitation() {
+    isTorchEnabled = false
+    invitationURL = nil
   }
 
 }
@@ -253,11 +255,11 @@ extension CameraViewModel {
 
   private func fetchAndSaveCredential(from offer: CredentialOffer) async throws -> Credential {
     guard let issuerUrl = URL(string: offer.issuer) else {
-      throw CameraError.unavailableCredential
+      throw CameraError.validationFailed
     }
 
     guard let selectedCredentialId = offer.credentialConfigurationIds.first else {
-      throw CameraError.unavailableCredential
+      throw CameraError.validationFailed
     }
 
     let metadata = try await fetchMetadataUseCase.execute(from: issuerUrl)
@@ -285,6 +287,7 @@ extension CameraViewModel {
     if let credential {
       let trustStatement = await fetchTrustStatement(for: credential)
 
+      cameraManager.stop()
       router.credentialOffer(credential: credential, trustStatement: trustStatement)
     }
   }
@@ -322,14 +325,16 @@ extension CameraViewModel {
     isLoading = false
 
     if let id = getFirstCompatibleCredentialInputDescriptorID(from: context) {
+      cameraManager.stop()
       return try router.compatibleCredentials(for: id, and: context)
     }
 
     guard
       let id = context.requestObject.presentationDefinition.inputDescriptors.first?.id,
-      let credential = context.requests[id]?.first else { throw CameraError.invalidRequestObject }
+      let credential = context.requests[id]?.first else { throw CameraError.invalidPresentationRequest }
     context.selectedCredentials[id] = credential
     isTorchEnabled = false
+    cameraManager.stop()
     return router.presentationReview(with: context)
   }
 
@@ -347,76 +352,44 @@ extension CameraViewModel {
 }
 
 extension CameraViewModel.CameraError {
+
+  var icon: Image {
+    switch self {
+    case .noConnection: Assets.noWifi.swiftUIImage
+    case .compatibleCredentialNotFound,
+         .emptyWallet,
+         .expiredInvitation: Assets.credential.swiftUIImage
+    case .invalidPresentationRequest,
+         .unknownIssuer,
+         .validationFailed: Assets.questionmarkSquare.swiftUIImage
+    case .invalidQRCode: Assets.qrcode.swiftUIImage
+    }
+  }
+
   var primaryText: String {
     switch self {
-    case .noInternetConnexion: L10n.tkErrorConnectionproblemTitle
-    case .noCredentialsInWallet: L10n.tkErrorEmptywalletTitle
-    case .noCompatibleCredentials: L10n.tkErrorNosuchcredentialTitle
-    case .expiredInvitation: L10n.tkErrorNotusableTitle
-    case .unavailableCredential: L10n.tkErrorInvalidrequestTitle
-    case .unknownQRCode: L10n.tkErrorInvalidqrcodeTitle
-    case .invalidRequestObject: L10n.tkErrorInvalidrequestTitle
+    case .noConnection: L10n.tkErrorConnectionproblemTitle
+    case .emptyWallet: L10n.tkErrorEmptywalletTitle
+    case .compatibleCredentialNotFound: L10n.tkErrorNosuchcredentialTitle
+    case .expiredInvitation: L10n.tkErrorInvitationcredentialTitle
+    case .unknownIssuer: L10n.tkErrorNotregisteredTitle
+    case .validationFailed: L10n.tkErrorNotregisteredTitle
+    case .invalidQRCode: L10n.tkErrorNotusableTitle
+    case .invalidPresentationRequest: L10n.tkErrorInvalidrequestTitle
     }
   }
 
   var secondaryText: String {
     switch self {
-    case .noInternetConnexion: L10n.tkErrorConnectionproblemBody
-    case .noCredentialsInWallet: L10n.tkErrorEmptywalletBody
-    case .noCompatibleCredentials: L10n.tkErrorNosuchcredentialBody
-    case .expiredInvitation: L10n.tkErrorNotusableBody
-    case .unavailableCredential: L10n.tkErrorInvalidrequestBody
-    case .unknownQRCode: L10n.tkErrorInvalidqrcodeBody
-    case .invalidRequestObject: L10n.tkErrorInvalidrequestBody
+    case .noConnection: L10n.tkErrorConnectionproblemBody
+    case .emptyWallet: L10n.tkErrorEmptywalletBody
+    case .compatibleCredentialNotFound: L10n.tkErrorNosuchcredentialBody
+    case .expiredInvitation: L10n.tkErrorInvitationcredentialBody
+    case .unknownIssuer: L10n.tkErrorNotregisteredBody
+    case .validationFailed: L10n.tkErrorNotregisteredBody
+    case .invalidQRCode: L10n.tkErrorNotusableBody
+    case .invalidPresentationRequest: L10n.tkErrorInvalidrequestBody
     }
   }
 
-  var tertiaryText: String? {
-    switch self {
-    case .expiredInvitation,
-         .invalidRequestObject,
-         .noCompatibleCredentials,
-         .noInternetConnexion,
-         .unavailableCredential: nil
-    case .noCredentialsInWallet: L10n.tkQrscannerInvalidcodeLinkText
-    case .unknownQRCode: L10n.tkQrscannerInvalidcodeLinkText
-    }
-  }
-
-  var icon: String {
-    switch self {
-    case .noInternetConnexion: "wifi"
-    case .noCredentialsInWallet: ""
-    case .noCompatibleCredentials: ""
-    case .expiredInvitation: "qrcode"
-    case .unavailableCredential: "person.crop.square"
-    case .unknownQRCode: "questionmark.square"
-    case .invalidRequestObject: ""
-    }
-  }
-
-  var link: String? {
-    switch self {
-    case .invalidRequestObject,
-         .noCompatibleCredentials,
-         .noCredentialsInWallet,
-         .noInternetConnexion: nil
-    case .expiredInvitation,
-         .unavailableCredential,
-         .unknownQRCode: "https://www.eid.admin.ch/en"
-    }
-  }
-}
-
-extension CameraViewModel {
-
-  // MARK: Internal
-
-  static let hapticFeedbackGenerator: UIImpactFeedbackGenerator = .init(style: .medium)
-
-  // MARK: Private
-
-  private func vibrate() {
-    Self.hapticFeedbackGenerator.impactOccurred()
-  }
 }

@@ -13,7 +13,7 @@ public class CredentialEntity: Object {
   @Persisted public var format: String
   @Persisted public var issuer: String
 
-  @Persisted public var createdAt: Date = .init()
+  @Persisted public var createdAt = Date()
   @Persisted public var updatedAt: Date?
 
   @Persisted public var claims = List<CredentialClaimEntity>()

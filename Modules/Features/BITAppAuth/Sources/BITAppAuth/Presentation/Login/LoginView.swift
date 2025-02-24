@@ -33,6 +33,13 @@ public struct LoginView: View {
       }
   }
 
+  // MARK: Internal
+
+  enum AccessibilityIdentifier: String {
+    case loginButton
+    case pinField
+  }
+
   // MARK: Private
 
   private enum Focus: Hashable {
@@ -116,27 +123,31 @@ extension LoginView {
 
       Spacer()
 
-      if orientation.isLandscape {
-        HStack(spacing: .x4) {
-          Spacer()
-          lockedViewFooter()
-          Spacer()
-        }
-      } else {
-        VStack(spacing: .x4) {
-          lockedViewFooter()
+      Group {
+        if orientation.isLandscape {
+          HStack(spacing: .x2) {
+            Spacer()
+            lockedViewFooter()
+            Spacer()
+          }
+        } else {
+          VStack(spacing: .x4) {
+            lockedViewFooter()
+          }
         }
       }
+      .padding(.horizontal, .x3)
+      .padding(.bottom, .x1)
     }
   }
 
   @ViewBuilder
   private func lockedViewFooter() -> some View {
     if viewModel.isBiometricAuthenticationAvailable {
-
       biometricButton()
         .buttonStyle(.filledPrimary)
         .accessibilitySortPriority(800)
+        .controlSize(.large)
     }
 
     Button {
@@ -144,6 +155,8 @@ extension LoginView {
     } label: {
       Text(L10n.tkLoginLockedSecondarybuttonText)
     }
+    .buttonStyle(.bezeledLightReversed)
+    .controlSize(.large)
     .accessibilitySortPriority(700)
     .accessibilityFocused($focus, equals: .helpButton)
   }
@@ -260,6 +273,7 @@ extension LoginView {
       Spacer()
 
       loginButton()
+        .accessibilityIdentifier(AccessibilityIdentifier.loginButton.rawValue)
         .accessibilitySortPriority(600)
         .accessibilityFocused($focus, equals: .loginButton)
     }
@@ -290,6 +304,7 @@ extension LoginView {
     }
     .accessibilitySortPriority(800)
     .accessibilityFocused($focus, equals: .input)
+    .secureTextFieldAccessibilityIdentifier(AccessibilityIdentifier.pinField.rawValue)
   }
 
   @ViewBuilder
@@ -317,7 +332,7 @@ extension LoginView {
       }
     } label: {
       if viewModel.state == .locked {
-        Label(L10n.tkGlobalLoginfaceidPrimarybutton, systemImage: viewModel.biometricType.icon)
+        Label(L10n.tkGlobalLoginfaceidPrimarybutton(viewModel.biometricType.text), systemImage: viewModel.biometricType.icon)
       } else {
         viewModel.biometricType.image
           .padding(2)

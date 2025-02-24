@@ -2,7 +2,6 @@ import BITCore
 import Foundation
 import JOSESwift
 import XCTest
-
 @testable import BITJWT
 
 // MARK: - JWTTests
@@ -32,14 +31,14 @@ final class JWTTests: XCTestCase {
   }
 
   func testAlgorithm() throws {
-    let jwtWrapper: JWT = .Mock.sample
+    let jwtWrapper = JWT.Mock.sample
     let algorithm = jwtWrapper.algorithm
     XCTAssertNotNil(algorithm)
     XCTAssertEqual("ES256", algorithm)
   }
 
   func testHeaderKid() throws {
-    let jwtWrapper: JWT = .Mock.sample
+    let jwtWrapper = JWT.Mock.sample
     let kid = jwtWrapper.kid
     XCTAssertNotNil(kid)
     XCTAssertEqual("did:tdw:example#key01", kid)

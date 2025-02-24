@@ -10,7 +10,7 @@ public enum DisclosureIndicator {
     switch self {
     case .none: nil
     case .externalLink: Image(systemName: "arrow.up.right")
-    case .navigation: Image(systemName: "arrow.right")
+    case .navigation: Image(systemName: "chevron.right")
     case .custom(let systemName): Image(systemName: systemName)
     }
   }

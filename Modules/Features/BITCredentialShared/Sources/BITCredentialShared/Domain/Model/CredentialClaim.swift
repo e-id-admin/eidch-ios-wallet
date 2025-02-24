@@ -10,7 +10,7 @@ public struct CredentialClaim: Codable {
 
   // MARK: Lifecycle
 
-  init(id: UUID = .init(), key: String, valueType: String = "string", value: String, order: Int16 = 0, credentialId: UUID? = nil, displays: [CredentialClaimDisplay] = []) {
+  init(id: UUID = UUID(), key: String, valueType: String = "string", value: String, order: Int16 = 0, credentialId: UUID? = nil, displays: [CredentialClaimDisplay] = []) {
     self.id = id
     self.key = key
     self.valueType = valueType
@@ -18,7 +18,7 @@ public struct CredentialClaim: Codable {
     self.order = order
     self.credentialId = credentialId
     self.displays = displays
-    preferredDisplay = displays.findDisplayWithFallback() as? CredentialClaimDisplay ?? .init(name: key)
+    preferredDisplay = displays.findDisplayWithFallback() as? CredentialClaimDisplay ?? CredentialClaimDisplay(name: key)
   }
 
   public init(from decoder: Decoder) throws {
@@ -60,7 +60,7 @@ public struct CredentialClaim: Codable {
     {
       throw CredentialClaimError.invalidCredentialClaim(key: anyClaim.key)
     }
-    let id: UUID = .init()
+    let id = UUID()
     self.init(
       id: id,
       key: anyClaim.key,

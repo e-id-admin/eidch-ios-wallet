@@ -3,7 +3,6 @@ import BITDataStore
 import Factory
 import RealmSwift
 import XCTest
-
 @testable import BITCredential
 @testable import BITCredentialMocks
 @testable import BITCredentialShared

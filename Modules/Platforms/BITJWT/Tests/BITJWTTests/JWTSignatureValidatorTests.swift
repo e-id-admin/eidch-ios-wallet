@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITCrypto
 @testable import BITJWT
 @testable import BITTestingCore
@@ -86,6 +85,21 @@ final class JWTSignatureValidatorTests: XCTestCase {
     XCTAssertFalse(jwtHelper.hasValidSignatureJwtUsingCalled)
   }
 
+  func testValidate_didResolverThrows_ShouldManageSpecificException() async throws {
+    let testingError = TestingError.error
+    spyDidResolver.getJWKSFromKeyIdentifierThrowableError = testingError
+    do {
+      _ = try await validator.validate(.Mock.sample, did: issuer, kid: kid)
+      XCTFail("Expected to throw an error, but it did not.")
+    } catch JWTSignatureValidator.JWTSignatureValidatorError.cannotResolveDid {
+      XCTAssertTrue(spyDidResolver.getJWKSFromKeyIdentifierCalled)
+      XCTAssertFalse(jwtHelper.getSecKeyCurveXYCalled)
+      XCTAssertFalse(jwtHelper.hasValidSignatureJwtUsingCalled)
+    } catch {
+      XCTFail("Unexpected error type")
+    }
+  }
+
   // MARK: Private
 
   // swiftlint:disable all
@@ -94,7 +108,7 @@ final class JWTSignatureValidatorTests: XCTestCase {
   private var spyDidResolver: DidResolverHelperProtocolSpy!
   // swiftlint:enable all
 
-  private let issuer: String = "did:example:123456789"
-  private let kid: String = "did:example:123456789#key-01"
+  private let issuer = "did:example:123456789"
+  private let kid = "did:example:123456789#key-01"
 
 }

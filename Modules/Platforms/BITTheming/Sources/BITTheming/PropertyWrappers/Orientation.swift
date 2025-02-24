@@ -30,7 +30,7 @@ fileprivate class OrientationManager: ObservableObject {
 
   static let shared = OrientationManager()
 
-  @Published var type: UIDeviceOrientation = .unknown
+  @Published var type = UIDeviceOrientation.unknown
 
   let allowedOrientations: [UIDeviceOrientation] = [.portrait, .portraitUpsideDown, .landscapeLeft, .landscapeRight]
 

@@ -20,7 +20,7 @@ class CameraHostingController: UIHostingController<CameraView> {
   func customNavigationAppearance() -> UINavigationBarAppearance {
     let appearance = UINavigationBarAppearance()
     appearance.configureWithTransparentBackground()
-    appearance.backgroundColor = ThemingAssets.Brand.Core.navyBlue.color.resolvedColor(with: .init(userInterfaceStyle: .light))
+    appearance.backgroundColor = ThemingAssets.Brand.Core.navyBlue.color.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
 
     return appearance
   }

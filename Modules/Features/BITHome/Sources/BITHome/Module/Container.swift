@@ -1,6 +1,5 @@
-import BITCredentialShared
+import BITNavigation
 import Factory
-import Foundation
 import SwiftUI
 
 @MainActor
@@ -18,7 +17,7 @@ extension Container {
 
 extension Container {
 
-  public var homeRouter: Factory<HomeRouter> {
+  public var homeRouter: Factory<Router<UIViewController> & HomeRouterRoutes> {
     self { HomeRouter() }
   }
 

@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITOpenID
 @testable import BITPresentation
 @testable import BITTestingCore
@@ -50,13 +49,13 @@ final class DenyPresentationUseCaseTests: XCTestCase {
 
   // MARK: Private
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   private var useCase: DenyPresentationUseCase!
-  private var context: PresentationRequestContext = .Mock.vcSdJwtSample
+  private var context = PresentationRequestContext.Mock.vcSdJwtSample
   private var repository: PresentationRepositoryProtocolSpy!
-  private var mockErrorType: PresentationErrorRequestBody.ErrorType = .clientRejected
+  private var mockErrorType = PresentationErrorRequestBody.ErrorType.clientRejected
 
-  //swiftlint:enable all
+  // swiftlint:enable all
 
   private func validateRequestBody() {
     XCTAssertEqual(repository.submitPresentationFromPresentationErrorRequestBodyReceivedArguments?.presentationErrorRequestBody.error, .clientRejected)

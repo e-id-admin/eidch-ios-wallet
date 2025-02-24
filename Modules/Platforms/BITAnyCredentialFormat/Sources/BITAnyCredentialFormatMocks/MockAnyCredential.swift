@@ -1,5 +1,4 @@
 import Foundation
-
 @testable import BITAnyCredentialFormat
 @testable import BITCore
 
@@ -14,7 +13,7 @@ public struct MockAnyCredential: AnyCredential {
 
   // MARK: Public
 
-  public var format: String = "vc+sd-jwt"
+  public var format = "vc+sd-jwt"
 
   public var raw: String {
     String(data: payload, encoding: .utf8) ?? UUID().uuidString
@@ -29,6 +28,10 @@ public struct MockAnyCredential: AnyCredential {
   }
 
   public var status: (any BITAnyCredentialFormat.AnyStatus)? {
+    nil
+  }
+
+  public var validUntil: Date? {
     nil
   }
 

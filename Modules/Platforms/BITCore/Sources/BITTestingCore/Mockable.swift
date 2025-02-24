@@ -9,7 +9,7 @@ public protocol Mockable {
 
 // MARK: - Mocker
 
-struct Mocker: Mockable {}
+public struct Mocker: Mockable {}
 
 extension Mockable {
 
@@ -47,5 +47,6 @@ extension Mockable {
       fatalError("Can't decode object: \(error)")
     }
   }
+
 }
 #endif

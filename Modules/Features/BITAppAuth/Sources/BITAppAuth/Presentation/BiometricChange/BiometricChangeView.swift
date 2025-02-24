@@ -57,8 +57,8 @@ struct BiometricChangeView: View {
       secondary: L10n.biometricSetupContent(viewModel.biometricType.text),
       image: viewModel.biometricType.image,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      buttonLabel: L10n.biometricSetupNoClass3ToSettingsButton,
-      onNextAction: {
+      primaryButtonLabel: L10n.biometricSetupNoClass3ToSettingsButton,
+      primaryButtonAction: {
         viewModel.openSettings()
       })
   }

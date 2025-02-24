@@ -1,5 +1,6 @@
 import BITL10n
 import BITTheming
+import Factory
 import Foundation
 import SwiftUI
 
@@ -7,17 +8,39 @@ import SwiftUI
 
 struct CredentialIntroductionView: View {
 
-  let router: OnboardingInternalRoutes
+  init(router: OnboardingInternalRoutes) {
+    viewModel = Container.shared.credentialIntroductionViewModel(router)
+  }
+
+  private let viewModel: CredentialIntroductionViewModel
 
   var body: some View {
     InformationView(
-      primary: L10n.onboardingPresentPrimary,
-      secondary: L10n.onboardingPresentSecondary,
+      primary: L10n.tkOnboardingNeverforgetTitle,
+      secondary: L10n.tkOnboardingNeverforgetBody,
       image: Assets.eId.swiftUIImage,
       backgroundImage: ThemingAssets.Gradient.gradient5.swiftUIImage,
-      buttonLabel: L10n.globalContinue)
-    {
-      router.infoScreenSecurity()
-    }
+      primaryButtonLabel: L10n.tkGlobalContinue,
+      primaryButtonAction: viewModel.primaryAction)
   }
+}
+
+// MARK: - CredentialIntroductionViewModel
+
+class CredentialIntroductionViewModel {
+
+  // MARK: Lifecycle
+
+  init(router: OnboardingInternalRoutes) {
+    self.router = router
+  }
+
+  // MARK: Internal
+
+  let router: OnboardingInternalRoutes
+
+  func primaryAction() {
+    router.privacyPermission()
+  }
+
 }

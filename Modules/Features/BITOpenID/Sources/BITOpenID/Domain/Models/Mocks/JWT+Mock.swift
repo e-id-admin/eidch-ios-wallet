@@ -10,7 +10,7 @@ extension JWT {
     // MARK: Internal
 
     static let tokenStatusList: String = JWT.getString(fromFile: tokenStatusListFilename, bundle: Bundle.module)
-    static let tokenStatusListPayload: Data = JWT.getData(fromFile: tokenStatusListPayloadFilename, bundle: Bundle.module) ?? Data()
+    static let tokenStatusListPayload: Data = Mocker.getData(fromFile: tokenStatusListPayloadFilename, bundle: Bundle.module) ?? Data()
     static let tokenStatusListWrongType: JWT = decodeRawText(fromFile: tokenStatusListWrongTypeFilename)
     static let tokenStatusListWithoutIssuedAt: JWT = decodeRawText(fromFile: tokenStatusListWithoutIssuedAtFilename)
     static let tokenStatusListWrongSubject: JWT = decodeRawText(fromFile: tokenStatusListWrongSubjectFilename)

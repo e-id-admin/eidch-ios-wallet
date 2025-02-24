@@ -1,6 +1,5 @@
 #if DEBUG
 import Foundation
-
 @testable import BITTestingCore
 
 extension CredentialMetadataWrapper: Mockable {

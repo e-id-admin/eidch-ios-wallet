@@ -1,6 +1,5 @@
 import BITCore
 import XCTest
-
 @testable import BITCredentialShared
 @testable import BITOpenID
 
@@ -18,7 +17,6 @@ final class CredentialDisplayTests: XCTestCase {
     let credentialDisplay = CredentialDisplay(mockCredentialSupportedDisplay)
 
     XCTAssertNotNil(credentialDisplay.logoBase64)
-    XCTAssertNil(credentialDisplay.logoUrl)
   }
 
   func testCredentialDisplayInitWithUrlLogo_success() throws {
@@ -30,8 +28,8 @@ final class CredentialDisplayTests: XCTestCase {
     let mockCredentialSupportedDisplay = CredentialMetadata.CredentialSupportedDisplay(name: "credential", logo: mockLogo)
     let credentialDisplay = CredentialDisplay(mockCredentialSupportedDisplay)
 
+    // Url is not supported currently
     XCTAssertNil(credentialDisplay.logoBase64)
-    XCTAssertNotNil(credentialDisplay.logoUrl)
   }
 
   // MARK: Private

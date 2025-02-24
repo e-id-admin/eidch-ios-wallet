@@ -1,5 +1,5 @@
 import Foundation
 
 protocol Screen {
-  func assert()
+  func assertDisplayed()
 }

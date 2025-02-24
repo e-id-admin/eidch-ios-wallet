@@ -5,11 +5,11 @@ import XCTest
 
 final class ValidateCredentialOfferInvitationUrlUseCaseTests: XCTestCase {
 
-  var sut: ValidateCredentialOfferInvitationUrlUseCase = .init()
+  var sut = ValidateCredentialOfferInvitationUrlUseCase()
 
   override func setUp() {
     super.setUp()
-    sut = .init()
+    sut = ValidateCredentialOfferInvitationUrlUseCase()
   }
 
   func testExecute_withInvalidScheme_shouldThrowError() {

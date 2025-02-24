@@ -7,7 +7,7 @@ let package = Package(
   name: "BITNetworking",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v15),
+    .iOS(.v16),
   ],
   products: [
     .library(

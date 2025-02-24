@@ -31,7 +31,7 @@ final class NoDevicePinCodeScene: SceneManagerProtocol {
 
   // MARK: Private
 
-  @AppStorage("rootOnboardingIsEnabled") private var isOnboardingEnabled: Bool = true
+  @AppStorage("rootOnboardingIsEnabled") private var isOnboardingEnabled = true
 
   private var hasDevicePinUseCase: HasDevicePinUseCaseProtocol
 

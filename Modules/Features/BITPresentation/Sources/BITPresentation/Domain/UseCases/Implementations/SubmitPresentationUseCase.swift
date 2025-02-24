@@ -13,8 +13,6 @@ import Foundation
 
 enum SubmitPresentationError: Error {
   case wrongSubmissionUrl
-  case presentationFailed
-  case credentialInvalid
   case inputDescriptorsNotFound
 }
 
@@ -38,20 +36,7 @@ public struct SubmitPresentationUseCase: SubmitPresentationUseCaseProtocol {
       throw SubmitPresentationError.wrongSubmissionUrl
     }
 
-    do {
-      try await repository.submitPresentation(from: submissionURL, presentationRequestBody: presentationRequestBody)
-    } catch {
-      guard let err = error as? NetworkError else { throw error }
-      switch err.status {
-      case .internalServerError,
-           .unprocessableEntity:
-        throw SubmitPresentationError.presentationFailed
-      case .badRequest,
-           .invalidGrant:
-        throw SubmitPresentationError.credentialInvalid
-      default: throw error
-      }
-    }
+    try await repository.submitPresentation(from: submissionURL, presentationRequestBody: presentationRequestBody)
   }
 
   // MARK: Private

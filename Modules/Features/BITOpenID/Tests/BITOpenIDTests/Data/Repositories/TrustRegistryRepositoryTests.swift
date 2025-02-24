@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITOpenID
 
 final class TrustRegistryRepositoryTests: XCTestCase {

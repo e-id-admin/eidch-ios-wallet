@@ -19,6 +19,36 @@ struct DeeplinkLoadingView: View {
   @StateObject var viewModel: DeeplinkViewModel
 
   var body: some View {
+    if let invitationError = viewModel.qrScannerError as? DeeplinkViewModel.CameraError {
+      errorView(invitationError)
+    } else {
+      progressView()
+    }
+  }
+
+  // MARK: Private
+
+  private enum Defaults {
+    static let innerGradientMaxWidth = 250.0
+    static let innerGradientMaxHeight = 462.0
+  }
+}
+
+// MARK: - Components
+
+extension DeeplinkLoadingView {
+
+  private enum AccessibilityPriority: Double {
+    case x1 = 100
+    case x2 = 80
+    case x3 = 50
+    case x4 = 30
+    case x5 = 20
+    case x6 = 10
+  }
+
+  @ViewBuilder
+  private func progressView() -> some View {
     ZStack {
       Rectangle()
         .overlay(
@@ -35,59 +65,49 @@ struct DeeplinkLoadingView: View {
         .resizable()
         .frame(maxWidth: Defaults.innerGradientMaxWidth, maxHeight: Defaults.innerGradientMaxHeight)
         .clipShape(.rect(cornerRadius: .CornerRadius.l))
+        .accessibilityHidden(true)
 
-      if viewModel.isLoading {
-        progressView()
-      }
-
-      if let invitationError = viewModel.qrScannerError as? DeeplinkViewModel.CameraError {
-        errorView(invitationError)
-      }
+      ProgressView()
+        .tint(.white)
+        .scaleEffect(1.5)
+        .accessibilitySortPriority(AccessibilityPriority.x1.rawValue)
     }
-  }
-
-  // MARK: Private
-
-  private enum Defaults {
-    static let innerGradientMaxWidth = 250.0
-    static let innerGradientMaxHeight = 462.0
-  }
-}
-
-// MARK: - Components
-
-extension DeeplinkLoadingView {
-
-  @ViewBuilder
-  private func progressView() -> some View {
-    ProgressView()
-      .tint(.white)
-      .scaleEffect(1.5)
   }
 
   @ViewBuilder
   private func errorView(_ error: DeeplinkViewModel.CameraError) -> some View {
-    VStack(spacing: .x2) {
+    VStack(spacing: .x1) {
       Spacer()
+
+      error.icon
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: 56, height: 56)
+        .accessibilityHidden(true)
+
       Text(error.primaryText)
         .font(.custom.title)
-        .foregroundColor(.white)
+        .foregroundStyle(ThemingAssets.Label.primary.swiftUIColor)
         .multilineTextAlignment(.center)
-        .accessibilityLabel(error.primaryText)
+        .accessibilitySortPriority(AccessibilityPriority.x1.rawValue)
 
       Text(error.secondaryText)
         .font(.custom.body)
-        .foregroundColor(.white)
+        .foregroundStyle(ThemingAssets.Label.secondary.swiftUIColor)
         .multilineTextAlignment(.center)
-        .accessibilityLabel(error.secondaryText)
+        .accessibilitySortPriority(AccessibilityPriority.x2.rawValue)
 
       Spacer()
-      Button(L10n.globalBack, action: viewModel.close)
-        .padding(.bottom, .x2)
+
+      Button(L10n.tkGlobalClose, action: viewModel.close)
+        .padding(.bottom, .x6)
         .controlSize(.large)
-        .buttonStyle(.filledPrimary)
-        .accessibilityLabel(L10n.globalBack)
+        .buttonStyle(.bezeled)
+        .accessibilitySortPriority(AccessibilityPriority.x3.rawValue)
     }
     .padding(.horizontal, .x6)
+    .frame(maxWidth: .infinity)
+    .background(ThemingAssets.Background.secondary.swiftUIColor)
   }
+
 }

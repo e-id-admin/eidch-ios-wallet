@@ -10,7 +10,7 @@ extension VcSdJwt {
 
     static let sample: VcSdJwt = decodeRawText(fromFile: sampleFilename)
     static let sampleRaw: String = VcSdJwt.getString(fromFile: sampleFilename, bundle: Bundle.module)
-    static let sampleData: Data = VcSdJwt.getData(fromFile: sampleFilename, ofType: "txt", bundle: Bundle.module) ?? Data()
+    static let sampleData: Data = Mocker.getData(fromFile: sampleFilename, ofType: "txt", bundle: Bundle.module) ?? Data()
     static let sampleNoKeyBinding: VcSdJwt = decodeRawText(fromFile: sampleNoKeyBindingFilename)
     static let sampleNoVct: VcSdJwt = decodeRawText(fromFile: sampleNoVctFilename)
     static let sampleNoStatus: VcSdJwt = decodeRawText(fromFile: sampleNoStatusFilename)

@@ -16,17 +16,17 @@ struct GetVerifierDisplayUseCase: GetVerifierDisplayUseCaseProtocol {
       let logo = getDisplayForClaim(logoUri, with: Self.logoUriKey, in: trustStatement),
       let decodedURI = CredentialDisplayLogoURIDecoder.decode(logo)
     else {
-      return .init(verifier: verifier, trustStatus: .unverified)
+      return VerifierDisplay(verifier: verifier, trustStatus: .unverified)
     }
 
-    return .init(name: name, logo: Data(base64Encoded: decodedURI), trustStatus: .verified)
+    return VerifierDisplay(name: name, logo: Data(base64Encoded: decodedURI), trustStatus: .verified)
   }
 
   // MARK: Private
 
-  private static let orgNameKey: String = "orgName"
-  private static let logoUriKey: String = "logoUri"
-  private static let prefLangKey: String = "prefLang"
+  private static let orgNameKey = "orgName"
+  private static let logoUriKey = "logoUri"
+  private static let prefLangKey = "prefLang"
 
   @Injected(\.preferredUserLanguageCodes) private var preferredUserLanguageCodes: [UserLanguageCode]
 

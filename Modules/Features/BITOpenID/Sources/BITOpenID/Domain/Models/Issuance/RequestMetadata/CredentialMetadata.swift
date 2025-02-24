@@ -103,6 +103,10 @@ extension CredentialMetadata {
 
   }
 
+  public enum CryptographicBindingMethod: String {
+    case didJwk = "did:jwk"
+  }
+
   public struct CredentialSupportedDisplay: Decodable, Equatable {
 
     // MARK: Lifecycle

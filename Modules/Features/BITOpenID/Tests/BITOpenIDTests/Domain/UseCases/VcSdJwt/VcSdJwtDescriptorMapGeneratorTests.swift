@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITOpenID
 
 final class VcSdJwtDescriptorMapGeneratorTests: XCTestCase {

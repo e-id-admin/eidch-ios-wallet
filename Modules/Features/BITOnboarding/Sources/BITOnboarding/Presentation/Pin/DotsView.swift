@@ -12,10 +12,10 @@ struct DotView: View {
     static let circleFrameWidth: CGFloat = 14
     static let maxScale: CGFloat = 2
     static let minScale: CGFloat = 1
-    static let animation: Animation = .interpolatingSpring(stiffness: 750, damping: 20)
+    static let animation = Animation.interpolatingSpring(stiffness: 750, damping: 20)
   }
 
-  var isActive: Bool = false
+  var isActive = false
 
   var body: some View {
     ZStack {
@@ -36,5 +36,5 @@ struct DotView: View {
 
   // MARK: Private
 
-  @State private var scale: Bool = false
+  @State private var scale = false
 }

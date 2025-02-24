@@ -77,7 +77,7 @@ extension VerifierDisplay: Equatable {
 #if DEBUG
 extension VerifierDisplay {
   struct Mock {
-    static let sample: VerifierDisplay = .init(name: "Verifier", logo: nil, trustStatus: .verified)
+    static let sample = VerifierDisplay(name: "Verifier", logo: nil, trustStatus: .verified)
   }
 }
 #endif

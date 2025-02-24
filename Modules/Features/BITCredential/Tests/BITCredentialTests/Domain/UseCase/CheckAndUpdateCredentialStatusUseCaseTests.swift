@@ -1,7 +1,6 @@
 import BITCore
 import Factory
 import XCTest
-
 @testable import BITAnyCredentialFormat
 @testable import BITAnyCredentialFormatMocks
 @testable import BITCredential
@@ -9,7 +8,6 @@ import XCTest
 @testable import BITOpenID
 @testable import BITSdJWT
 @testable import BITSdJWTMocks
-
 @testable import BITTestingCore
 
 final class CheckAndUpdateCredentialStatusUseCaseTests: XCTestCase {
@@ -21,51 +19,57 @@ final class CheckAndUpdateCredentialStatusUseCaseTests: XCTestCase {
     validator = AnyStatusCheckValidatorProtocolSpy()
 
     useCase = CheckAndUpdateCredentialStatusUseCase(localRepository: localRepositorySpy, validators: [AnyStatusType.tokenStatusList: validator])
+
+    success()
   }
 
   func testCheckCredentialStatus_valid() async throws {
     var currentCredential = mockCredential
     currentCredential.status = .unknown
 
-    localRepositorySpy.updateClosure = { credential in credential }
-    validator.validateIssuerReturnValue = .valid
-
     let credential = try await useCase.execute(for: currentCredential)
 
     XCTAssertEqual(credential.status, .valid)
     currentCredential.status = .valid
-    XCTAssertTrue(localRepositorySpy.updateReceivedCredential == currentCredential)
-    XCTAssertEqual(localRepositorySpy.updateCallsCount, 1)
+    XCTAssertEqual(localRepositorySpy.updateReceivedCredential, currentCredential)
+  }
+
+  func testCheckCredentialStatus_expired() async throws {
+    var mockCredential = Credential(payload: CredentialPayload.Mock.expired, format: "vc+sd-jwt", issuer: "")
+    mockCredential.status = .valid
+
+    let credential = try await useCase.execute(for: mockCredential)
+
+    XCTAssertEqual(credential.status, .expired)
+    mockCredential.status = .expired
+    XCTAssertFalse(validator.validateIssuerCalled)
+    XCTAssertEqual(localRepositorySpy.updateReceivedCredential, mockCredential)
   }
 
   func testCheckCredentialStatus_suspended() async throws {
     var currentCredential = mockCredential
     currentCredential.status = .valid
 
-    localRepositorySpy.updateClosure = { credential in credential }
     validator.validateIssuerReturnValue = .suspended
 
     let credential = try await useCase.execute(for: currentCredential)
 
     XCTAssertEqual(credential.status, .suspended)
     currentCredential.status = .suspended
-    XCTAssertTrue(localRepositorySpy.updateReceivedCredential == currentCredential)
-    XCTAssertEqual(localRepositorySpy.updateCallsCount, 1)
+    XCTAssertEqual(localRepositorySpy.updateReceivedCredential, currentCredential)
   }
 
   func testCheckCredentialStatus_revoked() async throws {
     var currentCredential = mockCredential
     currentCredential.status = .suspended
 
-    localRepositorySpy.updateClosure = { credential in credential }
     validator.validateIssuerReturnValue = .revoked
 
     let credential = try await useCase.execute(for: currentCredential)
 
     XCTAssertEqual(credential.status, .revoked)
     currentCredential.status = .revoked
-    XCTAssertTrue(localRepositorySpy.updateReceivedCredential == currentCredential)
-    XCTAssertEqual(localRepositorySpy.updateCallsCount, 1)
+    XCTAssertEqual(localRepositorySpy.updateReceivedCredential, currentCredential)
   }
 
   func testCheckCredentialStatus_unknownIsNotSavedInRepository() async throws {
@@ -108,6 +112,12 @@ final class CheckAndUpdateCredentialStatusUseCaseTests: XCTestCase {
   private var useCase = CheckAndUpdateCredentialStatusUseCase()
   private var localRepositorySpy = CredentialRepositoryProtocolSpy()
   private var validator = AnyStatusCheckValidatorProtocolSpy()
+
   // swiftlint:enable all
+
+  private func success() {
+    localRepositorySpy.updateClosure = { credential in credential }
+    validator.validateIssuerReturnValue = .valid
+  }
 
 }

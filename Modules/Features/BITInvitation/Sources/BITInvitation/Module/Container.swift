@@ -29,6 +29,13 @@ extension Container {
   var deeplinkViewModel: ParameterFactory<(URL, InvitationRouterRoutes), DeeplinkViewModel> {
     self { DeeplinkViewModel(url: $0, router: $1) }
   }
+
+  // MARK: - Beta ID
+
+  var betaIdViewModel: ParameterFactory<InvitationRouterRoutes, BetaIdViewModel> {
+    self { BetaIdViewModel(router: $0) }
+  }
+
 }
 
 extension Container {

@@ -7,7 +7,7 @@ let package = Package(
   name: "BITEntities",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v15),
+    .iOS(.v16),
   ],
   products: [
     .library(

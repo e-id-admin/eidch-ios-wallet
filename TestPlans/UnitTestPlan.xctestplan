@@ -16,7 +16,7 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:swiyu.xcodeproj",
-        "identifier" : "F618D0FC6F5F3ABA236DD8E7",
+        "identifier" : "18E63AF93FE788D4E42ADFD3",
         "name" : "swiyuTests"
       }
     },
@@ -198,7 +198,15 @@
         "identifier" : "BITThemingTests",
         "name" : "BITThemingTests"
       }
-    }
+    },
+    {
+       "parallelizable" : true,
+       "target" : {
+         "containerPath" : "container:Modules\/Features\/BITEIDRequest",
+         "identifier" : "BITEIDRequestTests",
+         "name" : "BITEIDRequestTests"
+       }
+     }
   ],
   "version" : 1
 }

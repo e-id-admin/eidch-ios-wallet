@@ -1,7 +1,6 @@
 import Factory
 import Spyable
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITTestingCore
 
@@ -173,8 +172,8 @@ final class BiometricChangeViewModelTests: XCTestCase {
   // MARK: Private
 
   // swiftlint:disable all
-  private var pinCodeSize: Int = 6
-  private var isPresented: Bool = true
+  private var pinCodeSize = 6
+  private var isPresented = true
 
   private var getUniquePassphraseUseCase: GetUniquePassphraseUseCaseProtocolSpy!
   private var lockWalletUseCase: LockWalletUseCaseProtocolSpy!

@@ -56,9 +56,9 @@ final class LoginRepositoryTests: XCTestCase {
 
   // MARK: Private
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   private var secretManagerSpy: SecretManagerProtocolSpy!
   private var repository: LoginRepositoryProtocol!
-  //swiftlint:enable all
+  // swiftlint:enable all
 
 }

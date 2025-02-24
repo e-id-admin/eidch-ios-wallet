@@ -3,7 +3,6 @@ import BITCrypto
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITTestingCore
 @testable import BITVault
@@ -44,7 +43,7 @@ final class PepperRepositoryTests: XCTestCase {
   }
 
   func testGetPeppeInitialVector() throws {
-    let mockData: Data = .init()
+    let mockData = Data()
     secretManagerProtocolSpy.dataForKeyQueryReturnValue = mockData
     let data = try repository.getPepperInitialVector()
     XCTAssertEqual(mockData, data)
@@ -52,24 +51,24 @@ final class PepperRepositoryTests: XCTestCase {
   }
 
   func testSetPepperInitialVector() throws {
-    let mockData: Data = .init()
+    let mockData = Data()
     let mockAccessControl = try SecAccessControl.create(accessControlFlags: [], protection: kSecAttrAccessibleWhenUnlockedThisDeviceOnly)
     try repository.setPepperInitialVector(mockData)
     XCTAssertTrue(secretManagerProtocolSpy.setForKeyQueryCalled)
     XCTAssertEqual(mockData, secretManagerProtocolSpy.setForKeyQueryReceivedArguments?.value as? Data)
-    //swiftlint:disable force_cast
+    // swiftlint:disable force_cast
     XCTAssertEqual(mockAccessControl, secretManagerProtocolSpy.setForKeyQueryReceivedArguments?.query?[kSecAttrAccessControl as String] as! SecAccessControl)
-    //swiftlint:enable force_cast
+    // swiftlint:enable force_cast
   }
 
   // MARK: Private
 
-  private let vaultAlgorithm: VaultAlgorithm = .eciesEncryptionStandardVariableIVX963SHA256AESGCM
+  private let vaultAlgorithm = VaultAlgorithm.eciesEncryptionStandardVariableIVX963SHA256AESGCM
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   private var secretManagerProtocolSpy: SecretManagerProtocolSpy!
   private var keyManagerProtocolSpy: KeyManagerProtocolSpy!
   private var repository: PepperRepositoryProtocol!
-  //swiftlint:enable all
+  // swiftlint:enable all
 
 }

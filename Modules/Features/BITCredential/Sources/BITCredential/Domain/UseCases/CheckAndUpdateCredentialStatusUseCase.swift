@@ -62,6 +62,10 @@ public struct CheckAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialSta
 extension CheckAndUpdateCredentialStatusUseCase {
   private func getStatus(of credential: Credential) async throws -> VcStatus {
     let anyCredential = try createAnyCredentialUseCase.execute(from: credential.payload, format: credential.format)
+    let dateStatus = checkDateValidity(anyCredential: anyCredential)
+    guard dateStatus == .valid else {
+      return dateStatus
+    }
     guard
       let anyStatus = anyCredential.status,
       let validator = validators[anyStatus.type]
@@ -71,6 +75,17 @@ extension CheckAndUpdateCredentialStatusUseCase {
       return status
     }
     return .unknown
+  }
+
+  private func checkDateValidity(anyCredential: AnyCredential) -> VcStatus {
+    let now = Date().addingTimeInterval(dateBuffer)
+
+
+    if let validUntil = anyCredential.validUntil, validUntil < now {
+      return .expired
+    }
+
+    return .valid
   }
 
   private func updateCredentialStatus(_ credential: Credential, to status: VcStatus) async throws -> Credential {

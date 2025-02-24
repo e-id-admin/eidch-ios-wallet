@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITTestingCore
 
@@ -153,10 +152,10 @@ final class CurrentPinCodeViewModelTests: XCTestCase {
 
   // MARK: Private
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   private var getUniquePassphraseUseCase: GetUniquePassphraseUseCaseProtocolSpy!
   private var getLoginAttemptCounterUseCase: GetLoginAttemptCounterUseCaseProtocolSpy!
   private var lockWalletUseCase: LockWalletUseCaseProtocolSpy!
-  //swiftlint:enable all
+  // swiftlint:enable all
 
 }

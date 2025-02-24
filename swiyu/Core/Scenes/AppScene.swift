@@ -72,11 +72,17 @@ final class AppScene: SceneManagerProtocol {
 
   private func registerNotifications() {
     NotificationCenter.default.addObserver(forName: .userInactivityTimeout, object: nil, queue: .main) { _ in
-      Task { @MainActor in self.presentLogin() }
+      Task { @MainActor in
+        Container.shared.authContext.reset()
+        self.presentLogin()
+      }
     }
 
     NotificationCenter.default.addObserver(forName: .logout, object: nil, queue: .main) { _ in
-      Task { @MainActor in self.presentLogin() }
+      Task { @MainActor in
+        Container.shared.authContext.reset()
+        self.presentLogin()
+      }
     }
 
     NotificationCenter.default.addObserver(forName: .didLoginClose, object: nil, queue: .main) { _ in

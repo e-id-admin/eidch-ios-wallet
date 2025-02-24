@@ -18,9 +18,16 @@ class CredentialIntroductionScreen: InformationScreen {
   let tertiaryText: XCUIElement
   let expectedImageLabel = "e-id"
 
-  override func assert() {
-    super.assert()
+  override func assertDisplayed() {
+    super.assertDisplayed()
     XCTAssertEqual(getImagelabel(), expectedImageLabel)
     XCTAssertTrue(secondaryText.exists) }
+
+  func navigateFromAppStartToScreen() {
+    let securityIntroduction = SecurityIntroductionScreen(app: app)
+    securityIntroduction.navigateFromAppStartToScreen()
+    securityIntroduction.primaryButton.tap()
+    assertDisplayed()
+  }
 
 }

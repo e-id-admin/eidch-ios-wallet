@@ -1,5 +1,6 @@
 import Foundation
 import XCTest
+@testable import BITOnboarding
 
 class PrivacyPermissionScreen: Screen {
 
@@ -7,14 +8,13 @@ class PrivacyPermissionScreen: Screen {
 
   init(app: XCUIApplication) {
     self.app = app
-    acceptButton = app.buttons["Accept"]
-    declineButton = app.buttons["Decline"]
+    acceptButton = app.buttons[PrivacyPermissionView.AccessibilityIdentifier.acceptButton.rawValue]
+    declineButton = app.buttons[PrivacyPermissionView.AccessibilityIdentifier.declineButton.rawValue]
     backButton = app.buttons["Back"]
-    image = app.images["verify cross"]
-    primaryText = app.staticTexts["Help us to improve"]
-    secondaryText = app.staticTexts["Allow anonymized usage data to be shared with our development team."]
-    tertiaryText = app.staticTexts["Data protection and security"]
-    dataProtectionLink = app.links["Data protection and security"]
+    image = app.images[PrivacyPermissionView.AccessibilityIdentifier.image.rawValue]
+    primaryText = app.staticTexts[PrivacyPermissionView.AccessibilityIdentifier.primaryText.rawValue]
+    secondaryText = app.staticTexts[PrivacyPermissionView.AccessibilityIdentifier.secondaryText.rawValue]
+    dataProtectionLink = app.links[PrivacyPermissionView.AccessibilityIdentifier.privacyLink.rawValue]
   }
 
   // MARK: Internal
@@ -26,16 +26,22 @@ class PrivacyPermissionScreen: Screen {
   let image: XCUIElement
   let primaryText: XCUIElement
   let secondaryText: XCUIElement
-  let tertiaryText: XCUIElement
   let dataProtectionLink: XCUIElement
   let expectedImageLabel = "verify cross"
 
-  func assert() {
-    XCTAssertTrue(image.waitForExistence(timeout: 3))
+  func assertDisplayed() {
     XCTAssertTrue(primaryText.exists)
-    XCTAssertEqual(image.label, expectedImageLabel)
-    XCTAssertTrue(secondaryText.exists)
-    XCTAssertTrue(tertiaryText.exists)
+  }
+
+  func getImagelabel() -> String {
+    app.descendants(matching: .image).matching(identifier: PrivacyPermissionView.AccessibilityIdentifier.image.rawValue).allElementsBoundByIndex[0].label
+  }
+
+  func navigateFromAppStartToScreen() {
+    let credentialIntroduction = CredentialIntroductionScreen(app: app)
+    credentialIntroduction.navigateFromAppStartToScreen()
+    credentialIntroduction.primaryButton.tap()
+    assertDisplayed()
   }
 
 }

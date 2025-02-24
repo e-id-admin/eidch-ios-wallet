@@ -9,6 +9,7 @@ class RootRouterMock: RootRouterRoutes {
   var didCallDeeplink = false
   var didCallInvitation = false
   var didCallCamera = false
+  var didCallBetaId = false
 
   func login(animated: Bool) {
     didCallLogin = true
@@ -29,6 +30,10 @@ class RootRouterMock: RootRouterRoutes {
 
   func camera(openingStyle: any OpeningStyle) {
     didCallCamera = true
+  }
+
+  func betaId() {
+    didCallBetaId = true
   }
 
 }

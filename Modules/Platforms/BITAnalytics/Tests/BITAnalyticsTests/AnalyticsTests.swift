@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITAnalytics
 @testable import BITAnalyticsMocks
 @testable import BITTestingCore

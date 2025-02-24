@@ -128,7 +128,7 @@ extension Container {
   }
 
   public var authContext: Factory<LAContextProtocol> {
-    self { LAContext() }.cached
+    self { LAContext() }.singleton
   }
 
   // MARK: Internal

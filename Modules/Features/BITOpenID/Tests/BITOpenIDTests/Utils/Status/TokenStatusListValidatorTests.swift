@@ -1,7 +1,6 @@
 import Factory
 import Foundation
 import XCTest
-
 @testable import BITAnyCredentialFormatMocks
 @testable import BITJWT
 @testable import BITOpenID

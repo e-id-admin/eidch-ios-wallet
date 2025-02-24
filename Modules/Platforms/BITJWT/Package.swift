@@ -7,7 +7,7 @@ let package = Package(
   name: "BITJWT",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v15),
+    .iOS(.v16),
   ],
   products: [
     .library(
@@ -19,8 +19,8 @@ let package = Package(
     .package(path: "../../Platforms/BITAnalytics"),
     .package(path: "../../Platforms/BITCrypto"),
     .package(path: "../../Platforms/BITNetworking"),
+    .package(url: "https://github.com/e-id-admin/didresolver-swift.git", exact: "1.0.1"),
     .package(url: "https://github.com/hmlongco/Factory", exact: "2.2.0"),
-    .package(url: "git@github.com:e-id-admin/didresolver-swift.git", exact: "0.0.5"),
     .package(url: "https://github.com/airsidemobile/JOSESwift.git", exact: "2.4.0"),
     .package(url: "https://github.com/Matejkob/swift-spyable", revision: "8f78f36989bde9f06cc5a5254a6748c23c16b045"),
   ],
@@ -33,10 +33,10 @@ let package = Package(
         .product(name: "BITAnalytics", package: "BITAnalytics"),
         .product(name: "BITCrypto", package: "BITCrypto"),
         .product(name: "BITNetworking", package: "BITNetworking"),
+        .product(name: "DidResolver", package: "didresolver-swift"),
         .product(name: "Factory", package: "Factory"),
         .product(name: "JOSESwift", package: "JOSESwift"),
         .product(name: "Spyable", package: "swift-spyable"),
-        .product(name: "DidResolver", package: "didresolver-swift"),
       ],
       resources: [.process("Resources")],
       swiftSettings: [.define("DEBUG", .when(configuration: .debug))]),

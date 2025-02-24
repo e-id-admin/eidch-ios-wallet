@@ -13,7 +13,7 @@ public struct FooterView<Content: View>: View {
 
   public var body: some View {
     Group {
-      if #available(iOS 16, *), !sizeCategory.isAccessibilityCategory {
+      if !sizeCategory.isAccessibilityCategory {
         ViewThatFits(in: .horizontal) {
           HStack(spacing: .x2) {
             content()
@@ -31,9 +31,7 @@ public struct FooterView<Content: View>: View {
     }
     .padding(.vertical, .x4)
     .padding(.horizontal, .x6)
-    .if(horizontalSizeClass == .compact && verticalSizeClass == .regular, transform: {
-      $0.background(ThemingAssets.Materials.chrome.swiftUIColor)
-    })
+    .background(ThemingAssets.Materials.chrome.swiftUIColor)
   }
 
   // MARK: Internal

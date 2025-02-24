@@ -48,9 +48,8 @@ extension WildcardServerTrustManager {
         .replacingOccurrences(of: ".", with: "\\.")
         .replacingOccurrences(of: "*", with: ".*")
 
-      if RegexHelper.matches(regexPattern, in: url) {
-        return pattern
-      }
+      guard let regex = try? Regex(regexPattern), url.contains(regex) else { continue }
+      return pattern
     }
     return nil
   }

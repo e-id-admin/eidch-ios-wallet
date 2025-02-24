@@ -3,7 +3,6 @@ import BITCredentialShared
 import BITL10n
 import BITTheming
 import Factory
-import Foundation
 import SwiftUI
 
 // MARK: - PresentationRequestReviewView
@@ -19,150 +18,256 @@ public struct PresentationRequestReviewView: View {
   // MARK: Public
 
   public var body: some View {
-    GeometryReader { proxy in
-      ScrollView {
-        VStack(alignment: .leading, spacing: .x6) {
-          trustHeader()
-            .padding(.horizontal, .x6)
-            .padding(.top, .x3)
-
-          if let credential = viewModel.credential {
-            credentialContainer(credential)
-            content(credential)
-          }
+    content()
+      .accessibilityAction(named: L10n.presentationAcceptButtonText) {
+        Task { await viewModel.submit() }
+      }
+      .accessibilityAction(named: L10n.presentationDenyButtonText) {
+        Task { await viewModel.deny() }
+      }
+      .readSize(onChange: { size in
+        compression = sizeCategory.isAccessibilityCategory ? .small : UICompressionStyle(height: size.height)
+      })
+      .navigationBarHidden(true)
+      .task {
+        if orientation.isPortrait {
+          focus = .header
+        } else {
+          focus = .subtitle
         }
       }
-      .onFirstAppear {
-        compression = .init(height: proxy.size.height)
-      }
-    }
-    .accessibilityAction(named: L10n.presentationAcceptButtonText, {
-      Task { await viewModel.send(event: .submit) }
-    })
-    .accessibilityAction(named: L10n.presentationDenyButtonText, {
-      Task { await viewModel.send(event: .deny) }
-    })
-    .navigationBarHidden(true)
   }
-
-  // MARK: Internal
-
-  @Environment(\.sizeCategory) var sizeCategory
-  @Environment(\.accessibilityVoiceOverEnabled) var isVoiceOverEnabled
 
   // MARK: Private
 
-  private enum Constants {
-    static let issuerLineSpacing: CGFloat = -10
+  private enum Focus: Hashable {
+    case header, subtitle
   }
 
-  @State private var compression: UICompressionStyle = .normal
-  @State private var viewport: CGRect = .zero
+  @Environment(\.sizeCategory) private var sizeCategory
+  @State private var compression = UICompressionStyle.normal
 
   @StateObject private var viewModel: PresentationRequestReviewViewModel
 
-  @ViewBuilder
-  private func credentialContainer(_ credential: CompatibleCredential) -> some View {
-    VStack {
-      Spacer(minLength: compression.isCompressed ? .x4 : .x12)
-      CredentialCard(credential.credential)
-        .padding(.horizontal, .x10)
-        .accessibilityHidden(true)
-      Spacer(minLength: compression.isCompressed ? .x6 : .x12)
+  @FocusState private var inputFocused: Bool
+  @AccessibilityFocusState private var focus: Focus?
 
-      footerButtons()
-        .accessibilityElement(children: .contain)
+  @Orientation private var orientation
+
+  @ViewBuilder
+  private func content() -> some View {
+    switch viewModel.state {
+    case .result:
+      resultView(viewModel.credential)
+    case .loading:
+      loadingView(viewModel.credential.credential)
     }
-    .padding(.x6)
-    .background(
-      Color(uiColor: .secondarySystemBackground)
-        .ignoresSafeArea(.container, edges: .bottom)
-    )
-    .clipShape(.rect(cornerRadius: .x8))
-    .accessibilityElement(children: .contain)
+  }
+}
+
+// MARK: - Result
+
+extension PresentationRequestReviewView {
+  @ViewBuilder
+  private func resultView(_ credential: CompatibleCredential) -> some View {
+    if orientation.isPortrait {
+      portraitResultView(credential)
+    } else {
+      landscapeResultView(credential)
+    }
   }
 
   @ViewBuilder
-  private func content(_ compatibleCredential: CompatibleCredential) -> some View {
+  private func portraitResultView(_ credential: CompatibleCredential) -> some View {
     VStack(alignment: .leading) {
-      VStack(alignment: .leading) {
-        Text(L10n.credentialOfferContentSectionTitle)
-          .font(.custom.body)
-          .padding(.horizontal, .x6)
-          .accessibilityHidden(true)
+      actorHeader()
+        .padding(.horizontal, .x6)
+        .padding(.top, .x3)
 
-        Divider()
+      subtitle()
+        .padding(.vertical, .x4)
+        .padding(.horizontal, .x6)
 
-        LazyVStack {
-          PresentationRequestClaimList(compatibleCredential.requestClaims)
-            .padding(.leading, .x6)
-        }
-      }
-      .accessibilityElement(children: .contain)
-      .accessibilityLabel(L10n.credentialOfferContentSectionTitle)
-      .accessibilitySortPriority(10)
+      CredentialBox(credential: credential.credential, compression: compression)
 
-      footerButtons()
-        .padding(.x6)
-        .accessibilityElement(children: .contain)
+      claimsList(credential)
+        .padding(.top, .x2)
+      Spacer() // Pushes buttons down if VStack is not filling screen
     }
-    .accessibilityElement(children: .contain)
+    .applyScrollViewIfNeeded()
+    .safeAreaInset(edge: .bottom) {
+      footerButtons()
+        .background(ThemingAssets.Materials.chrome.swiftUIColor)
+        .accessibilitySortPriority(-1)
+    }
+  }
+
+  @ViewBuilder
+  private func landscapeResultView(_ credential: CompatibleCredential) -> some View {
+    HStack(spacing: .x5) {
+      credentialBoxWithSubtitle(credential.credential)
+        .accessibilitySortPriority(1)
+      VStack(alignment: .leading) {
+        actorHeader()
+          .padding(.bottom, .x3)
+        claimsList(credential)
+        Spacer() // Pushes buttons down if VStack is not filling screen
+      }
+      .padding(.top, .x4)
+      .applyScrollViewIfNeeded()
+      .safeAreaInset(edge: .bottom) {
+        footerButtons()
+          .background(ThemingAssets.Materials.chrome.swiftUIColor)
+          .accessibilitySortPriority(-1)
+      }
+    }
+  }
+
+  @ViewBuilder
+  private func claimsList(_ compatibleCredential: CompatibleCredential) -> some View {
+    VStack(alignment: .leading) {
+      Text(L10n.tkPresentApprovalSubtitleAffectedDetailsIos(compatibleCredential.requestedClaims.count))
+        .font(.custom.body)
+        .foregroundStyle(ThemingAssets.Label.primary.swiftUIColor)
+        .padding(.horizontal, .x6)
+        .accessibilityAddTraits(.isHeader)
+
+      Divider()
+
+      LazyVStack {
+        PresentationRequestClaimList(compatibleCredential.requestedClaims)
+          .padding(.leading, .x6)
+      }
+    }
   }
 
   @ViewBuilder
   private func footerButtons() -> some View {
-    if viewModel.isLoading {
-      VStack {
-        ProgressView()
-          .controlSize(.large)
-      }
-    } else {
-      VStack {
-        ButtonStackView {
-          Button { Task { await viewModel.send(event: .deny) } } label: {
-            Label(L10n.credentialOfferRefuseButton, systemImage: "xmark")
-              .if(!sizeCategory.isAccessibilityCategory, transform: {
-                $0.multilineTextAlignment(.center)
-                  .lineLimit(1)
-              })
-              .frame(maxWidth: .infinity)
-              .minimumScaleFactor(0.5)
-              .lineLimit(1)
-          }
-          .buttonStyle(.filledPrimary)
-          .controlSize(.large)
-          .accessibilityLabel(L10n.credentialOfferRefuseButton)
-          .accessibilitySortPriority(50)
-
-          Button { Task { await viewModel.send(event: .submit) } } label: {
-            Label(L10n.credentialOfferAcceptButton, systemImage: "checkmark")
-              .if(!sizeCategory.isAccessibilityCategory, transform: {
-                $0.multilineTextAlignment(.center)
-                  .lineLimit(1)
-              })
-              .frame(maxWidth: .infinity)
-              .minimumScaleFactor(0.5)
-              .lineLimit(1)
-          }
-          .buttonStyle(.filledSecondary)
-          .controlSize(.large)
-          .accessibilityLabel(L10n.credentialOfferAcceptButton)
-          .accessibilitySortPriority(100)
+    FooterView {
+      ButtonStackView {
+        Button { Task { await viewModel.deny() } } label: {
+          Label(L10n.tkGlobalDeclineSecondarybutton, systemImage: "xmark")
+            .if(!sizeCategory.isAccessibilityCategory, transform: {
+              $0.multilineTextAlignment(.center)
+                .lineLimit(1)
+            })
+            .frame(maxWidth: .infinity)
+            .minimumScaleFactor(0.5)
+            .lineLimit(1)
         }
+        .buttonStyle(.filledPrimary)
+        .controlSize(.large)
+
+        Button { Task { await viewModel.submit() } } label: {
+          Label(L10n.credentialOfferAcceptButton, systemImage: "checkmark")
+            .if(!sizeCategory.isAccessibilityCategory, transform: {
+              $0.multilineTextAlignment(.center)
+                .lineLimit(1)
+            })
+            .frame(maxWidth: .infinity)
+            .minimumScaleFactor(0.5)
+            .lineLimit(1)
+        }
+        .buttonStyle(.filledSecondary)
+        .controlSize(.large)
       }
+    }
+  }
+}
+
+// MARK: - Loading
+
+extension PresentationRequestReviewView {
+  @ViewBuilder
+  private func loadingView(_ credential: Credential) -> some View {
+    if orientation.isPortrait {
+      portraitLoadingView(credential)
+    } else {
+      landscapeLoadingView(credential)
     }
   }
 
   @ViewBuilder
-  private func trustHeader() -> some View {
-    if let verifierDisplay = viewModel.verifierDisplay {
-      let name = verifierDisplay.name ?? L10n.presentationVerifierNameUnknown
+  private func portraitLoadingView(_ credential: Credential) -> some View {
+    VStack {
+      actorHeader()
+        .padding(.horizontal, .x6)
+        .padding(.top, .x3)
+        .padding(.bottom, .x4)
 
-      if let imageData = verifierDisplay.logo {
-        TrustHeaderView(name: name, trustStatus: verifierDisplay.trustStatus, subtitle: L10n.tkGlobalCheckcredential, imageData: imageData)
-      } else if let imageUri = verifierDisplay.logoUri {
-        TrustHeaderView(name: name, trustStatus: verifierDisplay.trustStatus, subtitle: L10n.tkGlobalCheckcredential, imageUrl: imageUri)
+      VStack {
+        Spacer()
+        HStack(spacing: .x3) {
+          Spacer()
+          CredentialCard(credential)
+            .controlSize(.small)
+
+          Spacer()
+        }
+        Spacer(minLength: .x4)
+        loader()
       }
+      .padding(.top, .x6)
+      .padding(.bottom, .x10)
+      .padding(.horizontal, .x6)
+      .background(ThemingAssets.Background.secondary.swiftUIColor)
+      .clipShape(RoundedCorner(radius: .x8, corners: [.topLeft, .topRight]))
+    }
+    .ignoresSafeArea(edges: .bottom)
+  }
+
+  @ViewBuilder
+  private func landscapeLoadingView(_ credential: Credential) -> some View {
+    HStack(spacing: .x5) {
+      credentialBoxWithSubtitle(credential)
+      loader()
+        .frame(maxWidth: .infinity)
+    }
+  }
+
+  @ViewBuilder
+  private func loader() -> some View {
+    VStack(spacing: .x3) {
+      ProgressView()
+        .controlSize(.large)
+
+      if viewModel.showLoadingMessage {
+        Text(L10n.tkGlobalPleasewait)
+          .font(.custom.body)
+      }
+    }
+    .animation(.default, value: viewModel.showLoadingMessage)
+  }
+}
+
+// MARK: Components
+
+extension PresentationRequestReviewView {
+  @ViewBuilder
+  private func actorHeader() -> some View {
+    if let verifierDisplay = viewModel.verifierDisplay {
+      ActorHeaderView(verifier: verifierDisplay)
+        .accessibilityFocused($focus, equals: .header)
+    }
+  }
+
+  @ViewBuilder
+  private func subtitle() -> some View {
+    Text(L10n.tkGlobalCheckcredential)
+      .font(.custom.title3)
+      .foregroundStyle(ThemingAssets.Brand.Core.navyBlue.swiftUIColor)
+      .accessibilityAddTraits(.isHeader)
+      .accessibilityFocused($focus, equals: .subtitle)
+  }
+
+  @ViewBuilder
+  private func credentialBoxWithSubtitle(_ credential: Credential) -> some View {
+    VStack {
+      subtitle()
+        .padding(.top, .x4)
+        .fixedSize()
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+      CredentialBox(credential: credential, compression: compression)
     }
   }
 }

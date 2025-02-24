@@ -33,6 +33,7 @@ schemes:
       config: Dev (debug)
       commandLineArguments: 
         <<: *launch_arguments
+        -disable-user-inactivity-timeout: true
     test:
       <<: *test_plans
     profile:

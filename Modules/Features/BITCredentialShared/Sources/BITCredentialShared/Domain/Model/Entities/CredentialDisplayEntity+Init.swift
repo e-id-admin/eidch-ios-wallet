@@ -18,7 +18,6 @@ extension CredentialDisplayEntity {
     name = display.name
     logoAltText = display.logoAltText
     logoData = display.logoBase64
-    logoUrl = display.logoUrl?.absoluteString
     summary = display.summary
     backgroundColor = display.backgroundColor
   }

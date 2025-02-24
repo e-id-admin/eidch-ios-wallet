@@ -1,6 +1,5 @@
 import Spyable
 import XCTest
-
 @testable import BITAnyCredentialFormat
 @testable import BITOpenID
 
@@ -39,11 +38,11 @@ final class FetchAnyCredentialUseCaseFactoryTests: XCTestCase {
 
   // MARK: Private
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   private var useCase: FetchAnyCredentialUseCase!
   private var spyFetchCredentialVcSdJwtUseCase: FetchAnyCredentialUseCaseProtocolSpy!
   private var mockDispatcher: [CredentialFormat: FetchAnyCredentialUseCaseProtocol]!
   private var mockVcSdJwtCredential: AnyCredentialSpy!
-  //swiftlint:enable all
+  // swiftlint:enable all
 
 }

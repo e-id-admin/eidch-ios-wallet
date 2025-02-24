@@ -36,8 +36,8 @@ struct FetchVersionEnforcementUseCase: FetchVersionEnforcementUseCaseProtocol {
 
   // MARK: Private
 
-  private static let highPriority: String = "high"
-  private static let iOSPlatform: String = "ios"
+  private static let highPriority = "high"
+  private static let iOSPlatform = "ios"
 
   private let repository: VersionEnforcementRepositoryProtocol
   private var getAppVersionUseCase: GetAppVersionUseCaseProtocol

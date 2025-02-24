@@ -53,18 +53,17 @@ public struct AppVersion: Equatable, Comparable {
 
   // MARK: Private
 
-  private let regex: String = #"(?<major>\d+)(.(?<minor>\d+))?(.(?<patch>\d+))?"#
+  private let regex = #"(?<major>\d+)(.(?<minor>\d+))?(.(?<patch>\d+))?"#
 
   private static func parse(_ version: String, pattern: String) -> Version {
     var finalVersion: Version = (0, 0, 0)
-    guard let match = RegexHelper.firstMatch(pattern, in: version) else {
+    guard let regex = try? Regex(pattern), let match = version.wholeMatch(of: regex) else {
       return finalVersion
     }
 
-    for name in VersionKind.allCases {
-      let range = match.range(withName: name.rawValue)
-      guard let substringRange = Range(range, in: version) else { continue }
-      let capture = String(version[substringRange])
+    let captures = match.output.filter { $0.name != nil }
+    for (idx, name) in VersionKind.allCases.enumerated() {
+      guard let capture = captures[idx].value as? Substring else { continue }
       switch name {
       case .major:
         finalVersion.major = Int(capture) ?? 0
@@ -84,6 +83,6 @@ public struct AppVersion: Equatable, Comparable {
 
 extension AppVersion {
   public enum Mock {
-    public static let sample: AppVersion = .init("1.2.3")
+    public static let sample = AppVersion("1.2.3")
   }
 }

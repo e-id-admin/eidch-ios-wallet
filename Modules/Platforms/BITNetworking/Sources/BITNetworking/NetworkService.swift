@@ -5,19 +5,15 @@ import Moya
 
 public struct NetworkService {
 
-  // MARK: Lifecycle
-
-  public init() {}
-
   // MARK: Public
 
-  public func request<D>(_ target: some TargetType) async throws -> (D) where D: Decodable {
+  public func request<D>(_ target: some TargetType, decoder: JSONDecoder = NetworkContainer.shared.decoder()) async throws -> (D) where D: Decodable {
     try await withCheckedThrowingContinuation({ continuation in
       fetch(target) { result in
         switch result {
         case .success(let response):
           do {
-            let decodedObject = try NetworkContainer.shared.decoder().decode(D.self, from: response.data)
+            let decodedObject = try decoder.decode(D.self, from: response.data)
             continuation.resume(returning: decodedObject)
           } catch {
             continuation.resume(throwing: error)
@@ -29,13 +25,13 @@ public struct NetworkService {
     })
   }
 
-  public func request<D>(_ target: some TargetType) async throws -> (D, Response) where D: Decodable {
+  public func request<D>(_ target: some TargetType, decoder: JSONDecoder = NetworkContainer.shared.decoder()) async throws -> (D, Response) where D: Decodable {
     try await withCheckedThrowingContinuation({ continuation in
       fetch(target) { result in
         switch result {
         case .success(let response):
           do {
-            let decodedObject = try NetworkContainer.shared.decoder().decode(D.self, from: response.data)
+            let decodedObject = try decoder.decode(D.self, from: response.data)
             continuation.resume(returning: (decodedObject, response))
           } catch {
             continuation.resume(throwing: error)
@@ -68,7 +64,7 @@ public struct NetworkService {
       let endpointClosure = { (target: T) -> Endpoint in
         Endpoint(
           url: URL(target: target).absoluteString,
-          sampleResponseClosure: ({ () -> EndpointSampleResponse in NetworkContainer.shared.endpointClosure() ?? .response(.init(), target.sampleData) }),
+          sampleResponseClosure: ({ () -> EndpointSampleResponse in NetworkContainer.shared.endpointClosure() ?? .response(HTTPURLResponse(), target.sampleData) }),
           method: target.method,
           task: target.task,
           httpHeaderFields: target.headers)

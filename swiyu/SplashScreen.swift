@@ -17,8 +17,8 @@ struct AnimatedSplashScreen: View {
     static let secondStepDuration = 0.25 * duration
     static let thirdStepDuration = 0.5 * duration
 
-    static let logoExtendedWidth = 265.0
-    static let logoWidth = 28.0
+    static let logoExtendedWidth = 222.0
+    static let logoWidth = 52.0
 
     static let computedLogoPosition = -logoExtendedWidth / 2 + logoWidth / 2
   }
@@ -31,6 +31,8 @@ struct AnimatedSplashScreen: View {
   var body: some View {
     ZStack(alignment: .center) {
       Asset.logoExtended.swiftUIImage
+        .resizable()
+        .aspectRatio(contentMode: .fit)
         .mask {
           Rectangle()
             .keyframeAnimator(initialValue: properties, trigger: isAnimationTriggered) { content, value in
@@ -63,6 +65,9 @@ struct AnimatedSplashScreen: View {
         }
 
       Asset.logo.swiftUIImage
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: Defaults.logoWidth)
         .keyframeAnimator(initialValue: properties, trigger: isAnimationTriggered) { content, value in
           content
             .offset(x: value.translation)
@@ -88,10 +93,14 @@ struct AnimatedSplashScreen: View {
 struct SplashScreen: View {
   enum Defaults {
     static let duration = 1.0
+    static let logoExtendedWidth = 270.0
   }
 
   var body: some View {
     Asset.logoExtended.swiftUIImage
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .frame(width: Defaults.logoExtendedWidth)
       .onFirstAppear {
         DispatchQueue.main.asyncAfter(deadline: .now() + Defaults.duration) {
           completed?()

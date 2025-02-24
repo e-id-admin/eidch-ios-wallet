@@ -14,7 +14,7 @@ public class ClosableRoutesMock: ClosableRoutes {
   public var closeCalled = false
   public var popCalled = false
   public var popNumberCalled = false
-  public var popNumberCalledValue: Int = 0
+  public var popNumberCalledValue = 0
   public var popToRootCalled = false
   public var dismissCalled = false
 

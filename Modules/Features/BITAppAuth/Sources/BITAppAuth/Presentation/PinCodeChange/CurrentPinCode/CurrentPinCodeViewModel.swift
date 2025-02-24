@@ -21,10 +21,10 @@ class CurrentPinCodeViewModel: ObservableObject, Vibrating {
   var router: ChangePinCodeInternalRoutes
 
   @Published var inputFieldMessage: String?
-  @Published var attempts: Int = 0
-  @Published var inputFieldState: InputFieldState = .normal
+  @Published var attempts = 0
+  @Published var inputFieldState = InputFieldState.normal
 
-  @Published var pinCode: String = "" {
+  @Published var pinCode = "" {
     didSet {
       guard userDidRequestValidation else { return }
       inputFieldState = .normal
@@ -48,7 +48,7 @@ class CurrentPinCodeViewModel: ObservableObject, Vibrating {
 
   // MARK: Private
 
-  private var userDidRequestValidation: Bool = false
+  private var userDidRequestValidation = false
   private var bag: Set<AnyCancellable> = []
 
   @Injected(\.getUniquePassphraseUseCase) private var getUniquePassphraseUseCase: GetUniquePassphraseUseCaseProtocol

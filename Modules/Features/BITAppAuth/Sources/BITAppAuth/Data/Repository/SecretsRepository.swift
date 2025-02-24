@@ -16,9 +16,9 @@ enum SecretsError: Error {
 private enum SecretsKey {
   static let authenticationServiceKey = "ch.admin.foitt.federal-wallet.authentication"
 
-  static let saltAppPinIdentifierKey: String = "saltAppPinIdentifierKey"
-  static let pepperAppPinIdentifierKey: String = "pepperAppPinIdentifierKey"
-  static let pepperInitialVectorIdentifierKey: String = "pepperInitialVectorIdentifierKey"
+  static let saltAppPinIdentifierKey = "saltAppPinIdentifierKey"
+  static let pepperAppPinIdentifierKey = "pepperAppPinIdentifierKey"
+  static let pepperInitialVectorIdentifierKey = "pepperInitialVectorIdentifierKey"
   static let lockedWalletUptime = "lockedWalletUptime"
 }
 

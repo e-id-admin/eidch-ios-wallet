@@ -33,7 +33,7 @@ struct TokenStatusListValidator: AnyStatusCheckValidatorProtocol {
 
   // MARK: Private
 
-  private static let statusListType: String = "statuslist+jwt"
+  private static let statusListType = "statuslist+jwt"
 
   @Injected(\.openIDRepository) private var repository: OpenIDRepositoryProtocol
   @Injected(\.tokenStatusListDecoder) private var tokenStatusListDecoder: TokenStatusListDecoderProtocol

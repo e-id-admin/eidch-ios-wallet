@@ -22,8 +22,8 @@ struct CameraPermissionView: View {
       secondary: viewModel.secondary,
       image: Assets.camera.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      buttonLabel: viewModel.buttonText,
-      onNextAction: viewModel.buttonAction)
+      primaryButtonLabel: viewModel.buttonText,
+      primaryButtonAction: viewModel.buttonAction)
       .toolbar { toolbarContent() }
   }
 

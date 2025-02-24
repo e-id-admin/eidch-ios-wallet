@@ -47,9 +47,9 @@ extension PresentationEndpoint: TargetType {
   var task: Moya.Task {
     switch self {
     case .submission(_, presentationBody: let presentationBody):
-      .requestParameters(parameters: presentationBody.asDictionnary(), encoding: URLEncoding.httpBody)
+      .requestParameters(parameters: presentationBody.asDictionary(), encoding: URLEncoding.httpBody)
     case .errorSubmission(_, presentationErrorBody: let presentationErrorBody):
-      .requestParameters(parameters: presentationErrorBody.asDictionnary(), encoding: URLEncoding.httpBody)
+      .requestParameters(parameters: presentationErrorBody.asDictionary(), encoding: URLEncoding.httpBody)
     }
   }
 

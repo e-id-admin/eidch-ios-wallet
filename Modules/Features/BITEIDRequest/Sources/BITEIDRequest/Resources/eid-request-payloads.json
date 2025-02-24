@@ -1,0 +1,403 @@
+[
+    {
+        "displayName": "UNDERAGE I7A (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I7A<<<<<<7<<<<<<<<<<<<<<<",
+                "1001015X3012316<<<<<<<<<<<<<<2",
+                "MINDERJAEHRIGE<<ANNETTE<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE I7G (ID CARD)",
+        "payload": {
+            "legalRepresentant": true,
+            "email": null,
+            "mrz": [
+                "ID<<<I7G<<<<<<3<<<<<<<<<<<<<<<",
+                "1001015X3012316<<<<<<<<<<<<<<0",
+                "MINDERJAEHRIGE<<ANNETTE<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE I7C (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I7C<<<<<<9<<<<<<<<<<<<<<<",
+                "1001015X2312318<<<<<<<<<<<<<<0",
+                "MINDERJAEHRIGE<<ANNETTE<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE I7D (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I7D<<<<<<0<<<<<<<<<<<<<<<",
+                "1001015X3012316<<<<<<<<<<<<<<6",
+                "MINDERJAEHRIGE<<ANNETTE<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE I7E (ID CARD)",
+        "payload": {
+            "legalRepresentant": true,
+            "email": null,
+            "mrz": [
+                "ID<<<I7E<<<<<<1<<<<<<<<<<<<<<<",
+                "1001015X3012316<<<<<<<<<<<<<<4",
+                "MINDERJAEHRIGE<<ANNETTE<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE I7F (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I7F<<<<<<2<<<<<<<<<<<<<<<",
+                "1001015X3012316<<<<<<<<<<<<<<2",
+                "MINDERJAEHRIGE<<ANNETTE<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE I7G (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I7G<<<<<<3<<<<<<<<<<<<<<<",
+                "1001015X3012316<<<<<<<<<<<<<<0",
+                "MINDERJAEHRIGE<<ANNETTE<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE P7B (PASSPORT)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "PM<<<MINDERJAEHRIGE<<ANNETTE<<<<<<<<<<<<<<<<",
+                "P7B<<<<<<7<<<1001015X3012316<<<<<<<<<<<<<<02"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE A (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<M101A<<<<4<<<<<<<<<<<<<<<",
+                "1001015X3012316<<<<<<<<<<<<<<8",
+                "MINDERJAEHRIGER<<TOBI<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE B (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<M101B<<<<7<<<<<<<<<<<<<<<",
+                "1001015X2312318<<<<<<<<<<<<<<4",
+                "MINDERJAEHRIGER<<TOBI<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE C (FOREIGN) DEAD",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<M101C<<<<0<<<<<<<<<<<<<<<",
+                "1001015X3012316<<<<<<<<<<<<<<6",
+                "MINDERJAEHRIGER<<TOBI<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "UNDERAGE D (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<M101D<<<<3<<<<<<<<<<<<<<<",
+                "1001015X3012316<<<<<<<<<<<<<<0",
+                "MINDERJAEHRIGER<<TOBI<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT A (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<E101A<<<<8<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<6",
+                "MUSTER1<<HANS1<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT B (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<E101B<<<<1<<<<<<<<<<<<<<<",
+                "0001018X2312318<<<<<<<<<<<<<<2",
+                "MUSTER1<<HANS1<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT C (FOREIGN) DEAD",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<E101C<<<<4<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<4",
+                "MUSTER1<<HANS1<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT D (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<E101D<<<<7<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<8",
+                "MUSTER1<<HANS1<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT A (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I1A<<<<<<9<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<4",
+                "MUSTER1<<HANS1<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT C (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I1C<<<<<<1<<<<<<<<<<<<<<<",
+                "0001018X2312318<<<<<<<<<<<<<<2",
+                "MUSTER1<<HANS1<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT D (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I1D<<<<<<2<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<8",
+                "MUSTER1<<HANS1<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT B (PASSPORT)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "PM<<<MUSTER1<<HANS1<<<<<<<<<<<<<<<<<<<<<<<<<",
+                "P1B<<<<<<9<<<0001018X3012316<<<<<<<<<<<<<<04"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT2 (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<E102<<<<<5<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<2",
+                "MUSTER2<<HANS2<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT2 (PASSPORT)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "PM<<<MUSTER2<<HANS2<<<<<<<<<<<<<<<<<<<<<<<<<",
+                "P2<<<<<<<1<<<0001018X3012316<<<<<<<<<<<<<<00"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT3 (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<E103<<<<<2<<<<<<<<<<<<<<<",
+                "0001018X2212315<<<<<<<<<<<<<<0",
+                "MUSTER3<<HANS3<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT3 (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I3<<<<<<<5<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<2",
+                "MUSTER3<<HANS3<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT4 (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<E104<<<<<9<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<4",
+                "MUSTER4<<HANS4<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT4 (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I4<<<<<<<8<<<<<<<<<<<<<<<",
+                "0001018X2212315<<<<<<<<<<<<<<8",
+                "MUSTER4<<HANS4<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT5 (FOREIGN) DEAD",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<E105<<<<<6<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<0",
+                "MUSTER5<<HANS5<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT5 (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I5<<<<<<<1<<<<<<<<<<<<<<<",
+                "0001018X3012316<<<<<<<<<<<<<<0",
+                "MUSTER5<<HANS5<<<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "ADULT6 (PASSPORT) DEAD",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "PM<<<MUSTER6<<HANS6<<<<<<<<<<<<<<<<<<<<<<<<<",
+                "P6<<<<<<<3<<<0001018X3012316<<<<<<<<<<<<<<06"
+            ]
+        }
+    },
+    {
+        "displayName": "MUSTERMANN (FOREIGN)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "AR<<<E012345676<<<<<<<<<<<<<<<",
+                "7001017X4012313<<<<<<<<<<<<<<6",
+                "MUSTERMANN<<FRANZ<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "MUSTERMANN (PASSPORT)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "PM<<<MUSTERMANN<<MAX<<<<<<<<<<<<<<<<<<<<<<<<",
+                "X012345679<<<7001017X4012313<<<<<<<<<<<<<<00"
+            ]
+        }
+    },
+    {
+        "displayName": "BEVORMUNDET (PASSPORT)",
+        "payload": {
+            "legalRepresentant": true,
+            "email": null,
+            "mrz": [
+                "PM<<<BEVORMUNDET<<FRITZ<<<<<<<<<<<<<<<<<<<<<",
+                "P9<<<<<<<2<<<0001018X3012316<<<<<<<<<<<<<<08"
+            ]
+        }
+    },
+    {
+        "displayName": "LORENZ (ID CARD)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "ID<<<I7<<<<<<<7<<<<<<<<<<<<<<<",
+                "6704034X3012316<<<<<<<<<<<<<<4",
+                "LORENZ<<PHILIPPE<<<<<<<<<<<<<<"
+            ]
+        }
+    },
+    {
+        "displayName": "INFOSTAR (PASSPORT)",
+        "payload": {
+            "legalRepresentant": false,
+            "email": null,
+            "mrz": [
+                "PM<<<MEIER<<NICHT<IM<INFOSTAR<<<<<<<<<<<<<<<",
+                "P999<<<<<4<<<1001015X3012316<<<<<<<<<<<<<<08"
+            ]
+        }
+    }
+]

@@ -2,7 +2,6 @@ import BITCredentialShared
 import BITInvitation
 import BITOpenID
 import Foundation
-
 @testable import BITNavigationTestCore
 
 final class MockRoutes: ClosableRoutesMock, CredentialOfferRouter.Routes {

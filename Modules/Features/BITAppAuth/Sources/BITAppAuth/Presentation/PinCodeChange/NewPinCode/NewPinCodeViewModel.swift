@@ -19,17 +19,17 @@ class NewPinCodeViewModel: ObservableObject, Vibrating {
 
   var router: ChangePinCodeInternalRoutes
 
-  @Published var inputFieldMessage: String?
-  @Published var inputFieldState: InputFieldState = .normal
-  @Published var isToastPresented: Bool = false
+  @Published var inputFieldMessage: String = L10n.tkOnboardingCharactersSubtitle
+  @Published var inputFieldState = InputFieldState.normal
+  @Published var isToastPresented = false
 
-  @Published var pinCode: String = "" {
+  @Published var pinCode = "" {
     didSet {
       guard userDidRequestValidation else { return }
       do {
         try validatePinCodeRuleUseCase.execute(pinCode)
         inputFieldState = .normal
-        inputFieldMessage = nil
+        inputFieldMessage = L10n.tkOnboardingCharactersSubtitle
       } catch {
         handleError(error)
       }
@@ -51,7 +51,7 @@ class NewPinCodeViewModel: ObservableObject, Vibrating {
 
   // MARK: Private
 
-  private var userDidRequestValidation: Bool = false
+  private var userDidRequestValidation = false
 
   @Injected(\.validatePinCodeRuleUseCase) private var validatePinCodeRuleUseCase: ValidatePinCodeRuleUseCaseProtocol
 

@@ -1,0 +1,11 @@
+{
+  "caseId": "1234-5678-abcd-1234567890ABCDE",
+  "surname": "Muster",
+  "givenNames": "Max Felix",
+  "dateOfBirth": "1992-12-31",
+  "identityType": "SWISS_PASS",
+  "identityNumber": "A123456789",
+  "validUntil": "2030-12-31",
+  "legalRepresentant": false,
+  "email": "user@examle.com"
+}

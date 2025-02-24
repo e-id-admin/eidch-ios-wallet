@@ -1,8 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "unbekannt.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "scale" : "1x"
     },
     {
       "appearances" : [
@@ -11,8 +11,40 @@
           "value" : "dark"
         }
       ],
-      "filename" : "unbekannt-dark.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "UnknownIcon-light@x2.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "UnknownIcon-dark@x2.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "UnknownIcon-light@x3.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "UnknownIcon-dark@x3.png",
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

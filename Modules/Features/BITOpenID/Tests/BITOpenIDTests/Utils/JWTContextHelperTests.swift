@@ -1,10 +1,8 @@
 import XCTest
-
 @testable import BITAnyCredentialFormatMocks
 @testable import BITJWT
 @testable import BITLocalAuthentication
 @testable import BITOpenID
-
 @testable import BITTestingCore
 @testable import BITVault
 
@@ -21,9 +19,9 @@ final class JWTContextHelperTests: XCTestCase {
   func testJWT_WithValidContext_ShouldReturnJWT() throws {
     let context = FetchCredentialContext.Mock.sample
     jwtHelper.jwtWithKeyPairTypeReturnValue = .Mock.sample
-    //swiftlint:disable all
+    // swiftlint:disable all
     let keyPair = context.keyPair!
-    //swiftlint:enable all
+    // swiftlint:enable all
 
     let jwt = try jwtContextHelper.jwt(using: context, keyPair: keyPair, type: "testType")
 

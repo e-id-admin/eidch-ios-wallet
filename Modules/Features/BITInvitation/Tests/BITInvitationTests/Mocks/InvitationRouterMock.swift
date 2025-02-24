@@ -4,7 +4,6 @@ import BITNavigation
 import BITOpenID
 import BITPresentation
 import Foundation
-
 @testable import BITNavigationTestCore
 
 class InvitationRouterMock: ClosableRoutesMock, InvitationRouterRoutes {
@@ -19,7 +18,9 @@ class InvitationRouterMock: ClosableRoutesMock, InvitationRouterRoutes {
   var didCallCompatibleCredentials = false
   var didCallNextCompatibleCredentials = false
   var didCallPresentationReview = false
+  var didCallPresentationResultState = false
   var didCallWrongData = false
+  var didCallBetaId = false
 
   func compatibleCredentials(for inputDescriptorId: String, and context: PresentationRequestContext) throws {
     didCallCompatibleCredentials = true
@@ -27,6 +28,10 @@ class InvitationRouterMock: ClosableRoutesMock, InvitationRouterRoutes {
 
   func presentationReview(with context: PresentationRequestContext) {
     didCallPresentationReview = true
+  }
+
+  func presentationResultState(with state: BITPresentation.PresentationRequestResultState, context: BITPresentation.PresentationRequestContext) {
+    didCallPresentationResultState = true
   }
 
   func settings() {
@@ -56,6 +61,10 @@ class InvitationRouterMock: ClosableRoutesMock, InvitationRouterRoutes {
 
   func wrongData() {
     didCallWrongData = true
+  }
+
+  func betaId() {
+    didCallBetaId = true
   }
 
 }

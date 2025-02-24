@@ -35,8 +35,6 @@ packages:
     path: Modules/Platforms/BITLocalAuthentication
   BITAnalytics:
     path: Modules/Platforms/BITAnalytics
-  BITSecurity:
-    path: Modules/Platforms/BITSecurity
   BITAnyCredentialFormat:
     path: Modules/Platforms/BITAnyCredentialFormat
 
@@ -62,3 +60,5 @@ packages:
     path: Modules/Features/BITEntities
   BITOpenID:
     path: Modules/Features/BITOpenID
+  BITEIDRequest:
+    path: Modules/Features/BITEIDRequest

@@ -3,11 +3,12 @@ import BITCore
 import Foundation
 
 public struct OtherMockAnyCredential: AnyCredential {
+
+  public var format = "unknown_format"
+
   public var raw: String {
     "mock value"
   }
-
-  public var format: String = "unknown_format"
 
   public var claims: [any AnyClaim] {
     []
@@ -18,6 +19,10 @@ public struct OtherMockAnyCredential: AnyCredential {
   }
 
   public var status: (any BITAnyCredentialFormat.AnyStatus)? {
+    nil
+  }
+
+  public var validUntil: Date? {
     nil
   }
 }

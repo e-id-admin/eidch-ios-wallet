@@ -7,7 +7,7 @@ public struct CredentialClaimDisplay: Codable, Hashable, Equatable, DisplayLocal
 
   // MARK: Lifecycle
 
-  public init(id: UUID = .init(), locale: String? = nil, name: String, claimId: UUID? = nil) {
+  public init(id: UUID = UUID(), locale: String? = nil, name: String, claimId: UUID? = nil) {
     self.id = id
     self.locale = locale
     self.name = name

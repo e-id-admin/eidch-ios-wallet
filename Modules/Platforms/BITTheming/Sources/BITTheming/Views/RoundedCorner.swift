@@ -1,8 +1,8 @@
 import SwiftUI
 
 public struct RoundedCorner: Shape {
-  var radius: CGFloat = .infinity
-  var corners: UIRectCorner = .allCorners
+  var radius = CGFloat.infinity
+  var corners = UIRectCorner.allCorners
 
   public init(radius: CGFloat, corners: UIRectCorner) {
     self.radius = radius

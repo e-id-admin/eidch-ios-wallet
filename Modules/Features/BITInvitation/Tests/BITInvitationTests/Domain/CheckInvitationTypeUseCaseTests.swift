@@ -1,7 +1,6 @@
 import BITCore
 import Spyable
 import XCTest
-
 @testable import BITInvitation
 
 final class CheckInvitationTypeUseCaseTests: XCTestCase {
@@ -10,11 +9,11 @@ final class CheckInvitationTypeUseCaseTests: XCTestCase {
 
   func testCheckInvitationType_Presentation_Success() async throws {
     let strURL = "https://bit.com"
-    guard let validPresentationInvitationURL: URL = .init(string: strURL) else {
+    guard let validPresentationInvitationURL = URL(string: strURL) else {
       fatalError("url generation")
     }
 
-    let expectedInvitationType: InvitationType = .presentation
+    let expectedInvitationType = InvitationType.presentation
     let invitationType = try await useCase.execute(url: validPresentationInvitationURL)
 
     XCTAssertEqual(expectedInvitationType, invitationType)
@@ -22,11 +21,11 @@ final class CheckInvitationTypeUseCaseTests: XCTestCase {
 
   func testCheckInvitationType_Credential_Success() async throws {
     let strURL = "openid-credential-offer://bit.com"
-    guard let validCredentialInvitationURL: URL = .init(string: strURL) else {
+    guard let validCredentialInvitationURL = URL(string: strURL) else {
       fatalError("url generation")
     }
 
-    let expectedInvitationType: InvitationType = .credentialOffer
+    let expectedInvitationType = InvitationType.credentialOffer
     let invitationType = try await useCase.execute(url: validCredentialInvitationURL)
 
     XCTAssertEqual(expectedInvitationType, invitationType)
@@ -34,7 +33,7 @@ final class CheckInvitationTypeUseCaseTests: XCTestCase {
 
   func testCheckInvitationType_Failure() async throws {
     let strURL = "test://bit.com"
-    guard let invalidInvitationURL: URL = .init(string: strURL) else {
+    guard let invalidInvitationURL = URL(string: strURL) else {
       fatalError("url generation")
     }
 

@@ -42,7 +42,11 @@ extension Container {
   }
 
   public var trustedDids: Factory<[String]> {
-    self { [ self.trustRegistryDid() ] }
+    self { [ self.trustRegistryDidIntProd() ] }
+  }
+
+  public var presentationFieldsValidator: Factory<PresentationFieldsValidatorProtocol> {
+    self { PresentationFieldsValidator() }
   }
 
   // MARK: Internal
@@ -81,9 +85,8 @@ extension Container {
     self { "trust-reg.trust-infra.swiyu.admin.ch" }
   }
 
-  #warning("must be defined")
-  private var trustRegistryDid: Factory<String> {
-    self { "did:tdw:123456" }
+  private var trustRegistryDidIntProd: Factory<String> {
+    self { "did:tdw:QmWrXWFEDenvoYWFXxSQGFCa6Pi22Cdsg2r6weGhY2ChiQ:identifier-reg.trust-infra.swiyu-int.admin.ch:api:v1:did:2e246676-209a-4c21-aceb-721f8a90b212" }
   }
 
 }
@@ -96,10 +99,6 @@ extension Container {
 
   public var anyDescriptorMapGenerator: Factory<AnyDescriptorMapGeneratorProtocol> {
     self { AnyDescriptorMapGenerator() }
-  }
-
-  public var anyPresentationFieldsValidator: Factory<AnyPresentationFieldsValidatorProtocol> {
-    self { AnyPresentationFieldsValidator() }
   }
 
   public var anyVpTokenGenerator: Factory<AnyVpTokenGeneratorProtocol> {
@@ -128,10 +127,14 @@ extension Container {
     }
   }
 
-  var anyPresentationFieldsValidatorDispatcher: Factory<[CredentialFormat: AnyPresentationFieldsValidatorProtocol]> {
+  var anyCredentialJsonGenerator: Factory<AnyCredentialJsonGeneratorProtocol> {
+    self { AnyCredentialJsonGenerator() }
+  }
+
+  var anyCredentialJsonGeneratorDispatcher: Factory<[CredentialFormat: AnyCredentialJsonGeneratorProtocol]> {
     self {
       [
-        CredentialFormat.vcSdJwt: VcSdJwtPresentationFieldsValidator(),
+        CredentialFormat.vcSdJwt: VcSdJwtCredentialJsonGenerator(),
       ]
     }
   }
@@ -183,11 +186,11 @@ extension Container {
     self { FetchTrustStatementUseCase() }
   }
 
-  public var baseRegistryDomainPattern: Factory<String> {
+  // MARK: Internal
+
+  var baseRegistryDomainPattern: Factory<String> {
     self { #"^did:tdw:[^:]+:([^:]+\.swiyu(-int)?\.admin\.ch):[^:]+"# }
   }
-
-  // MARK: Internal
 
   var trustRegistryRepository: Factory<TrustRegistryRepositoryProtocol> {
     self { TrustRegistryRepository() }

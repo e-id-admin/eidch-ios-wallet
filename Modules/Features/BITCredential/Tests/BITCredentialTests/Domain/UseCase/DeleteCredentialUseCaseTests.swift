@@ -1,7 +1,6 @@
 import Factory
 import Spyable
 import XCTest
-
 @testable import BITCredential
 @testable import BITCredentialMocks
 @testable import BITCredentialShared

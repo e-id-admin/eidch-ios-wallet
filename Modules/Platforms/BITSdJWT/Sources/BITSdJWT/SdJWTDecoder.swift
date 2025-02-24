@@ -31,7 +31,7 @@ public struct SdJWTDecoder: SdJWTDecoderProtocol {
         guard let digest = try findDigest(for: disclosure, in: digests, algorithm: algo) else {
           throw SdJWTDecoderError.digestNotFound
         }
-        return try .init(
+        return try SdJWTClaim(
           disclosableClaim: disclosableClaim,
           disclosure: disclosure,
           digest: digest)
@@ -62,7 +62,7 @@ extension SdJWTDecoder {
     guard
       let rawJwt = rawCredential.separatedByDisclosures.map(String.init).first
     else { throw SdJWTDecoderError.invalidRawSdJwt }
-    return try .init(compactSerialization: rawJwt)
+    return try JWS(compactSerialization: rawJwt)
   }
 
   private func findSelectiveDisclosures(in jwtPayloadData: Data) throws -> [SdJwtDigest] {

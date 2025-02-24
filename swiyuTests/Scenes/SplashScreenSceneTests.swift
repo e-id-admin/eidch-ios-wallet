@@ -1,7 +1,7 @@
+import Factory
 import Foundation
 import XCTest
 @testable import BITAppAuth
-@testable import BITSecurity
 @testable import swiyu
 
 final class SplashScreenSceneTests: XCTestCase {
@@ -12,18 +12,18 @@ final class SplashScreenSceneTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    sceneManagerDelegate = SceneManagerDelegateSpy()
     hasDevicePinUseCase = HasDevicePinUseCaseProtocolSpy()
-    jailbreakDetector = JailbreakDetectorProtocolSpy()
+    sceneManagerDelegate = SceneManagerDelegateSpy()
 
-    scene = SplashScreenScene(hasDevicePinUseCase: hasDevicePinUseCase, jailbreakDetector: jailbreakDetector)
+    Container.shared.hasDevicePinUseCase.register { self.hasDevicePinUseCase }
+
+    scene = SplashScreenScene()
     scene.delegate = sceneManagerDelegate
   }
 
   @MainActor
   func testHappyPath() {
     hasDevicePinUseCase.executeReturnValue = true
-    jailbreakDetector.isDeviceJailbrokenReturnValue = false
     UserDefaults.standard.setValue(false, forKey: "rootOnboardingIsEnabled")
 
     scene.didCompleteSplashScreen()
@@ -37,7 +37,6 @@ final class SplashScreenSceneTests: XCTestCase {
   @MainActor
   func testNoDevicePinCode() {
     hasDevicePinUseCase.executeReturnValue = false
-    jailbreakDetector.isDeviceJailbrokenReturnValue = false
 
     scene.didCompleteSplashScreen()
 
@@ -50,7 +49,6 @@ final class SplashScreenSceneTests: XCTestCase {
   @MainActor
   func testOnboardingEnabled() {
     hasDevicePinUseCase.executeReturnValue = true
-    jailbreakDetector.isDeviceJailbrokenReturnValue = false
     UserDefaults.standard.setValue(true, forKey: "rootOnboardingIsEnabled")
 
     scene.didCompleteSplashScreen()
@@ -61,27 +59,12 @@ final class SplashScreenSceneTests: XCTestCase {
     XCTAssertTrue(sceneManagerDelegate.changeSceneToAnimatedReceivedInvocations.contains(where: { $0.sceneManager == OnboardingScene.self }))
   }
 
-  @MainActor
-  func testDeviceJailbreak() {
-    hasDevicePinUseCase.executeReturnValue = true
-    jailbreakDetector.isDeviceJailbrokenReturnValue = true
-    UserDefaults.standard.setValue(true, forKey: "rootOnboardingIsEnabled")
-
-    scene.didCompleteSplashScreen()
-
-    XCTAssertTrue(sceneManagerDelegate.changeSceneToAnimatedCalled)
-    XCTAssertEqual(sceneManagerDelegate.changeSceneToAnimatedCallsCount, 1)
-    XCTAssertEqual(sceneManagerDelegate.changeSceneToAnimatedReceivedInvocations.count, 1)
-    XCTAssertTrue(sceneManagerDelegate.changeSceneToAnimatedReceivedInvocations.contains(where: { $0.sceneManager == JailbreakScene.self }))
-  }
-
   // MARK: Private
 
   // swiftlint:disable all
   private var scene: SplashScreenScene!
   private var sceneManagerDelegate: SceneManagerDelegateSpy!
   private var hasDevicePinUseCase: HasDevicePinUseCaseProtocolSpy!
-  private var jailbreakDetector: JailbreakDetectorProtocolSpy!
   // swiftlint:enable all
 
 }

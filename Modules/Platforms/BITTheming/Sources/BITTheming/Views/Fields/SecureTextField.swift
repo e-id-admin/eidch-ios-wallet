@@ -1,3 +1,4 @@
+import BITL10n
 import Foundation
 import SwiftUI
 import UIKit
@@ -52,11 +53,12 @@ public struct SecureTextField: UIViewRepresentable {
       let button = textField?.rightView as? UIButton
       let imageName = isSecure ? "eye.slash" : "eye"
       button?.setImage(UIImage(systemName: imageName), for: .normal)
+      button?.accessibilityLabel = isSecure ? L10n.tkGlobalInvisibleAlt : L10n.tkGlobalVisibleAlt
     }
 
     // MARK: Private
 
-    private var isSecure: Bool = true
+    private var isSecure = true
 
     ///
     /// Prevent the dot entry in the input field when the user enters 2 or more spaces.
@@ -97,6 +99,8 @@ public struct SecureTextField: UIViewRepresentable {
     textField.rightView = toggleButton
     textField.rightViewMode = .always
 
+    textField.accessibilityIdentifier = accessibilityIdentifier
+
     context.coordinator.textField = textField
 
     return textField
@@ -119,6 +123,8 @@ public struct SecureTextField: UIViewRepresentable {
 
   // MARK: Private
 
+  @Environment(\.secureTextFieldAccessibilityIdentifier) private var accessibilityIdentifier: String?
+
   private func textField(context: Context) -> UITextField {
     let textField = UITextField()
     if let prompt {
@@ -140,6 +146,7 @@ public struct SecureTextField: UIViewRepresentable {
     }
 
     textField.delegate = context.coordinator
+    textField.accessibilityIdentifier = accessibilityIdentifier
     return textField
   }
 
@@ -152,4 +159,16 @@ public struct SecureTextField: UIViewRepresentable {
     return toggleButton
   }
 
+}
+
+// MARK: - SecureTextFieldAccessibilityIdentifier
+
+extension View {
+  public func secureTextFieldAccessibilityIdentifier(_ identifier: String? = nil) -> some View {
+    environment(\.secureTextFieldAccessibilityIdentifier, identifier)
+  }
+}
+
+extension EnvironmentValues {
+  @Entry var secureTextFieldAccessibilityIdentifier: String?
 }

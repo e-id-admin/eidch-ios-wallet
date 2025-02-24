@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "shield person.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "shield person@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "shield person@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "shield person.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

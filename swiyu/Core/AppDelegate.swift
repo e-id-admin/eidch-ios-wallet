@@ -56,6 +56,7 @@ extension AppDelegate {
       "rootOnboardingIsEnabled": true,
       "isBiometricUsageAllowed": false,
       "hasDeletedCredential": false,
+      "eIDRequestAfterOnboardingEnabled": true,
     ])
   }
 

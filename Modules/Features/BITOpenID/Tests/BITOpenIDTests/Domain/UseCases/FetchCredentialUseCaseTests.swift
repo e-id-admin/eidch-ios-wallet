@@ -1,8 +1,10 @@
 import BITCore
 import BITNetworking
+import Factory
 import Spyable
 import XCTest
-
+@testable import BITAnalytics
+@testable import BITAnalyticsMocks
 @testable import BITAnyCredentialFormat
 @testable import BITCrypto
 @testable import BITOpenID
@@ -27,10 +29,16 @@ final class FetchCredentialUseCaseTests: XCTestCase {
     spyRepository.fetchCredentialFromCredentialRequestBodyAcccessTokenReturnValue = mockResponse
     spyRepository.fetchIssuerPublicKeyInfoFromReturnValue = mockIssuerPublicKeyInfo
 
-    useCase = FetchCredentialUseCase(
-      keyPairGenerator: spyKeyPairGenerator,
-      fetchAnyCredentialUseCase: spyFetchAnyCredentialUseCase,
-      repository: spyRepository)
+    analyticsProvider = MockProvider()
+    analytics = Analytics()
+    analytics.register(analyticsProvider)
+
+    Container.shared.analytics.register { self.analytics }
+    Container.shared.credentialKeyPairGenerator.register { self.spyKeyPairGenerator }
+    Container.shared.fetchAnyCredentialUseCase.register { self.spyFetchAnyCredentialUseCase }
+    Container.shared.openIDRepository.register { self.spyRepository }
+
+    useCase = FetchCredentialUseCase()
   }
 
   func testFetchCredentialSuccess_withAccessToken() async throws {
@@ -61,6 +69,7 @@ final class FetchCredentialUseCaseTests: XCTestCase {
     XCTAssertEqual(mockMetadataWrapper.selectedCredential as? CredentialMetadata.VcSdJwtCredentialConfigurationSupported, receivedContext.selectedCredential as? CredentialMetadata.VcSdJwtCredentialConfigurationSupported)
     XCTAssertEqual(mockMetadataWrapper.credentialMetadata.credentialEndpoint, receivedContext.credentialEndpoint.absoluteString)
 
+    XCTAssertEqual(analyticsProvider.logCounter, 0)
   }
 
   func testFetchCredentialSuccess_withoutProofType() async throws {
@@ -90,6 +99,8 @@ final class FetchCredentialUseCaseTests: XCTestCase {
     XCTAssertEqual(mockAccessToken, receivedContext.accessToken)
     XCTAssertEqual(mockWrapper.selectedCredential as? CredentialMetadata.VcSdJwtCredentialConfigurationSupported, receivedContext.selectedCredential as? CredentialMetadata.VcSdJwtCredentialConfigurationSupported)
     XCTAssertEqual(mockWrapper.credentialMetadata.credentialEndpoint, receivedContext.credentialEndpoint.absoluteString)
+
+    XCTAssertEqual(analyticsProvider.logCounter, 0)
   }
 
   func testFetchCredentialSuccess_withoutAccessToken() async throws {
@@ -108,6 +119,28 @@ final class FetchCredentialUseCaseTests: XCTestCase {
     XCTAssertEqual(mockMetadataWrapper.selectedCredential?.format, spyFetchAnyCredentialUseCase.executeForReceivedContext?.format)
     XCTAssertFalse(spyRepository.fetchCredentialFromCredentialRequestBodyAcccessTokenCalled)
     XCTAssertFalse(spyRepository.fetchIssuerPublicKeyInfoFromCalled)
+
+    XCTAssertEqual(analyticsProvider.logCounter, 0)
+  }
+
+  func testFetchCredentialFailure_keyPairGeneration() async throws {
+    mockAnyCredential.raw = UUID().uuidString
+    spyKeyPairGenerator.generateIdentifierAlgorithmThrowableError = NSError()
+    do {
+      let credential = try await useCase.execute(
+        from: mockUrl,
+        metadataWrapper: mockMetadataWrapper,
+        credentialOffer: mockCredentialOffer,
+        accessToken: nil)
+    } catch {
+      XCTAssertTrue(spyKeyPairGenerator.generateIdentifierAlgorithmCalled)
+      XCTAssertFalse(spyRepository.fetchAccessTokenFromPreAuthorizedCodeCalled)
+      XCTAssertFalse(spyFetchAnyCredentialUseCase.executeForCalled)
+      XCTAssertFalse(spyRepository.fetchCredentialFromCredentialRequestBodyAcccessTokenCalled)
+      XCTAssertFalse(spyRepository.fetchIssuerPublicKeyInfoFromCalled)
+
+      XCTAssertEqual(analyticsProvider.logCounter, 1)
+    }
   }
 
   func testAccessTokenInvalidGrant() async {
@@ -127,6 +160,7 @@ final class FetchCredentialUseCaseTests: XCTestCase {
       XCTAssertFalse(spyRepository.fetchCredentialFromCredentialRequestBodyAcccessTokenCalled)
       XCTAssertFalse(spyRepository.fetchIssuerPublicKeyInfoFromCalled)
       XCTAssertFalse(spyFetchAnyCredentialUseCase.executeForCalled)
+      XCTAssertEqual(analyticsProvider.logCounter, 0)
     } catch {
       XCTFail("Not the expected error")
     }
@@ -134,7 +168,7 @@ final class FetchCredentialUseCaseTests: XCTestCase {
 
   func testCredentialEnpoindInvalid() async {
     let invalidEndpoint = ""
-    let mockMetadataWrapperInvalid: CredentialMetadataWrapper = .init(selectedCredentialSupportedId: "123", credentialMetadata: .init(credentialIssuer: "valid-issuer", credentialEndpoint: invalidEndpoint, credentialConfigurationsSupported: [:], display: []))
+    let mockMetadataWrapperInvalid = CredentialMetadataWrapper(selectedCredentialSupportedId: "123", credentialMetadata: CredentialMetadata(credentialIssuer: "valid-issuer", credentialEndpoint: invalidEndpoint, credentialConfigurationsSupported: [:], display: []))
     do {
       _ = try await useCase.execute(
         from: mockUrl,
@@ -150,6 +184,7 @@ final class FetchCredentialUseCaseTests: XCTestCase {
       XCTAssertFalse(spyKeyPairGenerator.generateIdentifierAlgorithmCalled)
       XCTAssertFalse(spyDidJWKGenerator.generateFromPrivateKeyCalled)
       XCTAssertFalse(spyFetchAnyCredentialUseCase.executeForCalled)
+      XCTAssertEqual(analyticsProvider.logCounter, 0)
     } catch {
       XCTFail("Not the expected error")
     }
@@ -157,7 +192,7 @@ final class FetchCredentialUseCaseTests: XCTestCase {
 
   func testNoFormatAvailable() async {
     let unknownId = "unknown-id"
-    let mockMetadataWrapperInvalid: CredentialMetadataWrapper = .init(selectedCredentialSupportedId: unknownId, credentialMetadata: .init(credentialIssuer: "valid-issuer", credentialEndpoint: "some://valid-url", credentialConfigurationsSupported: [:], display: []))
+    let mockMetadataWrapperInvalid = CredentialMetadataWrapper(selectedCredentialSupportedId: unknownId, credentialMetadata: CredentialMetadata(credentialIssuer: "valid-issuer", credentialEndpoint: "some://valid-url", credentialConfigurationsSupported: [:], display: []))
     do {
       _ = try await useCase.execute(
         from: mockUrl,
@@ -173,6 +208,7 @@ final class FetchCredentialUseCaseTests: XCTestCase {
       XCTAssertFalse(spyKeyPairGenerator.generateIdentifierAlgorithmCalled)
       XCTAssertFalse(spyDidJWKGenerator.generateFromPrivateKeyCalled)
       XCTAssertFalse(spyFetchAnyCredentialUseCase.executeForCalled)
+      XCTAssertEqual(analyticsProvider.logCounter, 0)
     } catch {
       XCTFail("Not the expected error")
     }
@@ -183,15 +219,18 @@ final class FetchCredentialUseCaseTests: XCTestCase {
   private let mockSecKey = SecKeyTestsHelper.createPrivateKey()
   private let mockKeyPair = KeyPair(identifier: UUID(), algorithm: "ES256", privateKey: SecKeyTestsHelper.createPrivateKey())
   private let mockDidJwk = "mockDidJwk"
-  private let mockResponse: CredentialResponse = .Mock.sample
-  private let mockIssuerPublicKeyInfo: PublicKeyInfo = .Mock.sample
+  private let mockResponse = CredentialResponse.Mock.sample
+  private let mockIssuerPublicKeyInfo = PublicKeyInfo.Mock.sample
   private let mockAnyCredential = AnyCredentialSpy()
-  private let mockOpenIdConfiguration: OpenIdConfiguration = .Mock.sample
-  private let mockMetadataWrapper: CredentialMetadataWrapper = .Mock.sample
-  private let mockCredentialOffer: CredentialOffer = .Mock.sample
-  private let mockAccessToken: AccessToken = .Mock.sample
+  private let mockOpenIdConfiguration = OpenIdConfiguration.Mock.sample
+  private let mockMetadataWrapper = CredentialMetadataWrapper.Mock.sample
+  private let mockCredentialOffer = CredentialOffer.Mock.sample
+  private let mockAccessToken = AccessToken.Mock.sample
   // swiftlint:disable all
-  private let mockUrl: URL = .init(string: "some://url")!
+  private let mockUrl = URL(string: "some://url")!
+  private var analytics: AnalyticsProtocol!
+  private var analyticsProvider: MockProvider!
+
   // swiftlint:enable all
   private var spyFetchAnyCredentialUseCase = FetchAnyCredentialUseCaseProtocolSpy()
   private var spyDidJWKGenerator = CredentialDidJWKGeneratorProtocolSpy()

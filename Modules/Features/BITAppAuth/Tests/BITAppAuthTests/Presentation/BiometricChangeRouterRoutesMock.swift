@@ -1,12 +1,11 @@
 import Foundation
-
 @testable import BITAppAuth
 @testable import BITNavigationTestCore
 
 class BiometricChangeRouterRoutesMock: ClosableRoutesMock, BiometricChangeRouterRoutes {
 
-  var loginCalled: Bool = false
-  var biometicStatusUpdateCalled: Bool = false
+  var loginCalled = false
+  var biometicStatusUpdateCalled = false
 
   var delegate: (any BITAppAuth.BiometricChangeDelegate)?
 

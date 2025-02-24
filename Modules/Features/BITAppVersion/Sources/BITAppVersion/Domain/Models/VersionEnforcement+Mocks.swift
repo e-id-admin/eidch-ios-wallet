@@ -1,16 +1,17 @@
 #if DEBUG
-import BITTestingCore
 import Foundation
+@testable import BITTestingCore
 
 extension VersionEnforcement: Mockable {
   public struct Mock {
-    public static let highMinVersionSample: VersionEnforcement = .decode(fromFile: "high-min-version-sample", bundle: .module)
-    public static let noMinVersionSample: VersionEnforcement = .decode(fromFile: "no-min-version-sample", bundle: .module)
-    public static let maxVersionSample: VersionEnforcement = .decode(fromFile: "max-version-sample", bundle: .module)
-    public static let lowPrioritySample: VersionEnforcement = .decode(fromFile: "low-priority-sample", bundle: .module)
-    public static let otherPlatformSample: VersionEnforcement = .decode(fromFile: "other-platform-sample", bundle: .module)
-    public static let sample: VersionEnforcement = .decode(fromFile: "sample", bundle: .module)
-    public static let noDisplaysSample: VersionEnforcement = .decode(fromFile: "no-displays-sample", bundle: .module)
+    public static let highMinVersionSample: VersionEnforcement = Mocker.decode(fromFile: "high-min-version-sample", bundle: .module)
+    public static let noMinVersionSample: VersionEnforcement = Mocker.decode(fromFile: "no-min-version-sample", bundle: .module)
+    public static let maxVersionSample: VersionEnforcement = Mocker.decode(fromFile: "max-version-sample", bundle: .module)
+    public static let lowPrioritySample: VersionEnforcement = Mocker.decode(fromFile: "low-priority-sample", bundle: .module)
+    public static let otherPlatformSample: VersionEnforcement = Mocker.decode(fromFile: "other-platform-sample", bundle: .module)
+    public static let sample: VersionEnforcement = Mocker.decode(fromFile: "sample", bundle: .module)
+    public static let sampleData: Data = Mocker.getData(fromFile: "version-enforcement-response", bundle: .module) ?? Data()
+    public static let noDisplaysSample: VersionEnforcement = Mocker.decode(fromFile: "no-displays-sample", bundle: .module)
   }
 }
 #endif

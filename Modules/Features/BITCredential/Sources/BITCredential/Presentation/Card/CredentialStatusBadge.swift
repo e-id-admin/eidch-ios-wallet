@@ -53,7 +53,8 @@ extension VcStatus {
     case .unknown,
          .unsupported,
          .valid: .outline
-    case .revoked,
+    case .expired,
+         .revoked,
          .suspended: .error
     }
   }

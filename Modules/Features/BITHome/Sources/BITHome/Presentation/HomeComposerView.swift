@@ -1,11 +1,10 @@
 import BITCredential
 import BITCredentialShared
-import BITInvitation
+import BITEIDRequest
 import BITL10n
 import BITSettings
 import BITTheming
 import Factory
-import Foundation
 import SwiftUI
 
 // MARK: - HomeComposerView
@@ -27,7 +26,7 @@ public struct HomeComposerView: View {
       .onAppear {
         UIAccessibility.post(notification: .screenChanged, argument: L10n.tkHomeHomescreenAlt)
         Task {
-          await viewModel.send(event: .refresh)
+          await viewModel.onAppear()
         }
       }
       .accessibilityAction(named: L10n.tkGlobalScanPrimarybutton, {
@@ -38,26 +37,30 @@ public struct HomeComposerView: View {
       })
   }
 
+  // MARK: Internal
+
+  enum AccessibilityIdentifier: String {
+    case scanButton
+    case menuButton
+  }
+
   // MARK: Private
 
   private enum FocusableElement: Hashable {
     case scan, menu, list, emptyState, error
   }
 
-  @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-  @Environment(\.verticalSizeClass) private var verticalSizeClass
   @Environment(\.sizeCategory) private var sizeCategory
-  @Environment(\.accessibilityVoiceOverEnabled) private var isVoiceOverEnabled
-
   @AccessibilityFocusState
   private var focus: FocusableElement?
 
+  @Orientation private var orientation
+
   @ViewBuilder
   private func content() -> some View {
-    switch (horizontalSizeClass, verticalSizeClass) {
-    case (.compact, .regular):
+    if orientation.isPortrait {
       portraitLayout()
-    default:
+    } else {
       landscapeLayout()
     }
   }
@@ -96,7 +99,7 @@ extension HomeComposerView {
       }
     }
     .safeAreaInset(edge: .bottom) {
-      if !isLandscape {
+      if !orientation.isLandscape {
         portraitFooter()
       }
     }
@@ -104,23 +107,16 @@ extension HomeComposerView {
 
   @ViewBuilder
   private func emptyView() -> some View {
-    if #available(iOS 16, *) {
-      ViewThatFits(in: .vertical) {
-        VStack {
-          Spacer()
-          CredentialsEmptyStateView()
-            .padding(.horizontal, .x6)
-          Spacer()
-        }
-
-        ScrollView {
-          CredentialsEmptyStateView()
-            .padding(.horizontal, .x6)
-        }
+    ViewThatFits(in: .vertical) {
+      VStack {
+        Spacer()
+        CredentialsEmptyStateView(betaIdAction: viewModel.openBetaId, eIDRequestAction: viewModel.openEIDRequest)
+          .padding(.horizontal, .x6)
+        Spacer()
       }
-    } else {
+
       ScrollView {
-        CredentialsEmptyStateView()
+        CredentialsEmptyStateView(betaIdAction: viewModel.openBetaId, eIDRequestAction: viewModel.openEIDRequest)
           .padding(.horizontal, .x6)
       }
     }
@@ -128,21 +124,14 @@ extension HomeComposerView {
 
   @ViewBuilder
   private func errorView() -> some View {
-    if #available(iOS 16, *) {
-      ViewThatFits(in: .vertical) {
-        VStack {
-          Spacer()
-          EmptyStateView(.error(error: viewModel.stateError)) { Text("Refresh") } action: { await viewModel.send(event: .refresh) }
-            .padding(.horizontal, .x6)
-          Spacer()
-        }
-
-        ScrollView {
-          EmptyStateView(.error(error: viewModel.stateError)) { Text("Refresh") } action: { await viewModel.send(event: .refresh) }
-            .padding(.horizontal, .x6)
-        }
+    ViewThatFits(in: .vertical) {
+      VStack {
+        Spacer()
+        EmptyStateView(.error(error: viewModel.stateError)) { Text("Refresh") } action: { await viewModel.send(event: .refresh) }
+          .padding(.horizontal, .x6)
+        Spacer()
       }
-    } else {
+
       ScrollView {
         EmptyStateView(.error(error: viewModel.stateError)) { Text("Refresh") } action: { await viewModel.send(event: .refresh) }
           .padding(.horizontal, .x6)
@@ -156,17 +145,31 @@ extension HomeComposerView {
       Section {
         Button { viewModel.openSecurity() } label: { Label(L10n.settingsSecurity, systemImage: "lock") }
       }
+
       Section {
         Button { viewModel.openSettings() } label: { Label(L10n.settingsLanguage, systemImage: "globe") }
-
         Button { viewModel.openHelp() } label: { Label(L10n.settingsHelp, systemImage: "questionmark.circle") }
-
         Button { viewModel.openContact() } label: { Label(L10n.settingsContact, systemImage: "envelope") }
+        Button { viewModel.openFeedback() } label: { Label(L10n.tkMenuSettingWalletFeedback, systemImage: "text.bubble") }
       }
+
       Section {
         Button { viewModel.openImpressum() } label: { Label(L10n.settingsImpressum, systemImage: "info.circle") }
-
         Button { viewModel.openLicenses() } label: { Label(L10n.settingsLicences, systemImage: "doc") }
+      }
+
+      Section {
+        Button(action: viewModel.openBetaId, label: {
+          Label(L10n.tkGlobalGetbetaidPrimarybutton, systemImage: "person.text.rectangle")
+            .accessibilityLabel(L10n.tkGlobalGetbetaidPrimarybutton)
+        })
+
+        if viewModel.isEIDRequestFeatureEnabled {
+          Button(action: viewModel.openEIDRequest, label: {
+            Label(L10n.tkGetEidHomePrimaryButton, systemImage: "person.text.rectangle")
+              .accessibilityLabel(L10n.tkGetEidHomePrimaryButton)
+          })
+        }
       }
     } label: {
       HomeAssets.menuButton.swiftUIImage
@@ -176,6 +179,7 @@ extension HomeComposerView {
         .accessibilityHidden(true)
     }
     .accessibilityLabel(L10n.tkGlobalMoreoptionsAlt)
+    .accessibilityIdentifier(AccessibilityIdentifier.menuButton.rawValue)
     .accessibilitySortPriority(50)
     .accessibilityFocused($focus, equals: .menu)
     .accessibilityAddTraits(.isButton)
@@ -183,7 +187,7 @@ extension HomeComposerView {
 
   @ViewBuilder
   private func scannerButton() -> some View {
-    if sizeCategory.isAccessibilityCategory || isLandscape {
+    if sizeCategory.isAccessibilityCategory || orientation.isLandscape {
       Button(action: viewModel.openScanner) {
         HomeAssets.scannerButton.swiftUIImage
           .resizable()
@@ -191,6 +195,7 @@ extension HomeComposerView {
           .frame(height: 60)
       }
       .accessibilityLabel(L10n.tkGlobalScanPrimarybuttonAlt)
+      .accessibilityIdentifier(AccessibilityIdentifier.scanButton.rawValue)
       .accessibilitySortPriority(100)
       .accessibilityFocused($focus, equals: .scan)
     } else {
@@ -200,6 +205,7 @@ extension HomeComposerView {
       })
       .buttonStyle(.filledPrimary)
       .accessibilityLabel(L10n.tkGlobalScanPrimarybuttonAlt)
+      .accessibilityIdentifier(AccessibilityIdentifier.scanButton.rawValue)
       .accessibilitySortPriority(100)
       .frame(height: 60)
       .accessibilityFocused($focus, equals: .scan)
@@ -211,9 +217,13 @@ extension HomeComposerView {
     List(viewModel.credentials) { credential in
       Button(action: { viewModel.openDetail(for: credential) }, label: {
         CredentialCell(credential)
+          .animation(.spring, value: credential.status)
       })
     }
     .listStyle(.plain)
+    .refreshable {
+      await viewModel.send(event: .checkCredentialsStatus)
+    }
   }
 }
 
@@ -247,12 +257,8 @@ extension HomeComposerView {
 extension HomeComposerView {
   @ViewBuilder
   private func landscapeLayout() -> some View {
-    if #available(iOS 16, *) {
-      ViewThatFits(in: .vertical) {
-        landscapeContentLayout()
-        landscapeScrollableContentLayout()
-      }
-    } else {
+    ViewThatFits(in: .vertical) {
+      landscapeContentLayout()
       landscapeScrollableContentLayout()
     }
   }
@@ -290,17 +296,8 @@ extension HomeComposerView {
   }
 }
 
-extension HomeComposerView {
-  fileprivate var isLandscape: Bool {
-    switch (horizontalSizeClass, verticalSizeClass) {
-    case (.compact, .regular): false
-    default: true
-    }
-  }
-}
-
 #if DEBUG
 #Preview {
-  HomeComposerView(viewModel: .init(.results, router: HomeRouter(), credentials: Credential.Mock.array))
+  HomeComposerView(viewModel: HomeViewModel(.results, router: HomeRouter(), credentials: Credential.Mock.array))
 }
 #endif

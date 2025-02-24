@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITOpenID
 
 final class PresentationRequestBodyTests: XCTestCase {
@@ -8,7 +7,7 @@ final class PresentationRequestBodyTests: XCTestCase {
 
   func test_acceptPresentation() {
     let presentationRequestBody = PresentationRequestBody(vpToken: vpToken, presentationSubmission: presentationSubmission)
-    let dictionary = presentationRequestBody.asDictionnary()
+    let dictionary = presentationRequestBody.asDictionary()
 
     XCTAssertFalse(dictionary.isEmpty)
     XCTAssertEqual(dictionary.count, 2)
@@ -16,6 +15,7 @@ final class PresentationRequestBodyTests: XCTestCase {
     XCTAssertTrue(dictionary.contains(where: { $0.key == "presentation_submission" }))
 
     XCTAssertEqual(dictionary["vp_token"] as? String, vpToken)
+    XCTAssertTrue(dictionary["presentation_submission"] is String)
   }
 
   // MARK: Private

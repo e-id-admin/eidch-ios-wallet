@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITAppVersion
 
 final class FetchVersionEnforcementUseCaseTests: XCTestCase {

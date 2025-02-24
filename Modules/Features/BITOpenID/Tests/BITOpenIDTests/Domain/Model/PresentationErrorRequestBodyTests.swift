@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITOpenID
 
 final class PresentationErrorRequestBodyTests: XCTestCase {
@@ -8,7 +7,7 @@ final class PresentationErrorRequestBodyTests: XCTestCase {
 
   func test_refusePresentation() {
     let presentationErrorRequestBody = PresentationErrorRequestBody(error: .clientRejected)
-    let dictionary = presentationErrorRequestBody.asDictionnary()
+    let dictionary = presentationErrorRequestBody.asDictionary()
 
     XCTAssertFalse(dictionary.isEmpty)
     XCTAssertEqual(dictionary.count, 1)
@@ -20,7 +19,7 @@ final class PresentationErrorRequestBodyTests: XCTestCase {
 
   func test_refusePresentationWithDescription() {
     let presentationErrorRequestBody = PresentationErrorRequestBody(error: .clientRejected, errorDescription: "description")
-    let dictionary = presentationErrorRequestBody.asDictionnary()
+    let dictionary = presentationErrorRequestBody.asDictionary()
 
     XCTAssertFalse(dictionary.isEmpty)
     XCTAssertEqual(dictionary.count, 2)

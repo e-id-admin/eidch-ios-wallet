@@ -1,6 +1,5 @@
 import Spyable
 import XCTest
-
 @testable import BITOpenID
 
 final class AnyDescriptorMapGeneratorTests: XCTestCase {

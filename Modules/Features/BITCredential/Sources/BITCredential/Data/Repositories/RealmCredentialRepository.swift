@@ -46,7 +46,7 @@ struct RealmCredentialRepository: CredentialRepositoryProtocol {
   public func getAll() async throws -> [Credential] {
     let results = try database.get(CredentialEntity.self)
     let entities = results.sorted(by: \.createdAt, ascending: false)
-    return entities.map { .init($0) }
+    return entities.map { Credential($0) }
   }
 
   public func count() throws -> Int {

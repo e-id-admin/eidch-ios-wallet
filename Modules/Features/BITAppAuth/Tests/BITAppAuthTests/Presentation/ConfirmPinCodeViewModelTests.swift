@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITTestingCore
 
@@ -8,10 +7,10 @@ final class ConfirmPinCodeViewModelTests: XCTestCase {
 
   // MARK: Internal
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   var router = ChangePinRouterMock()
 
-  //swiftlint:enable all
+  // swiftlint:enable all
 
   @MainActor
   override func setUp() {

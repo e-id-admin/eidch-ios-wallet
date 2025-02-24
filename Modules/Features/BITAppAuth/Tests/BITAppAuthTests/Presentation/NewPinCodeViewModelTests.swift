@@ -1,6 +1,6 @@
+import BITL10n
 import Factory
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITTestingCore
 
@@ -8,10 +8,10 @@ final class NewPinCodeViewModelTests: XCTestCase {
 
   // MARK: Internal
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   var router = ChangePinRouterMock()
 
-  //swiftlint:enable all
+  // swiftlint:enable all
 
   @MainActor
   override func setUp() {
@@ -35,7 +35,7 @@ final class NewPinCodeViewModelTests: XCTestCase {
     let viewModel = NewPinCodeViewModel(router: router)
     XCTAssertTrue(viewModel.pinCode.isEmpty)
     XCTAssertFalse(viewModel.isToastPresented)
-    XCTAssertNil(viewModel.inputFieldMessage)
+    XCTAssertEqual(viewModel.inputFieldMessage, L10n.tkOnboardingCharactersSubtitle)
     XCTAssertEqual(viewModel.inputFieldState, .normal)
     XCTAssertNotNil(viewModel.router.context.uniquePassphrase)
     XCTAssertNotNil(viewModel.router.context.newPinCodeDelegate)
@@ -49,7 +49,7 @@ final class NewPinCodeViewModelTests: XCTestCase {
     viewModel.submit()
 
     XCTAssertTrue(viewModel.pinCode.isEmpty)
-    XCTAssertNil(viewModel.inputFieldMessage)
+    XCTAssertEqual(viewModel.inputFieldMessage, L10n.tkOnboardingCharactersSubtitle)
     XCTAssertEqual(viewModel.inputFieldState, .normal)
 
     XCTAssertTrue(router.confirmNewPinCodeCalled)
@@ -101,7 +101,7 @@ final class NewPinCodeViewModelTests: XCTestCase {
     viewModel.pinCode = "12345"
 
     XCTAssertFalse(viewModel.pinCode.isEmpty)
-    XCTAssertNil(viewModel.inputFieldMessage)
+    XCTAssertEqual(viewModel.inputFieldMessage, L10n.tkOnboardingCharactersSubtitle)
     XCTAssertEqual(viewModel.inputFieldState, .normal)
 
     XCTAssertFalse(router.confirmNewPinCodeCalled)

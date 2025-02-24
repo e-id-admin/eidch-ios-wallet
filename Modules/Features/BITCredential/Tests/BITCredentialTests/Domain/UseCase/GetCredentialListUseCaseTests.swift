@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITCredential
 @testable import BITCredentialShared
 @testable import BITTestingCore
@@ -36,10 +35,10 @@ final class GetCredentialListUseCaseTests: XCTestCase {
 
   // MARK: Private
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   private var useCase: GetCredentialListUseCase!
   private var mockCredentials: [Credential] = [.Mock.sample, .Mock.sampleDisplaysAdditional, .Mock.diploma]
   private var repository = CredentialRepositoryProtocolSpy()
-  //swiftlint:enable all
+  // swiftlint:enable all
 
 }

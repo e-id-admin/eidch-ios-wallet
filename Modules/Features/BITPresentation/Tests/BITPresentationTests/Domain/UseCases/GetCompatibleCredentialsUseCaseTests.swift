@@ -1,11 +1,12 @@
-import BITAnyCredentialFormat
+import Factory
 import Spyable
 import XCTest
-
+@testable import BITAnyCredentialFormat
+@testable import BITAnyCredentialFormatMocks
+@testable import BITCore
 @testable import BITCredential
 @testable import BITCredentialShared
 @testable import BITOpenID
-
 @testable import BITPresentation
 @testable import BITTestingCore
 
@@ -14,55 +15,87 @@ final class GetCompatibleCredentialsUseCaseTests: XCTestCase {
   // MARK: Internal
 
   override func setUp() {
-    repositorySpy = CredentialRepositoryProtocolSpy()
-    fieldValidatorSpy = AnyPresentationFieldsValidatorProtocolSpy()
-    useCase = GetCompatibleCredentialsUseCase(repository: repositorySpy, anyPresentationFieldsValidator: fieldValidatorSpy)
+    setUpMocks()
+
+    useCase = GetCompatibleCredentialsUseCase()
+
+    success()
   }
 
-  func testExecute_success() async throws {
-    let mockCredentials: [Credential] = [.Mock.sample, .Mock.sample]
-    repositorySpy.getAllReturnValue = mockCredentials
-    fieldValidatorSpy.validateWithReturnValue = [.string("Smith"), .string("John"), .string("\(Date.now.timeIntervalSince1970)"), .string("Zürich"), .string("A1")]
-    XCTAssertTrue(mockCredentials.count > 1, "relevant only if there is compatible / no compatible credentials")
+  func testExecute_TwoMatchingCredentials_ReturnsCompatibleCredentials() async throws {
+    let requestObject = RequestObject.Mock.VcSdJwt.sample
 
-    let compatibleCredentials = try await useCase.execute(using: .Mock.VcSdJwt.sample)
+    let credentialsMap = try await useCase.execute(using: requestObject)
 
-    guard let firstCompatibleCredential = compatibleCredentials.first else {
-      XCTFail("No compatible credentials found")
-      return
-    }
-    XCTAssertFalse(firstCompatibleCredential.value.isEmpty)
+    XCTAssertEqual(credentialsMap.count, 1)
+    XCTAssertEqual(credentialsMap.first?.key, mockInputDescriptorId)
+
+    let compatibleCredentials = credentialsMap.first?.value
+    XCTAssertEqual(compatibleCredentials?.count, 2)
+    XCTAssertEqual(compatibleCredentials?[0].credential, mockCredentials[0])
+    XCTAssertEqual(compatibleCredentials?[1].credential, mockCredentials[2])
+
+    XCTAssertEqual(compatibleCredentials?.first?.requestedFields, mockMatchingFields)
 
     XCTAssertTrue(repositorySpy.getAllCalled)
-    XCTAssertEqual(1, repositorySpy.getAllCallsCount)
+    XCTAssertEqual(createAnyCredentialUseCaseSpy.executeFromFormatReceivedInvocations[0].format, mockCredentials[0].format)
+    XCTAssertEqual(createAnyCredentialUseCaseSpy.executeFromFormatReceivedInvocations[0].payload, mockCredentials[0].payload)
+    XCTAssertEqual(createAnyCredentialUseCaseSpy.executeFromFormatReceivedInvocations[1].format, mockCredentials[2].format)
+    XCTAssertEqual(createAnyCredentialUseCaseSpy.executeFromFormatReceivedInvocations[1].payload, mockCredentials[2].payload)
+    XCTAssertEqual(fieldValidatorSpy.validateWithReceivedArguments?.anyCredential.raw, mockAnyCredential.raw)
+    let inputDescriptor = requestObject.presentationDefinition.inputDescriptors.first
+    XCTAssertEqual(fieldValidatorSpy.validateWithReceivedArguments?.requestedFields, inputDescriptor?.constraints.fields)
   }
 
-  func testExecute_missingOneMatchingField() async throws {
-    let mockCredentials: [Credential] = [.Mock.sample, .Mock.sample]
-    repositorySpy.getAllReturnValue = mockCredentials
-    fieldValidatorSpy.validateWithReturnValue = [.string("Smith"), .string("John")]
+  func testExecute_NoMatchingFormat_ThrowsNoCompatibleCredentials() async throws {
+    repositorySpy.getAllReturnValue = [.Mock.diploma]
 
     do {
       _ = try await useCase.execute(using: .Mock.VcSdJwt.sample)
       XCTFail("Should have thrown an exception")
-    } catch CompatibleCredentialsError.noCompatibleCredentials {
+    } catch CompatibleCredentialsError.compatibleCredentialNotFound {
       XCTAssertTrue(repositorySpy.getAllCalled)
+      XCTAssertFalse(createAnyCredentialUseCaseSpy.executeFromFormatCalled)
+      XCTAssertFalse(fieldValidatorSpy.validateWithCalled)
+    } catch {
+      XCTFail("Not the error expected")
+    }
+  }
+
+  func testExecute_NoMatchingFields_ThrowsNoCompatibleCredentials() async throws {
+    fieldValidatorSpy.validateWithReturnValue = []
+
+    do {
+      _ = try await useCase.execute(using: .Mock.VcSdJwt.sample)
+      XCTFail("Should have thrown an exception")
+    } catch CompatibleCredentialsError.compatibleCredentialNotFound {
       XCTAssertTrue(fieldValidatorSpy.validateWithCalled)
     } catch {
       XCTFail("Not the error expected")
     }
   }
 
-  func testExecute_additionalMatchingField() async throws {
-    let mockCredentials: [Credential] = [.Mock.sample, .Mock.sample]
-    repositorySpy.getAllReturnValue = mockCredentials
-    fieldValidatorSpy.validateWithReturnValue = [.string("additional field"), .string("Smith"), .string("John"), .string("\(Date.now.timeIntervalSince1970)")]
+  func testExecute_CreateAnyCredentialThrows_ThrowsNoCompatibleCredentials() async throws {
+    createAnyCredentialUseCaseSpy.executeFromFormatThrowableError = TestingError.error
 
     do {
-      _ = try await useCase.execute(using: .Mock.UnknownFormat.sample)
+      _ = try await useCase.execute(using: .Mock.VcSdJwt.sample)
       XCTFail("Should have thrown an exception")
-    } catch CompatibleCredentialsError.noCompatibleCredentials {
-      XCTAssertTrue(repositorySpy.getAllCalled)
+    } catch CompatibleCredentialsError.compatibleCredentialNotFound {
+      XCTAssertTrue(createAnyCredentialUseCaseSpy.executeFromFormatCalled)
+      XCTAssertFalse(fieldValidatorSpy.validateWithCalled)
+    } catch {
+      XCTFail("Not the error expected")
+    }
+  }
+
+  func testExecute_AnyPresentationFieldsValidatorThrows_ThrowsNoCompatibleCredentials() async throws {
+    fieldValidatorSpy.validateWithThrowableError = TestingError.error
+
+    do {
+      _ = try await useCase.execute(using: .Mock.VcSdJwt.sample)
+      XCTFail("Should have thrown an exception")
+    } catch CompatibleCredentialsError.compatibleCredentialNotFound {
       XCTAssertTrue(fieldValidatorSpy.validateWithCalled)
     } catch {
       XCTFail("Not the error expected")
@@ -74,38 +107,10 @@ final class GetCompatibleCredentialsUseCaseTests: XCTestCase {
     do {
       _ = try await useCase.execute(using: .Mock.VcSdJwt.sample)
       XCTFail("Should have thrown an exception")
-    } catch CompatibleCredentialsError.noCredentialsInWallet {
+    } catch CompatibleCredentialsError.emptyWallet {
       XCTAssertTrue(repositorySpy.getAllCalled)
-      XCTAssertEqual(1, repositorySpy.getAllCallsCount)
+      XCTAssertFalse(createAnyCredentialUseCaseSpy.executeFromFormatCalled)
       XCTAssertFalse(fieldValidatorSpy.validateWithCalled)
-    } catch {
-      XCTFail("Not the error expected")
-    }
-  }
-
-  func testExecute_noMatchingFormats() async throws {
-    repositorySpy.getAllReturnValue = [.Mock.sample]
-    fieldValidatorSpy.validateWithThrowableError = CredentialFormatError.formatNotSupported
-    do {
-      _ = try await useCase.execute(using: .Mock.UnknownFormat.sample)
-      XCTFail("Should have thrown an exception")
-    } catch CompatibleCredentialsError.noCompatibleCredentials {
-      XCTAssertTrue(repositorySpy.getAllCalled)
-      XCTAssertTrue(fieldValidatorSpy.validateWithCalled)
-    } catch {
-      XCTFail("Not the error expected")
-    }
-  }
-
-  func testExecute_noMatchingFields() async throws {
-    repositorySpy.getAllReturnValue = [.Mock.sample]
-    fieldValidatorSpy.validateWithReturnValue = []
-    do {
-      _ = try await useCase.execute(using: .Mock.VcSdJwt.sample)
-      XCTFail("Should have thrown an exception")
-    } catch CompatibleCredentialsError.noCompatibleCredentials {
-      XCTAssertTrue(repositorySpy.getAllCalled)
-      XCTAssertTrue(fieldValidatorSpy.validateWithCalled)
     } catch {
       XCTFail("Not the error expected")
     }
@@ -113,7 +118,35 @@ final class GetCompatibleCredentialsUseCaseTests: XCTestCase {
 
   // MARK: Private
 
-  private var useCase = GetCompatibleCredentialsUseCase()
-  private var fieldValidatorSpy = AnyPresentationFieldsValidatorProtocolSpy()
+  private let mockInputDescriptorId = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  private let mockCredentials: [Credential] = [.Mock.sample, .Mock.diploma, .Mock.sample]
+  private let mockAnyCredential = MockAnyCredential()
+  private let firstNameField = PresentationField(jsonPath: "$.firstName", value: .string("Fritz"))
+  private let lastNameField = PresentationField(jsonPath: "$.lastName", value: .string("Test"))
+  private var mockMatchingFields: [PresentationField] = []
+
   private var repositorySpy = CredentialRepositoryProtocolSpy()
+  private var createAnyCredentialUseCaseSpy = CreateAnyCredentialUseCaseProtocolSpy()
+  private var fieldValidatorSpy = PresentationFieldsValidatorProtocolSpy()
+
+  private var useCase = GetCompatibleCredentialsUseCase()
+
+  private func setUpMocks() {
+    mockMatchingFields = [firstNameField, lastNameField]
+
+    repositorySpy = CredentialRepositoryProtocolSpy()
+    createAnyCredentialUseCaseSpy = CreateAnyCredentialUseCaseProtocolSpy()
+    fieldValidatorSpy = PresentationFieldsValidatorProtocolSpy()
+
+    Container.shared.databaseCredentialRepository.register { self.repositorySpy }
+    Container.shared.createAnyCredentialUseCase.register { self.createAnyCredentialUseCaseSpy }
+    Container.shared.presentationFieldsValidator.register { self.fieldValidatorSpy }
+  }
+
+  private func success() {
+    repositorySpy.getAllReturnValue = mockCredentials
+    createAnyCredentialUseCaseSpy.executeFromFormatReturnValue = mockAnyCredential
+    fieldValidatorSpy.validateWithReturnValue = mockMatchingFields
+  }
+
 }

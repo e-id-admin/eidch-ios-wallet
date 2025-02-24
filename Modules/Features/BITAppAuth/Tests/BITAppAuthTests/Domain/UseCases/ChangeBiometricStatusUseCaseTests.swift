@@ -1,6 +1,5 @@
 import LocalAuthentication
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITLocalAuthentication
 

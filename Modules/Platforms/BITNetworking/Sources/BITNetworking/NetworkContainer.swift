@@ -10,7 +10,7 @@ import OSLog
 public final class NetworkContainer: SharedContainer {
   public static var shared = NetworkContainer()
 
-  public var manager: ContainerManager = .init()
+  public var manager = ContainerManager()
 }
 
 public typealias StubHandler = (TargetType) -> Moya.StubBehavior
@@ -47,7 +47,7 @@ extension NetworkContainer {
   }
 
   public var plugins: Factory<[PluginType]> {
-    self { [ NetworkLoggerPlugin() ] }
+    self { [] }
   }
 
   public var stubClosure: Factory<StubHandler> {
@@ -68,7 +68,7 @@ extension NetworkContainer {
 
   public var session: Factory<Session> {
     self {
-      .init(configuration: self.sessionConfiguration(), serverTrustManager: self.serverTrustManager())
+      Session(configuration: self.sessionConfiguration(), serverTrustManager: self.serverTrustManager())
     }
   }
 

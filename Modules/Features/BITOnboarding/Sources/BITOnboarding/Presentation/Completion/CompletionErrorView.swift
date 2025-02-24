@@ -16,11 +16,11 @@ struct CompletionErrorView: View {
       secondary: L10n.onboardingSetupErrorSecondary,
       image: Assets.xmarkCircle.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      buttonLabel: L10n.onboardingSetupErrorButtonText)
-    {
-      delegate?.restartSetup()
-      router.pop()
-    }
-    .navigationBarBackButtonHidden(true)
+      primaryButtonLabel: L10n.onboardingSetupErrorButtonText,
+      primaryButtonAction: {
+        delegate?.restartSetup()
+        router.pop()
+      })
+      .navigationBarBackButtonHidden(true)
   }
 }

@@ -2,7 +2,6 @@ import Factory
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITOnboarding
 
 // MARK: - PinCodeViewModelTests
@@ -36,7 +35,7 @@ final class PinCodeInformationViewModelTests: XCTestCase {
     let initialButtonLabelText = viewModel.buttonLabelText
     viewModel.didTryTooManyAttempts()
     XCTAssertNotEqual(initialSecondaryText, viewModel.secondaryText)
-    XCTAssertNotEqual(initialPrimaryText, viewModel.primaryText)
+    XCTAssertEqual(initialPrimaryText, viewModel.primaryText)
     XCTAssertEqual(initialButtonLabelText, viewModel.buttonLabelText)
   }
 
@@ -51,7 +50,7 @@ final class PinCodeInformationViewModelTests: XCTestCase {
 
     simulateBackAction()
     XCTAssertNotEqual(initialSecondaryText, viewModel.secondaryText)
-    XCTAssertNotEqual(initialPrimaryText, viewModel.primaryText)
+    XCTAssertEqual(initialPrimaryText, viewModel.primaryText)
     XCTAssertEqual(initialButtonLabelText, viewModel.buttonLabelText)
 
     viewModel.onAppear()

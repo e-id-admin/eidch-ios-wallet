@@ -22,17 +22,16 @@ typealias AssetImageTypeAlias = ImageAsset.Image
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 enum Assets {
+  static let betaId = ImageAsset(name: "BetaId")
   static let camera = ImageAsset(name: "Camera")
   static let close = ImageAsset(name: "Close")
-  static let emptyWallet = ImageAsset(name: "EmptyWallet")
-  static let fehlenderNachweis = ImageAsset(name: "Fehlender Nachweis")
   static let lightOff = ImageAsset(name: "LightOff")
   static let lightOn = ImageAsset(name: "LightOn")
-  static let noInternet = ImageAsset(name: "NoInternet")
-  static let unbekanntenAussteller = ImageAsset(name: "Unbekannten Aussteller")
-  static let verifierError = ImageAsset(name: "VerifierError")
   static let warning = ImageAsset(name: "Warning")
-  static let wrongCredential = ImageAsset(name: "WrongCredential")
+  static let credential = ImageAsset(name: "credential")
+  static let noWifi = ImageAsset(name: "no-wifi")
+  static let qrcode = ImageAsset(name: "qrcode")
+  static let questionmarkSquare = ImageAsset(name: "questionmark.square")
 }
 
 // MARK: - ImageAsset

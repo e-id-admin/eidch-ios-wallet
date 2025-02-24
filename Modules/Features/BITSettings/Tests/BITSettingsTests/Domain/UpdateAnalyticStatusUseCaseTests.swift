@@ -1,6 +1,5 @@
 import Spyable
 import XCTest
-
 @testable import BITAnalytics
 @testable import BITSettings
 

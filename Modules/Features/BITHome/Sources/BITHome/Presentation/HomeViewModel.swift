@@ -3,7 +3,7 @@ import BITAppAuth
 import BITCore
 import BITCredential
 import BITCredentialShared
-import BITDataStore
+import BITEIDRequest
 import BITEntities
 import BITL10n
 import Combine
@@ -21,19 +21,11 @@ public class HomeViewModel: StateMachine<HomeViewModel.State, HomeViewModel.Even
     _ initialState: State = .results,
     router: HomeRouterRoutes,
     credentials: [Credential] = [],
-    notificationCenter: NotificationCenter = NotificationCenter.default,
-    getCredentialListUseCase: GetCredentialListUseCaseProtocol = Container.shared.getCredentialListUseCase(),
-    checkAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialStatusUseCaseProtocol = Container.shared.checkAndUpdateCredentialStatusUseCase(),
-    isUserLoggedInUseCase: IsUserLoggedInUseCaseProtocol = Container.shared.isUserLoggedInUseCase(),
-    analytics: AnalyticsProtocol = Container.shared.analytics())
+    notificationCenter: NotificationCenter = NotificationCenter.default)
   {
     self.credentials = credentials
-    self.getCredentialListUseCase = getCredentialListUseCase
-    self.checkAndUpdateCredentialStatusUseCase = checkAndUpdateCredentialStatusUseCase
     self.router = router
     self.notificationCenter = notificationCenter
-    self.analytics = analytics
-    self.isUserLoggedInUseCase = isUserLoggedInUseCase
 
     super.init(initialState)
     registerNotifications()
@@ -122,6 +114,17 @@ public class HomeViewModel: StateMachine<HomeViewModel.State, HomeViewModel.Even
   @Published var isLicensesPresented = false
   @Published var isVerificationInstructionPresented = false
 
+  @Injected(\.isEIDRequestFeatureEnabled) var isEIDRequestFeatureEnabled: Bool
+
+  func onAppear() async {
+    guard isEIDRequestFeatureEnabled, isEIDRequestAfterOnboardingEnabledUseCase.execute() else {
+      return await send(event: .refresh)
+    }
+
+    router.eIDRequest()
+    enableEIDRequestAfterOnboardingUseCase.execute(false)
+  }
+
   func openScanner() {
     router.invitation()
   }
@@ -137,6 +140,11 @@ public class HomeViewModel: StateMachine<HomeViewModel.State, HomeViewModel.Even
 
   func openContact() {
     guard let url = URL(string: L10n.settingsContactLink) else { return }
+    router.openExternalLink(url: url)
+  }
+
+  func openFeedback() {
+    guard let url = URL(string: L10n.tkMenuSettingWalletFeedbackLinkValue) else { return }
     router.openExternalLink(url: url)
   }
 
@@ -156,15 +164,25 @@ public class HomeViewModel: StateMachine<HomeViewModel.State, HomeViewModel.Even
     router.credentialDetail(credential)
   }
 
+  func openBetaId() {
+    router.betaId()
+  }
+
+  func openEIDRequest() {
+    router.eIDRequest()
+  }
+
   // MARK: Private
 
   private let router: HomeRouterRoutes
 
   private let notificationCenter: NotificationCenter
-  private let getCredentialListUseCase: GetCredentialListUseCaseProtocol
-  private let checkAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialStatusUseCaseProtocol
-  private let isUserLoggedInUseCase: IsUserLoggedInUseCaseProtocol
-  private let analytics: AnalyticsProtocol
+  @Injected(\.getCredentialListUseCase) private var getCredentialListUseCase: GetCredentialListUseCaseProtocol
+  @Injected(\.checkAndUpdateCredentialStatusUseCase) private var checkAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialStatusUseCaseProtocol
+  @Injected(\.isUserLoggedInUseCase) private var isUserLoggedInUseCase: IsUserLoggedInUseCaseProtocol
+  @Injected(\.analytics) private var analytics: AnalyticsProtocol
+  @Injected(\.isEIDRequestAfterOnboardingEnabledUseCase) private var isEIDRequestAfterOnboardingEnabledUseCase: IsEIDRequestAfterOnboardingEnabledUseCaseProtocol
+  @Injected(\.enableEIDRequestAfterOnboardingUseCase) private var enableEIDRequestAfterOnboardingUseCase: EnableEIDRequestAfterOnboardingUseCaseProtocol
 
   private var credentialObjectsDidChangeNotification: NotificationToken?
 

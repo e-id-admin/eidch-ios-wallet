@@ -1,7 +1,6 @@
 import BITJWT
 import Foundation
 import XCTest
-
 @testable import BITSdJWT
 @testable import BITSdJWTMocks
 @testable import BITTestingCore

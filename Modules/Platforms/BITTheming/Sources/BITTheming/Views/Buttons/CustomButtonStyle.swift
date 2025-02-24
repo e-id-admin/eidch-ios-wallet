@@ -9,6 +9,8 @@ extension ButtonStyle where Self == CustomButtonStyle {
   public static var filledPrimary: CustomButtonStyle { CustomButtonStyle(buttonConfiguration: .filledPrimary) }
   public static var filledSecondary: CustomButtonStyle { CustomButtonStyle(buttonConfiguration: .filledSecondary) }
   public static var filledDestructive: CustomButtonStyle { CustomButtonStyle(buttonConfiguration: .filledDestructive) }
+  public static var firGreen: CustomButtonStyle { CustomButtonStyle(buttonConfiguration: .firGreen) }
+  public static var navyBlue: CustomButtonStyle { CustomButtonStyle(buttonConfiguration: .navyBlue) }
   public static var material: CustomButtonStyle { CustomButtonStyle(buttonConfiguration: .material) }
 }
 

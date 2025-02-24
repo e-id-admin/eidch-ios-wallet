@@ -20,9 +20,9 @@ public class ConfirmPinCodeViewModel: ObservableObject, Vibrating {
 
   @Published var inputFieldMessage: String?
   @Published var attempts = 0
-  @Published var inputFieldState: InputFieldState = .normal
+  @Published var inputFieldState = InputFieldState.normal
 
-  @Published var pinCode: String = "" {
+  @Published var pinCode = "" {
     didSet {
       guard userDidRequestValidation else { return }
       do {
@@ -55,7 +55,7 @@ public class ConfirmPinCodeViewModel: ObservableObject, Vibrating {
 
   private let originPinCode: String
 
-  private var userDidRequestValidation: Bool = false
+  private var userDidRequestValidation = false
   private let router: ChangePinCodeInternalRoutes
 
   @Injected(\.attemptsLimitChangePinCode) private var attemptsLimit: Int

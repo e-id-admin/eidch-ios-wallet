@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITOpenID
 @testable import BITPresentation
 @testable import BITTestingCore
@@ -11,8 +10,9 @@ class PresentationRequestReviewViewModelTests: XCTestCase {
 
   @MainActor
   override func setUp() {
-    super.setUp()
     context = .Mock.vcSdJwtSample
+
+    Container.shared.reset()
     Container.shared.submitPresentationUseCase.register { self.submitPresentationUseCase }
     Container.shared.denyPresentationUseCase.register { self.denyPresentationUseCase }
     Container.shared.getVerifierDisplayUseCase.register { self.getVerifierDisplayUseCase }
@@ -26,19 +26,19 @@ class PresentationRequestReviewViewModelTests: XCTestCase {
   func testInitialStateWithoutVerifierDisplay_withoutTrustStatement() {
     viewModel = PresentationRequestReviewViewModel(context: context, router: router)
 
-    XCTAssertFalse(viewModel.isLoading)
+    XCTAssertFalse(viewModel.showLoadingMessage)
     XCTAssertEqual(viewModel.verifierDisplay?.trustStatus, .unverified)
     XCTAssertEqual(viewModel.verifierDisplay?.name, "EN Verifier")
   }
 
   @MainActor
   func testInitialStateWithoutVerifierDisplay_withTrustStatement() {
-    let mockContext: PresentationRequestContext = .Mock.vcSdJwtJwtSample
+    let mockContext = PresentationRequestContext.Mock.vcSdJwtJwtSample
     getVerifierDisplayUseCase.executeForTrustStatementReturnValue = .Mock.sample
 
     viewModel = PresentationRequestReviewViewModel(context: mockContext, router: router)
 
-    XCTAssertFalse(viewModel.isLoading)
+    XCTAssertFalse(viewModel.showLoadingMessage)
     XCTAssertEqual(viewModel.verifierDisplay?.trustStatus, .verified)
     XCTAssertEqual(viewModel.verifierDisplay?.name, "Verifier")
     XCTAssertEqual(getVerifierDisplayUseCase.executeForTrustStatementReceivedArguments?.trustStatement, mockContext.trustStatement)
@@ -46,88 +46,79 @@ class PresentationRequestReviewViewModelTests: XCTestCase {
   }
 
   @MainActor
-  func testHappyPath() async throws {
-    await viewModel.send(event: .submit)
+  func testSubmitPresentation_Success_NavigateToSuccess() async throws {
+    await viewModel.submit()
 
-    XCTAssertTrue(viewModel.isLoading)
+    XCTAssertEqual(viewModel.state, .loading)
+    XCTAssertFalse(viewModel.showLoadingMessage)
     XCTAssertTrue(submitPresentationUseCase.executeContextCalled)
-    XCTAssertEqual(submitPresentationUseCase.executeContextCallsCount, 1)
+    XCTAssertEqual(router.calledPresentationResultState, .success(claims: viewModel.credential.requestedClaims))
     XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
   }
 
   @MainActor
-  func testFailurePath() async throws {
+  func testSubmitPresentation_ErrorThrown_ErrorState() async throws {
     submitPresentationUseCase.executeContextThrowableError = TestingError.error
 
-    await viewModel.send(event: .submit)
+    await viewModel.submit()
 
-    XCTAssertFalse(viewModel.isLoading)
-    XCTAssertEqual(viewModel.state, .error)
-    XCTAssertNotNil(viewModel.stateError)
-    XCTAssertFalse(router.closeCalled)
+    XCTAssertEqual(viewModel.state, .result)
+    XCTAssertFalse(viewModel.showLoadingMessage)
+    XCTAssertEqual(router.calledPresentationResultState, .error)
     XCTAssertTrue(submitPresentationUseCase.executeContextCalled)
-    XCTAssertEqual(submitPresentationUseCase.executeContextCallsCount, 1)
+    XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
+  }
+
+  @MainActor
+  func testSubmitPresentation_CredentialInvalid_ErrorState() async throws {
+    submitPresentationUseCase.executeContextThrowableError = PresentationError.credentialInvalid
+
+    await viewModel.submit()
+
+    XCTAssertEqual(viewModel.state, .result)
+    XCTAssertFalse(viewModel.showLoadingMessage)
+    XCTAssertEqual(router.calledPresentationResultState, .error)
+    XCTAssertTrue(submitPresentationUseCase.executeContextCalled)
+    XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
+  }
+
+  @MainActor
+  func testSubmitPresentation_PresentationCancelled_PresentationCancelledState() async throws {
+    submitPresentationUseCase.executeContextThrowableError = PresentationError.presentationCancelled
+
+    await viewModel.submit()
+
+    XCTAssertEqual(viewModel.state, .result)
+    XCTAssertFalse(viewModel.showLoadingMessage)
+    XCTAssertEqual(router.calledPresentationResultState, .cancelled)
+    XCTAssertTrue(submitPresentationUseCase.executeContextCalled)
     XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
   }
 
   @MainActor
   func testDeny() async throws {
-    await viewModel.send(event: .deny)
+    await viewModel.deny()
+    try await viewModel.denyTask?.value
 
-    XCTAssertFalse(viewModel.isLoading)
-    XCTAssertTrue(router.closeCalled)
+    XCTAssertFalse(viewModel.showLoadingMessage)
+    XCTAssertEqual(router.calledPresentationResultState, .deny)
     XCTAssertTrue(denyPresentationUseCase.executeContextErrorCalled)
-    XCTAssertEqual(denyPresentationUseCase.executeContextErrorCallsCount, 1)
     XCTAssertEqual(denyPresentationUseCase.executeContextErrorReceivedArguments?.error, .clientRejected)
+    XCTAssertFalse(submitPresentationUseCase.executeContextCalled)
   }
 
   @MainActor
   func testDeny_withError() async throws {
     denyPresentationUseCase.executeContextErrorThrowableError = TestingError.error
 
-    await viewModel.send(event: .deny)
+    await viewModel.deny()
+    try await viewModel.denyTask?.value
 
-    XCTAssertFalse(viewModel.isLoading)
-    XCTAssertTrue(router.closeCalled)
+    XCTAssertFalse(viewModel.showLoadingMessage)
+    XCTAssertEqual(router.calledPresentationResultState, .deny)
     XCTAssertTrue(denyPresentationUseCase.executeContextErrorCalled)
-    XCTAssertEqual(denyPresentationUseCase.executeContextErrorCallsCount, 1)
     XCTAssertEqual(denyPresentationUseCase.executeContextErrorReceivedArguments?.error, .clientRejected)
-  }
-
-  @MainActor
-  func testClose() async throws {
-    await viewModel.send(event: .close)
-    XCTAssertTrue(router.closeCalled)
-
-    XCTAssertFalse(viewModel.isLoading)
     XCTAssertFalse(submitPresentationUseCase.executeContextCalled)
-    XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
-  }
-
-  @MainActor
-  func test_presentationSubmit_suspendedCredential() async throws {
-    submitPresentationUseCase.executeContextThrowableError = SubmitPresentationError.credentialInvalid
-
-    await viewModel.send(event: .submit)
-
-    XCTAssertFalse(viewModel.isLoading)
-    XCTAssertFalse(router.closeCalled)
-    XCTAssertEqual(viewModel.state, .invalidCredentialError)
-    XCTAssertNotNil(viewModel.stateError)
-    XCTAssertTrue(submitPresentationUseCase.executeContextCalled)
-  }
-
-  @MainActor
-  func test_presentationSubmit_revokedCredential() async throws {
-    submitPresentationUseCase.executeContextThrowableError = SubmitPresentationError.credentialInvalid
-
-    await viewModel.send(event: .submit)
-
-    XCTAssertFalse(viewModel.isLoading)
-    XCTAssertFalse(router.closeCalled)
-    XCTAssertEqual(viewModel.state, .invalidCredentialError)
-    XCTAssertNotNil(viewModel.stateError)
-    XCTAssertTrue(submitPresentationUseCase.executeContextCalled)
   }
 
   // MARK: Private
@@ -138,8 +129,6 @@ class PresentationRequestReviewViewModelTests: XCTestCase {
   private var submitPresentationUseCase = SubmitPresentationUseCaseProtocolSpy()
   private var denyPresentationUseCase = DenyPresentationUseCaseProtocolSpy()
   private var getVerifierDisplayUseCase = GetVerifierDisplayUseCaseProtocolSpy()
-  private let selectedCredentialMock: CompatibleCredential = .Mock.BIT
-  private var mockRequestObjectMock: RequestObject!
   private var router = MockPresentationRouter()
   // swiftlint:enable all
 }

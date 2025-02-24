@@ -15,10 +15,17 @@ class PinCodeInformationScreen: InformationScreen {
   let backButton: XCUIElement
   let expectedImageLabel = "lock"
 
-  override func assert() {
-    super.assert()
+  override func assertDisplayed() {
+    super.assertDisplayed()
     XCTAssertEqual(getImagelabel(), expectedImageLabel)
     XCTAssertTrue(secondaryText.exists)
+  }
+
+  func navigateFromAppStartToScreen() {
+    let privacyPermission = PrivacyPermissionScreen(app: app)
+    privacyPermission.navigateFromAppStartToScreen()
+    privacyPermission.acceptButton.tap()
+    assertDisplayed()
   }
 
 }

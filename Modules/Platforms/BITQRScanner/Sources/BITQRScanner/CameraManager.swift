@@ -38,6 +38,7 @@ public class CameraManager: NSObject, ObservableObject {
   public func restart() {
     guard AVCaptureDevice.authorizationStatus(for: .video) == .authorized else { return }
     isMetadataOutputEnabled = true
+    qrOutputDelegate.isEnabled = true
   }
 
   public func configure() throws {
@@ -57,7 +58,7 @@ public class CameraManager: NSObject, ObservableObject {
 
   let metadataQueue = DispatchQueue(label: "qrreader.metadata.queue")
   let metadataOutput = AVCaptureMetadataOutput()
-  var isMetadataOutputEnabled: Bool = true
+  var isMetadataOutputEnabled = true
   var metadataScannerType: [AVMetadataObject.ObjectType] = Constant.metadataScannerType
 
   // MARK: Private
@@ -127,7 +128,7 @@ class CameraQRCodeOutputDelegate: NSObject, AVCaptureMetadataOutputObjectsDelega
 
   // MARK: Internal
 
-  var isEnabled: Bool = true
+  var isEnabled = true
   weak var delegate: QROutputDelegate?
 
 }

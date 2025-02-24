@@ -19,11 +19,10 @@ struct PinCodeInformationView: View {
       secondary: viewModel.secondaryText,
       image: viewModel.image,
       backgroundImage: viewModel.backgroundImage,
-      buttonLabel: viewModel.buttonLabelText)
-    {
-      viewModel.nextOnboardingStep()
-    }.onAppear {
-      viewModel.onAppear()
-    }
+      primaryButtonLabel: viewModel.buttonLabelText,
+      primaryButtonAction: viewModel.nextOnboardingStep)
+      .onAppear {
+        viewModel.onAppear()
+      }
   }
 }

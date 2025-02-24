@@ -1,3 +1,4 @@
+import BITAnalytics
 import BITAnyCredentialFormat
 import BITCrypto
 import BITJWT
@@ -13,24 +14,13 @@ public enum FetchCredentialError: Error {
   case expiredInvitation
   case noSelectedCredential
   case selectedCredentialNotFound
-  case verificationFailed
+  case unknownIssuer
+  case validationFailed
 }
 
 // MARK: - FetchCredentialUseCase
 
 struct FetchCredentialUseCase: FetchCredentialUseCaseProtocol {
-
-  // MARK: Lifecycle
-
-  init(
-    keyPairGenerator: CredentialKeyPairGeneratorProtocol = Container.shared.credentialKeyPairGenerator(),
-    fetchAnyCredentialUseCase: FetchAnyCredentialUseCaseProtocol = Container.shared.fetchAnyCredentialUseCase(),
-    repository: OpenIDRepositoryProtocol = Container.shared.openIDRepository())
-  {
-    self.keyPairGenerator = keyPairGenerator
-    self.fetchAnyCredentialUseCase = fetchAnyCredentialUseCase
-    self.repository = repository
-  }
 
   // MARK: Internal
 
@@ -51,7 +41,12 @@ struct FetchCredentialUseCase: FetchCredentialUseCaseProtocol {
       proofTypes.isEmpty == false,
       let algorithm = proofTypes.first?.algorithms.first
     {
-      holderBindingKeyPair = try keyPairGenerator.generate(identifier: UUID(), algorithm: algorithm)
+      do {
+        holderBindingKeyPair = try keyPairGenerator.generate(identifier: UUID(), algorithm: algorithm)
+      } catch {
+        analytics.log(error)
+        throw error
+      }
     }
 
     let configuration = try await repository.fetchOpenIdConfiguration(from: issuerUrl)
@@ -72,9 +67,10 @@ struct FetchCredentialUseCase: FetchCredentialUseCaseProtocol {
 
   // MARK: Private
 
-  private let fetchAnyCredentialUseCase: FetchAnyCredentialUseCaseProtocol
-  private let keyPairGenerator: CredentialKeyPairGeneratorProtocol
-  private let repository: OpenIDRepositoryProtocol
+  @Injected(\.fetchAnyCredentialUseCase) private var fetchAnyCredentialUseCase: FetchAnyCredentialUseCaseProtocol
+  @Injected(\.credentialKeyPairGenerator) private var keyPairGenerator: CredentialKeyPairGeneratorProtocol
+  @Injected(\.openIDRepository) private var repository: OpenIDRepositoryProtocol
+  @Injected(\.analytics) private var analytics: AnalyticsProtocol
 }
 
 extension FetchCredentialUseCase {

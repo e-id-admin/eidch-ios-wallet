@@ -13,6 +13,16 @@ extension View {
     .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
   }
 
+  public func readSafeAreaInsets(onChange: @escaping (EdgeInsets) -> Void) -> some View {
+    background(
+      GeometryReader { geometryProxy in
+        Color.clear
+          .preference(key: SafeAreaInsetsPreferenceKey.self, value: geometryProxy.safeAreaInsets)
+      }
+    )
+    .onPreferenceChange(SafeAreaInsetsPreferenceKey.self, perform: onChange)
+  }
+
   @ViewBuilder
   public func `if`(_ condition: Bool, transform: (Self) -> some View) -> some View {
     if condition {
@@ -60,6 +70,13 @@ extension View {
 // MARK: - SizePreferenceKey
 
 private struct SizePreferenceKey: PreferenceKey {
-  static var defaultValue: CGSize = .zero
+  static var defaultValue = CGSize.zero
   static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
+}
+
+// MARK: - SafeAreaInsetsPreferenceKey
+
+private struct SafeAreaInsetsPreferenceKey: PreferenceKey {
+  static var defaultValue = EdgeInsets()
+  static func reduce(value: inout EdgeInsets, nextValue: () -> EdgeInsets) {}
 }

@@ -1,13 +1,10 @@
 import XCTest
-
 @testable import BITOpenID
 @testable import BITTestingCore
 
 // MARK: - RequestObjectTests
 
 final class RequestObjectTests: XCTestCase {
-
-  // MARK: Internal
 
   func testDecodingVcSdJwtRequestObject() throws {
     let mockRequestObjectData = RequestObject.Mock.VcSdJwt.jsonSampleData
@@ -20,13 +17,12 @@ final class RequestObjectTests: XCTestCase {
     XCTAssertNotNil(mockRequestObject.clientMetadata?.logoUri)
 
     guard
-      let firstInputDescriptor = mockRequestObject.presentationDefinition.inputDescriptors.first,
-      let formats = firstInputDescriptor.formats
+      let firstInputDescriptor = mockRequestObject.presentationDefinition.inputDescriptors.first
     else {
-      return XCTFail("No input descriptor.formats")
+      XCTFail("No input descriptor")
+      return
     }
-
-    XCTAssertFalse(formats.isEmpty)
+    XCTAssertFalse(firstInputDescriptor.formats.isEmpty)
   }
 
   func testDecodingVcSdJwtRequestObjectWithUnsupportedClientMetadata() throws {
@@ -40,13 +36,12 @@ final class RequestObjectTests: XCTestCase {
     XCTAssertNil(mockRequestObject.clientMetadata?.logoUri)
 
     guard
-      let firstInputDescriptor = mockRequestObject.presentationDefinition.inputDescriptors.first,
-      let formats = firstInputDescriptor.formats
+      let firstInputDescriptor = mockRequestObject.presentationDefinition.inputDescriptors.first
     else {
-      return XCTFail("No input descriptor.formats")
+      XCTFail("No input descriptor")
+      return
     }
-
-    XCTAssertFalse(formats.isEmpty)
+    XCTAssertFalse(firstInputDescriptor.formats.isEmpty)
   }
 
   func testDecodingRequestObjectWithoutClientMetadata() throws {
@@ -58,52 +53,20 @@ final class RequestObjectTests: XCTestCase {
     XCTAssertNil(mockRequestObject.clientMetadata)
   }
 
-  func test_invalidRequestObject_missingFields() throws {
-    let data = try loadJSON(from: RequestObject.Mock.VcSdJwt.sampleWithMissingConstraintsFieldsFilename)
+  func testDecoding_UnknownInputDescriptorFormat_ThrowsInvalidPayload() throws {
+    let data = RequestObject.Mock.UnknownFormat.sampleData
 
     XCTAssertThrowsError(try JSONDecoder().decode(RequestObject.self, from: data)) { error in
-      guard let decodingError = error as? DecodingError else {
-        return XCTFail("Error is not a DecodingError")
-      }
-
-      switch decodingError {
-      case .keyNotFound(let key, _):
-        XCTAssertEqual(key.stringValue, "fields", "Missing 'fields' key")
-      default:
-        XCTFail("Expected keyNotFound error for 'fields', but got: \(decodingError)")
-      }
+      XCTAssertEqual(error as? RequestObjectError, .invalidPayload)
     }
   }
 
-  func test_invalidRequestObject_fieldEmpty() throws {
-    let data = try loadJSON(from: RequestObject.Mock.VcSdJwt.sampleWithoutAnyConstraintsFieldsFilename)
+  func testDecoding_NoInputDescriptorFormat_ThrowsInvalidPayload() throws {
+    let data = RequestObject.Mock.UnknownFormat.sampleWithoutFormatData
 
     XCTAssertThrowsError(try JSONDecoder().decode(RequestObject.self, from: data)) { error in
-      guard let decodingError = error as? DecodingError else {
-        return XCTFail("Error is not a DecodingError")
-      }
-
-      switch decodingError {
-      case .dataCorrupted(let context):
-        XCTAssertEqual(context.codingPath.last?.stringValue, "fields", "Missing 'fields' key")
-      default:
-        XCTFail("Expected dataCorrupted error for 'fields', but got: \(decodingError)")
-      }
+      XCTAssertEqual(error as? RequestObjectError, .invalidPayload)
     }
   }
 
-  // MARK: Private
-
-  private func loadJSON(from filename: String) throws -> Data {
-    guard let fileURL = Bundle.module.url(forResource: filename, withExtension: "json") else {
-      XCTFail("Impossible to read \(filename)")
-      throw NSError(domain: "TestErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "File not found"])
-    }
-    let raw = try String(contentsOf: fileURL, encoding: .utf8).replacingOccurrences(of: "\n", with: "")
-    guard let data = raw.data(using: .utf8) else {
-      XCTFail("Unable to parse JSON to Data")
-      throw NSError(domain: "TestErrorDomain", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON"])
-    }
-    return data
-  }
 }

@@ -17,11 +17,10 @@ class WelcomeIntroductionScreen: InformationScreen {
   let tertiaryText: XCUIElement
   let expectedImageLabel = "shield cross"
 
-  override func assert() {
-    super.assert()
+  override func assertDisplayed() {
+    super.assertDisplayed()
     XCTAssertEqual(getImagelabel(), expectedImageLabel)
     XCTAssertTrue(secondaryText.exists)
-    XCTAssertTrue(tertiaryText.exists)
   }
 
 }

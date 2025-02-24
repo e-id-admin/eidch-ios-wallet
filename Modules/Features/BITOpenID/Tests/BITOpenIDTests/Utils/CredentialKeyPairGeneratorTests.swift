@@ -2,10 +2,8 @@ import Factory
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITLocalAuthentication
 @testable import BITOpenID
-
 @testable import BITTestingCore
 @testable import BITVault
 

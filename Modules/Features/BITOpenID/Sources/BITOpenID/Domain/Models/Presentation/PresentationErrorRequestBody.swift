@@ -13,17 +13,7 @@ public struct PresentationErrorRequestBody: Codable {
 
   // MARK: Public
 
-  public func asDictionnary() -> [String: Any] {
-    do {
-      let jsonData = try JSONEncoder().encode(self)
-
-      if let dictionary = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [String: Any] {
-        return dictionary
-      }
-    } catch { }
-
-    return [:]
-  }
+  public let error: ErrorType
 
   // MARK: Internal
 
@@ -32,7 +22,6 @@ public struct PresentationErrorRequestBody: Codable {
     case errorDescription = "error_description"
   }
 
-  let error: ErrorType
   let errorDescription: String?
 
 }
@@ -44,5 +33,6 @@ extension PresentationErrorRequestBody {
   public enum ErrorType: String, Codable {
     case clientRejected = "client_rejected"
     case invalidRequest = "invalid_request"
+    case presentationCancelled = "verification_process_closed"
   }
 }

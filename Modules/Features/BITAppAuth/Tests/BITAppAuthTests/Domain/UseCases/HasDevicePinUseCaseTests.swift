@@ -1,7 +1,6 @@
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITLocalAuthentication
 @testable import BITTestingCore

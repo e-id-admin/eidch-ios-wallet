@@ -1,13 +1,13 @@
-//import Factory
-//import Spyable
-//import XCTest
+// import Factory
+// import Spyable
+// import XCTest
 //
-//@testable import BITAppAuth
-//@testable import BITOnboarding
-//@testable import BITSettings
+// @testable import BITAppAuth
+// @testable import BITOnboarding
+// @testable import BITSettings
 //
-//@MainActor
-//final class OnboardingViewModelTests: XCTestCase {
+// @MainActor
+// final class OnboardingViewModelTests: XCTestCase {
 //
 //  // MARK: Public
 //
@@ -207,4 +207,4 @@
 //    XCTAssertEqual(viewModel.currentIndex, step.rawValue)
 //  }
 //
-//}
+// }

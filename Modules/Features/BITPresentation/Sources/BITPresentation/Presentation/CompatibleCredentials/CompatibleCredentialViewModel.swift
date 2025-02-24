@@ -32,6 +32,10 @@ public class CompatibleCredentialViewModel: ObservableObject {
     router.presentationReview(with: context)
   }
 
+  func close() {
+    router.close()
+  }
+
   // MARK: Private
 
   private var inputDescriptorId: String

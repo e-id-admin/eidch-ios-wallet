@@ -1,7 +1,6 @@
 import BITCore
 import Factory
 import XCTest
-
 @testable import BITAnyCredentialFormat
 @testable import BITAnyCredentialFormatMocks
 @testable import BITCredentialShared
@@ -36,8 +35,8 @@ final class CredentialTests: XCTestCase {
       mockAnyClaim,
     ]
 
-    let mockCredential: Credential = .Mock.sample
-    let mockMetadataWrapper: CredentialMetadataWrapper = .Mock.sample
+    let mockCredential = Credential.Mock.sample
+    let mockMetadataWrapper = CredentialMetadataWrapper.Mock.sample
 
     guard let rawCredential = String(data: mockCredential.payload, encoding: .utf8) else {
       XCTFail("Can not decode raw credential")
@@ -74,8 +73,8 @@ final class CredentialTests: XCTestCase {
       mockAnyClaim,
     ]
 
-    let mockCredential: Credential = .Mock.sample
-    let mockMetadataWrapper: CredentialMetadataWrapper = .Mock.sample
+    let mockCredential = Credential.Mock.sample
+    let mockMetadataWrapper = CredentialMetadataWrapper.Mock.sample
 
     guard let rawCredential = String(data: mockCredential.payload, encoding: .utf8) else {
       XCTFail("Can not decode raw credential")
@@ -112,8 +111,8 @@ final class CredentialTests: XCTestCase {
       mockAnyClaim,
     ]
 
-    let mockCredential: Credential = .Mock.sample
-    let mockMetadataWrapper: CredentialMetadataWrapper = .Mock.sample
+    let mockCredential = Credential.Mock.sample
+    let mockMetadataWrapper = CredentialMetadataWrapper.Mock.sample
 
     guard let rawCredential = String(data: mockCredential.payload, encoding: .utf8) else {
       XCTFail("Can not decode raw credential")
@@ -138,13 +137,13 @@ final class CredentialTests: XCTestCase {
   }
 
   func testInitFromAnyCredential_unknownClaim() throws {
-    let mockCredential: Credential = .Mock.sample
+    let mockCredential = Credential.Mock.sample
 
     guard let rawCredential = String(data: mockCredential.payload, encoding: .utf8) else {
       XCTFail("Can not decode raw credential")
       return
     }
-    let mockMetadataWrapper: CredentialMetadataWrapper = .Mock.sample
+    let mockMetadataWrapper = CredentialMetadataWrapper.Mock.sample
     let mockAnyCredential = AnyCredentialSpy()
     mockAnyCredential.format = "some-format"
     mockAnyCredential.raw = rawCredential
@@ -169,7 +168,7 @@ final class CredentialTests: XCTestCase {
   func testFindDisplay_additionalDisplays_notAvailable() {
     let unmanagedCode = "cz"
     Container.shared.preferredUserLocales.register { [unmanagedCode] }
-    let credential: Credential = .Mock.otherSampleDisplaysAdditional
+    let credential = Credential.Mock.otherSampleDisplaysAdditional
     let expectedLanguageCode = "en"
 
     assertDisplays(credential: credential, expectedLanguageCode: expectedLanguageCode)
@@ -177,7 +176,7 @@ final class CredentialTests: XCTestCase {
 
   func testFindDisplay_appDefaultDisplays() {
     Container.shared.preferredUserLocales.register { [UserLocale.LocaleIdentifier.swissItalian.rawValue] }
-    let credential: Credential = .Mock.sampleDisplaysAppDefault
+    let credential = Credential.Mock.sampleDisplaysAppDefault
     let expectedLanguageCode = "en"
 
     assertDisplays(credential: credential, expectedLanguageCode: expectedLanguageCode)
@@ -185,7 +184,7 @@ final class CredentialTests: XCTestCase {
 
   func testFindDisplay_fallbackDisplays() {
     Container.shared.preferredUserLocales.register { [UserLocale.LocaleIdentifier.swissItalian.rawValue] }
-    let credential: Credential = .Mock.sampleDisplaysFallback
+    let credential = Credential.Mock.sampleDisplaysFallback
     let expectedLanguageCode = "en"
 
     assertDisplays(credential: credential, expectedLanguageCode: expectedLanguageCode)
@@ -193,7 +192,7 @@ final class CredentialTests: XCTestCase {
 
   func testFindDisplay_unsupportedDisplays() {
     Container.shared.preferredUserLocales.register { [UserLocale.LocaleIdentifier.swissItalian.rawValue] }
-    let credential: Credential = .Mock.sampleDisplaysUnsupported
+    let credential = Credential.Mock.sampleDisplaysUnsupported
 
     let display = credential.preferredDisplay
     XCTAssertNotNil(display)
@@ -205,7 +204,7 @@ final class CredentialTests: XCTestCase {
 
   func testFindDisplay_emptyDisplays() {
     Container.shared.preferredUserLocales.register { [UserLocale.LocaleIdentifier.swissItalian.rawValue] }
-    let credential: Credential = .Mock.sampleDisplaysEmpty
+    let credential = Credential.Mock.sampleDisplaysEmpty
 
     let display = credential.preferredDisplay
     XCTAssertNil(display)

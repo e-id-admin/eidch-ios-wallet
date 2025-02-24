@@ -10,7 +10,7 @@ public struct CredentialIssuerDisplay: Codable, Equatable, DisplayLocalizable {
 
   // MARK: Lifecycle
 
-  public init(id: UUID = .init(), locale: String? = nil, name: String? = nil, credentialId: UUID?, image: Data?) {
+  public init(id: UUID = UUID(), locale: String? = nil, name: String? = nil, credentialId: UUID?, image: Data?) {
     self.id = id
     self.locale = locale ?? UserLocale.defaultLocaleIdentifier
     self.name = name

@@ -7,7 +7,7 @@ let package = Package(
   name: "BITCrypto",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v15),
+    .iOS(.v16),
   ],
   products: [
     .library(

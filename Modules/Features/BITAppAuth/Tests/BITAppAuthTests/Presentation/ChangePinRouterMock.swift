@@ -6,7 +6,7 @@ import Foundation
 
 public class ChangePinRouterMock: ClosableRoutesMock, ChangePinCodeInternalRoutes {
 
-  public var context: ChangePinCodeContext = .init()
+  public var context = ChangePinCodeContext()
   public var isClosed = false
 
   // Protocol methods

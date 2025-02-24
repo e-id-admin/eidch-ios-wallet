@@ -8,7 +8,12 @@ public struct JWTSignatureValidator: JWTSignatureValidatorProtocol {
   // MARK: Public
 
   public func validate(_ jwt: JWT, did: String, kid: String) async throws -> Bool {
-    let jwks = try await didResolverHelper.getJWKS(from: did, keyIdentifier: kid)
+    let jwks: [PublicKeyInfo.JWK]
+    do {
+      jwks = try await didResolverHelper.getJWKS(from: did, keyIdentifier: kid)
+    } catch {
+      throw JWTSignatureValidatorError.cannotResolveDid(error)
+    }
 
     for jwk in jwks where validateJwtSignature(for: jwt, jwk: jwk) {
       return true
@@ -28,5 +33,13 @@ public struct JWTSignatureValidator: JWTSignatureValidatorProtocol {
     }
 
     return jwtHelper.hasValidSignature(jwt: jwt, using: secKey)
+  }
+}
+
+// MARK: JWTSignatureValidator.JWTSignatureValidatorError
+
+extension JWTSignatureValidator {
+  public enum JWTSignatureValidatorError: Error {
+    case cannotResolveDid(_ error: Error)
   }
 }

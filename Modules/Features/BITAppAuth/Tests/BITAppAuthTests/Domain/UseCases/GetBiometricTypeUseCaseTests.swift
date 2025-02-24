@@ -2,7 +2,6 @@ import Foundation
 import LocalAuthentication
 import Spyable
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITLocalAuthentication
 @testable import BITTestingCore

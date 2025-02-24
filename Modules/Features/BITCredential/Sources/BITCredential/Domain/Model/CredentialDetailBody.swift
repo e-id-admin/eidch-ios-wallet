@@ -23,7 +23,7 @@ public struct CredentialDetailBody: Equatable {
       let displayName = claim.preferredDisplay?.name ?? claim.key
       let valueType = ValueType(rawValue: claim.valueType)
 
-      claims.append(.init(id: claim.id, key: displayName, value: claim.value, type: valueType))
+      claims.append(Self.Claim(id: claim.id, key: displayName, value: claim.value, type: valueType))
     }
 
     let issuerDisplayName = credential.preferredDisplay?.name ?? L10n.globalNotAssigned

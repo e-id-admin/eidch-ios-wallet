@@ -8,7 +8,8 @@ class InformationScreen: Screen {
 
   init(app: XCUIApplication) {
     self.app = app
-    continueButton = app.buttons[InformationView.AccessibilityIdentifier.continueButton.rawValue]
+    primaryButton = app.buttons[InformationView.AccessibilityIdentifier.primaryButton.rawValue]
+    secondaryButton = app.buttons[InformationView.AccessibilityIdentifier.secondaryButton.rawValue]
     image = app.images[InformationView.AccessibilityIdentifier.image.rawValue]
     primaryText = app.staticTexts[InformationView.AccessibilityIdentifier.primaryText.rawValue]
     secondaryText = app.staticTexts[InformationView.AccessibilityIdentifier.secondaryText.rawValue]
@@ -17,7 +18,8 @@ class InformationScreen: Screen {
   // MARK: Internal
 
   let app: XCUIApplication
-  let continueButton: XCUIElement
+  let primaryButton: XCUIElement
+  let secondaryButton: XCUIElement
   let image: XCUIElement
   let primaryText: XCUIElement
   let secondaryText: XCUIElement
@@ -26,7 +28,7 @@ class InformationScreen: Screen {
     app.descendants(matching: .image).matching(identifier: InformationView.AccessibilityIdentifier.image.rawValue).allElementsBoundByIndex[1].label
   }
 
-  func assert() {
+  func assertDisplayed() {
     XCTAssertTrue(image.waitForExistence(timeout: 3))
     XCTAssertTrue(primaryText.exists)
   }

@@ -1,6 +1,5 @@
 import Spyable
 import XCTest
-
 @testable import BITAnyCredentialFormat
 @testable import BITAnyCredentialFormatMocks
 @testable import BITCrypto
@@ -78,15 +77,15 @@ final class VcSdJwtVpTokenGeneratorTests: XCTestCase {
 
   private let mockPrivateKey: SecKey = SecKeyTestsHelper.createPrivateKey()
   private let mockIdentifier = UUID()
-  private let mockAlgorithm: String = "ES256"
-  private let mockKeyBindingJwt: JWT = .Mock.sampleKeyBinding
+  private let mockAlgorithm = "ES256"
+  private let mockKeyBindingJwt = JWT.Mock.sampleKeyBinding
   private let mockReason = "mockReason"
 
   // swiftlint:disable all
   private var jwtHelper: JWTHelperProtocolSpy!
   private var generator: VcSdJwtVpTokenGenerator!
   private var sha2656Hasher = HashableSpy()
-  private var mockCredential: VcSdJwt = .Mock.sample
+  private var mockCredential = VcSdJwt.Mock.sample
   private var mockKeyPair: KeyPair!
 
   private func asserts(_ vpToken: VpToken, nbOfDisclosures: Int, hasKeyBinding: Bool) {

@@ -1,6 +1,5 @@
 import Spyable
 import XCTest
-
 @testable import BITSettings
 
 final class FetchAnalyticStatusUseCaseTests: XCTestCase {
@@ -24,8 +23,8 @@ final class FetchAnalyticStatusUseCaseTests: XCTestCase {
 
   // MARK: Private
 
-  //swiftlint:disable implicitly_unwrapped_optional
+  // swiftlint:disable implicitly_unwrapped_optional
   private var useCase: FetchAnalyticStatusUseCase!
   private var analyticsRepository: AnalyticsRepositoryProtocolSpy!
-  //swiftlint:enable implicitly_unwrapped_optional
+  // swiftlint:enable implicitly_unwrapped_optional
 }

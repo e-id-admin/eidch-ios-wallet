@@ -8,12 +8,8 @@ import Factory
 // MARK: - CompatibleCredentialsError
 
 public enum CompatibleCredentialsError: Error {
-  case noCredentialsInWallet
-  case noCompatibleCredentials
-  case notMatchingField
-  case invalidCredential
-  case jsonPathParsingFailed
-  case invalidRequestObject
+  case emptyWallet
+  case compatibleCredentialNotFound
 }
 
 // MARK: - GetCompatibleCredentialsUseCase
@@ -21,18 +17,6 @@ public enum CompatibleCredentialsError: Error {
 /// https://identity.foundation/presentation-exchange/spec/v2.1.0/#presentation-definition
 
 struct GetCompatibleCredentialsUseCase: GetCompatibleCredentialsUseCaseProtocol {
-
-  // MARK: Lifecycle
-
-  init(
-    repository: CredentialRepositoryProtocol = Container.shared.databaseCredentialRepository(),
-    createAnyCredentialUseCase: CreateAnyCredentialUseCaseProtocol = Container.shared.createAnyCredentialUseCase(),
-    anyPresentationFieldsValidator: AnyPresentationFieldsValidatorProtocol = Container.shared.anyPresentationFieldsValidator())
-  {
-    self.repository = repository
-    self.createAnyCredentialUseCase = createAnyCredentialUseCase
-    self.anyPresentationFieldsValidator = anyPresentationFieldsValidator
-  }
 
   // MARK: Internal
 
@@ -55,7 +39,7 @@ struct GetCompatibleCredentialsUseCase: GetCompatibleCredentialsUseCaseProtocol 
       }
 
       if requests.contains(where: \.value.isEmpty) {
-        throw CompatibleCredentialsError.noCompatibleCredentials
+        throw CompatibleCredentialsError.compatibleCredentialNotFound
       }
 
       return requests
@@ -66,73 +50,47 @@ struct GetCompatibleCredentialsUseCase: GetCompatibleCredentialsUseCaseProtocol 
 
   // MARK: Private
 
-  private let repository: CredentialRepositoryProtocol
-  private let createAnyCredentialUseCase: CreateAnyCredentialUseCaseProtocol
-  private let anyPresentationFieldsValidator: AnyPresentationFieldsValidatorProtocol
+  @Injected(\.databaseCredentialRepository) private var repository: CredentialRepositoryProtocol
+  @Injected(\.createAnyCredentialUseCase) private var createAnyCredentialUseCase: CreateAnyCredentialUseCaseProtocol
+  @Injected(\.presentationFieldsValidator) private var presentationFieldsValidator: PresentationFieldsValidatorProtocol
 
   private func execute(inputDescriptor: InputDescriptor) async throws -> [CompatibleCredential] {
-    var credentials = try await getCredentials()
-    if let formats = inputDescriptor.formats {
-      credentials = try filter(credentials: credentials, withFormats: formats)
-    }
-
+    let credentials = try await repository.getAll()
     if credentials.isEmpty {
-      throw CompatibleCredentialsError.noCompatibleCredentials
+      throw CompatibleCredentialsError.emptyWallet
     }
-
-    guard let requestedFields = inputDescriptor.constraints.fields else {
-      throw CompatibleCredentialsError.invalidRequestObject
-    }
-
-    var compatibleCredentials: [CompatibleCredential] = []
-
-    for credential in credentials {
-      do {
-        let anyCredential = try createAnyCredentialUseCase.execute(from: credential.payload, format: credential.format)
-        let matchingFields: [CodableValue] = try anyPresentationFieldsValidator.validate(anyCredential, with: requestedFields)
-
-        guard matchingFields.count == requestedFields.count else { continue }
-        compatibleCredentials.append(CompatibleCredential(credential: credential, requestedFields: matchingFields))
-      } catch {
-        continue
-      }
-    }
-
+    let compatibleCredentials = try filter(credentials: credentials, withInputDescriptor: inputDescriptor)
     if compatibleCredentials.isEmpty {
-      throw CompatibleCredentialsError.noCompatibleCredentials
+      throw CompatibleCredentialsError.compatibleCredentialNotFound
     }
-
     return compatibleCredentials
   }
 
-  private func getCredentials() async throws -> [Credential] {
-    let credentials = try await repository.getAll()
-
-    if credentials.isEmpty {
-      throw CompatibleCredentialsError.noCredentialsInWallet
+  private func filter(credentials: [Credential], withInputDescriptor inputDescriptor: InputDescriptor) throws -> [CompatibleCredential] {
+    credentials.compactMap { credential in
+      do {
+        guard credential.validate(withFormats: inputDescriptor.formats) else { return nil }
+        let anyCredential = try createAnyCredentialUseCase.execute(from: credential.payload, format: credential.format)
+        let matchingFields: [PresentationField] = try presentationFieldsValidator.validate(anyCredential, with: inputDescriptor.constraints.fields)
+        guard !matchingFields.isEmpty else { return nil }
+        return CompatibleCredential(credential: credential, requestedFields: matchingFields)
+      } catch {
+        return nil
+      }
     }
-
-    return credentials
   }
 
-  private func filter(credentials: [Credential], withFormats formats: [Format]) throws -> [Credential] {
-    guard !formats.isEmpty else { return credentials }
+}
 
-    let filteredCredentialList = credentials.filter { credential in
-      let matchingFormats = formats.filter { $0.label == credential.format }
-      return !matchingFormats.filter { $0.keyBindingAlgorithm == nil }.isEmpty
-        || !matchingFormats.compactMap { f in f.keyBindingAlgorithm }
-        .flatMap { $0 }
-        .filter {
-          credential.keyBindingAlgorithm?.caseInsensitiveCompare($0) == .orderedSame
-        }.isEmpty
-    }
+extension Credential {
 
-    if filteredCredentialList.isEmpty {
-      throw CompatibleCredentialsError.noCompatibleCredentials
-    }
-
-    return filteredCredentialList
+  fileprivate func validate(withFormats formats: [Format]) -> Bool {
+    let matchingFormats = formats.filter { $0.label == self.format }
+    return !matchingFormats.filter { $0.keyBindingAlgorithm == nil }.isEmpty
+      || !matchingFormats.compactMap { f in f.keyBindingAlgorithm }
+      .flatMap { $0 }
+      .filter {
+        self.keyBindingAlgorithm?.caseInsensitiveCompare($0) == .orderedSame
+      }.isEmpty
   }
-
 }

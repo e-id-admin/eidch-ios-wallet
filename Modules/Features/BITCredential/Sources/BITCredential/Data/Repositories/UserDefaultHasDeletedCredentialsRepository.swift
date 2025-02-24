@@ -3,7 +3,7 @@ import Foundation
 // MARK: - UserDefaultHasDeletedCredentialRepository
 
 struct UserDefaultHasDeletedCredentialRepository: HasDeletedCredentialRepositoryProtocol {
-  private static let key: String = "hasDeletedCredential"
+  private static let key = "hasDeletedCredential"
 
   public func setHasDeletedCredential() {
     UserDefaults.standard.set(true, forKey: Self.key)

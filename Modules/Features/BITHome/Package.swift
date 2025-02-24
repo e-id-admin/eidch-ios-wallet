@@ -7,7 +7,7 @@ let package = Package(
   name: "BITHome",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v15),
+    .iOS(.v16),
   ],
   products: [
     .library(
@@ -26,6 +26,7 @@ let package = Package(
     .package(url: "https://github.com/hmlongco/Factory", exact: "2.2.0"),
     .package(path: "../../Platforms/BITAnalytics"),
     .package(path: "../BITCredentialShared"),
+    .package(path: "../BITEIDRequest"),
     .package(url: "https://github.com/Matejkob/swift-spyable", revision: "8f78f36989bde9f06cc5a5254a6748c23c16b045"),
     .package(url: "https://github.com/gh123man/SwiftUI-Refresher", exact: "1.1.8"),
     .package(url: "https://github.com/realm/realm-swift", exact: "10.50.0"),
@@ -44,6 +45,7 @@ let package = Package(
         .product(name: "BITDataStore", package: "BITDataStore"),
         .product(name: "BITAnalytics", package: "BITAnalytics"),
         .product(name: "BITCredentialShared", package: "BITCredentialShared"),
+        .product(name: "BITEIDRequest", package: "BITEIDRequest"),
         .product(name: "Factory", package: "Factory"),
         .product(name: "Spyable", package: "swift-spyable"),
         .product(name: "Refresher", package: "SwiftUI-Refresher"),

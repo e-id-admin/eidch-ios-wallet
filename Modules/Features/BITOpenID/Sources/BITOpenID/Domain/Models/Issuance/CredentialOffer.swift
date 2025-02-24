@@ -13,7 +13,7 @@ public struct CredentialOffer: Codable, Equatable {
 
   enum CodingKeys: String, CodingKey {
     case issuer = "credential_issuer"
-    case grants = "grants"
+    case grants
     case credentialConfigurationIds = "credential_configuration_ids"
   }
 }

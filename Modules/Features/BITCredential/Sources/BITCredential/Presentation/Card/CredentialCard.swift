@@ -29,6 +29,7 @@ public struct CredentialCard<Header: View>: View {
       .overlay {
         if credential.environment == .demo {
           (controlSize < .regular ? Assets.credentialDemoPatternSmall.swiftUIImage : Assets.credentialDemoPattern.swiftUIImage)
+            .colorScheme(colorScheme)
             .aspectRatio(contentMode: .fill)
             .opacity(0.5)
             .clipped()
@@ -42,23 +43,23 @@ public struct CredentialCard<Header: View>: View {
     })
     .background(backgroundColor)
     .clipShape(.rect(cornerRadius: cornerRadius))
-    .colorScheme(colorScheme)
+    .foregroundStyle(colorScheme.standardColor())
   }
 
   // MARK: Private
 
   @Environment(\.sizeCategory) private var sizeCategory
   @Environment(\.controlSize) private var controlSize
-  @State private var size: CGSize = .zero
+  @State private var size = CGSize.zero
 
   private let credential: Credential
   private let header: Header?
 
-  private let secondaryTextOpacity: Double = 0.7
-  private let defaultText: String = "n/a"
+  private let secondaryTextOpacity = 0.7
+  private let defaultText = "n/a"
 
   private var colorScheme: ColorScheme {
-    (Color(hex: credential.preferredDisplay?.backgroundColor ?? ThemingAssets.Background.fallback.swiftUIColor.hexString())?.suggestedColorScheme()) ?? .dark
+    backgroundColor?.suggestedColorScheme() ?? .dark
   }
 
   private var backgroundColor: Color? {
@@ -73,7 +74,7 @@ public struct CredentialCard<Header: View>: View {
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(maxWidth: imageMaxWidth, maxHeight: imageMaxHeight, alignment: controlSize > .small ? .topTrailing : .center)
-        .colorMultiply(.white)
+        .colorMultiply(colorScheme.standardColor())
     }
   }
 
@@ -106,7 +107,7 @@ public struct CredentialCard<Header: View>: View {
           .multilineTextAlignment(.leading)
 
         if let summary = credential.preferredDisplay?.summary {
-          Text(credential.preferredDisplay?.summary ?? defaultText)
+          Text(summary)
             .font(.mono.headline)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -149,18 +150,12 @@ public struct CredentialCard<Header: View>: View {
 
       Spacer()
 
-      if #available(iOS 16.0, *) {
-        ViewThatFits {
-          HStack {
-            badges()
-          }
-
-          VStack {
-            badges()
-          }
-        }
-      } else {
+      ViewThatFits {
         HStack {
+          badges()
+        }
+
+        VStack {
           badges()
         }
       }

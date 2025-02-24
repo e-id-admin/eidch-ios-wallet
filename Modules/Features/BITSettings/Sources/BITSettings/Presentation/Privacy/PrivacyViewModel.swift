@@ -13,25 +13,27 @@ class PrivacyViewModel: ObservableObject {
     hasBiometricAuthUseCase: HasBiometricAuthUseCaseProtocol = Container.shared.hasBiometricAuthUseCase(),
     isBiometricUsageAllowedUseCase: IsBiometricUsageAllowedUseCaseProtocol = Container.shared.isBiometricUsageAllowedUseCase(),
     updateAnalyticStatusUseCase: UpdateAnalyticStatusUseCaseProtocol = Container.shared.updateAnalyticsStatusUseCase(),
-    fetchAnalyticStatusUseCase: FetchAnalyticStatusUseCaseProtocol = Container.shared.fetchAnalyticStatusUseCase())
+    fetchAnalyticStatusUseCase: FetchAnalyticStatusUseCaseProtocol = Container.shared.fetchAnalyticStatusUseCase(),
+    getBiometricTypeUseCase: GetBiometricTypeUseCaseProtocol = Container.shared.getBiometricTypeUseCase())
   {
     self.hasBiometricAuthUseCase = hasBiometricAuthUseCase
     self.isBiometricUsageAllowedUseCase = isBiometricUsageAllowedUseCase
     self.updateAnalyticStatusUseCase = updateAnalyticStatusUseCase
     self.fetchAnalyticStatusUseCase = fetchAnalyticStatusUseCase
+    self.getBiometricTypeUseCase = getBiometricTypeUseCase
   }
 
   // MARK: Internal
 
-  @Published var isBiometricEnabled: Bool = false
-  @Published var isAnalyticsEnabled: Bool = false
+  @Published var isBiometricEnabled = false
+  @Published var isAnalyticsEnabled = false
 
   @Published var isChangePinCodePresented = false
-  @Published var isInformationPresented: Bool = false
-  @Published var isBiometricChangeFlowPresented: Bool = false
+  @Published var isInformationPresented = false
+  @Published var isBiometricChangeFlowPresented = false
 
-  @Published var isLoading: Bool = false
-  @Published var isToastPresented: Bool = false
+  @Published var isLoading = false
+  @Published var isToastPresented = false
   @Published var toastMessage: String?
 
   func fetchBiometricStatus() {
@@ -74,6 +76,7 @@ class PrivacyViewModel: ObservableObject {
   private var isBiometricUsageAllowedUseCase: IsBiometricUsageAllowedUseCaseProtocol
   private var fetchAnalyticStatusUseCase: FetchAnalyticStatusUseCaseProtocol
   private var updateAnalyticStatusUseCase: UpdateAnalyticStatusUseCaseProtocol
+  private var getBiometricTypeUseCase: GetBiometricTypeUseCaseProtocol
 
 }
 
@@ -93,7 +96,8 @@ extension PrivacyViewModel: ChangePinCodeDelegate {
 extension PrivacyViewModel: BiometricChangeDelegate {
 
   func didBiometricStatusChange(to isEnabled: Bool) {
-    toastMessage = isEnabled ? L10n.tkMenuSecurityPrivacyIosStatusActivating : L10n.tkMenuSecurityPrivacyIosStatusDeactivating
+    let biometricType = getBiometricTypeUseCase.execute()
+    toastMessage = isEnabled ? L10n.tkMenuSecurityPrivacyIosStatusActivating(biometricType.text) : L10n.tkMenuSecurityPrivacyIosStatusDeactivating(biometricType.text)
     isToastPresented = true
   }
 

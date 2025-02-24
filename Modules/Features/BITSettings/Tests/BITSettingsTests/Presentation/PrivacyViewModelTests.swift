@@ -1,6 +1,5 @@
 import Spyable
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITSettings
 

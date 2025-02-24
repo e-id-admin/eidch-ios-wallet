@@ -1,7 +1,6 @@
 import BITNetworking
 import Foundation
 import XCTest
-
 @testable import BITJWT
 
 final class DidResolverRepositoryTests: XCTestCase {
@@ -18,7 +17,7 @@ final class DidResolverRepositoryTests: XCTestCase {
   }
 
   func testFetchDidLog_success() async throws {
-    guard let mockURL: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockURL = URL(string: strURL) else { fatalError("url building") }
     let testString = "[\"test\"]"
     let testData = try testString.asData()
     NetworkContainer.shared.endpointClosure.register {
@@ -31,10 +30,10 @@ final class DidResolverRepositoryTests: XCTestCase {
   }
 
   func testFetchDidLog_failure() async throws {
-    guard let mockURL: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockURL = URL(string: strURL) else { fatalError("url building") }
 
     NetworkContainer.shared.endpointClosure.register {
-      .networkResponse(500, .init())
+      .networkResponse(500, Data())
     }
 
     do {

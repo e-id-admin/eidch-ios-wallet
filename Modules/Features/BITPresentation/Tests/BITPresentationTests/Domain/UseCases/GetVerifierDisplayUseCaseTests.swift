@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITCore
 @testable import BITCredentialShared
 @testable import BITOpenID
@@ -10,11 +9,11 @@ final class GetVerifierDisplayUseCaseTests: XCTestCase {
 
   // swiftlint:disable all
   var useCase: GetVerifierDisplayUseCase!
-  var mockRequestObject: RequestObject = .Mock.VcSdJwt.sample
+  var mockRequestObject = RequestObject.Mock.VcSdJwt.sample
   var preferredUserLanguageCodes: [UserLanguageCode] = []
 
-  var mockITIssuerName: String = "IT issuer"
-  var mockENIssuerName: String = "EN issuer"
+  var mockITIssuerName = "IT issuer"
+  var mockENIssuerName = "EN issuer"
 
   // swiftlint:enable all
 

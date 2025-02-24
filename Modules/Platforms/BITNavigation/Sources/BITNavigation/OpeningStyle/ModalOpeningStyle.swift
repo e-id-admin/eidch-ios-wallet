@@ -42,8 +42,8 @@ public class ModalOpeningStyle: NSObject {
   // MARK: Internal
 
   var animation: OpeningStyleAnimation?
-  var animatedWhenPresenting: Bool = true
-  var animatedWhenClosing: Bool = true
+  var animatedWhenPresenting = true
+  var animatedWhenClosing = true
 
   var modalTransitionStyle: UIModalTransitionStyle
   var modalPresentationStyle: UIModalPresentationStyle

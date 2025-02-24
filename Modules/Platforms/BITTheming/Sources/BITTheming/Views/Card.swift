@@ -20,22 +20,22 @@ public struct Card<Content>: View where Content: View {
       VStack {
         if let lottieView {
           lottieView
-            .frame(minWidth: Defaults.minWidthContent, maxWidth: Defaults.maxWidthContent, minHeight: Defaults.minHeightContent, idealHeight: Defaults.maxHeightContent, maxHeight: Defaults.maxHeightContent)
+            .frame(minWidth: minWidthContent, maxWidth: maxWidthContent, minHeight: minHeightContent, idealHeight: maxHeightContent, maxHeight: maxHeightContent)
             .colorScheme(colorScheme)
         } else if let content {
           content
-            .colorScheme(colorScheme)
+            .preferredColorScheme(colorScheme)
         } else if let image {
           image
             .resizable()
             .scaledToFit()
-            .frame(minWidth: Defaults.minWidthContent, maxWidth: Defaults.maxWidthContent, minHeight: Defaults.minHeightContent, idealHeight: Defaults.maxHeightContent, maxHeight: Defaults.maxHeightContent)
+            .frame(minWidth: minWidthContent, maxWidth: maxWidthContent, minHeight: minHeightContent, idealHeight: maxHeightContent, maxHeight: maxHeightContent)
             .colorScheme(colorScheme)
         }
       }
       .padding(.x8)
     }
-    .frame(maxWidth: .infinity, minHeight: Defaults.minHeightCard, idealHeight: Defaults.idealHeightCard, maxHeight: Defaults.maxHeightCard)
+    .frame(maxWidth: .infinity, minHeight: minHeightCard, idealHeight: idealHeightCard, maxHeight: maxHeightCard)
     .background(background.view)
     .cornerRadius(.x9)
   }
@@ -51,19 +51,15 @@ public struct Card<Content>: View where Content: View {
   private let image: Image?
   private let lottieView: LottieView?
   private let background: CardBackground
-}
 
-// MARK: - Defaults
+  private let minWidthContent: CGFloat = 80
+  private let maxWidthContent: CGFloat = 120
+  private let minHeightContent: CGFloat = 80
+  private let maxHeightContent: CGFloat = 180
 
-fileprivate enum Defaults {
-  static let minWidthContent: CGFloat = 50
-  static let maxWidthContent: CGFloat = 120
-  static let minHeightContent: CGFloat = 50
-  static let maxHeightContent: CGFloat = 180
-
-  static let minHeightCard: CGFloat = 95
-  static let maxHeightCard: CGFloat = 355
-  static let idealHeightCard: CGFloat = 355
+  private let minHeightCard: CGFloat = 95
+  private let maxHeightCard: CGFloat = 355
+  private let idealHeightCard: CGFloat = 355
 }
 
 extension Card where Content == Image {

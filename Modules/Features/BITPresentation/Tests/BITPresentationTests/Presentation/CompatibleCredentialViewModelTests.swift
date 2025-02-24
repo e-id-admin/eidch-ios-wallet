@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITOpenID
 @testable import BITPresentation
 
@@ -37,7 +36,7 @@ final class CompatibleCredentialViewModelTests: XCTestCase {
 
   @MainActor
   func testCredentialSelection() async throws {
-    let credential: CompatibleCredential = .Mock.BIT
+    let credential = CompatibleCredential.Mock.BIT
 
     guard let inputDescriptor = context.requestObject.presentationDefinition.inputDescriptors.first else {
       fatalError("Cannot get input descriptor")
@@ -50,13 +49,27 @@ final class CompatibleCredentialViewModelTests: XCTestCase {
     XCTAssertEqual(context.selectedCredentials[inputDescriptor.id], credential)
   }
 
+  @MainActor
+  func testClose() {
+    let credential: CompatibleCredential = .Mock.BIT
+
+    guard let inputDescriptor = context.requestObject.presentationDefinition.inputDescriptors.first else {
+      fatalError("Cannot get input descriptor")
+    }
+
+    viewModel = CompatibleCredentialViewModel(context: context, inputDescriptorId: inputDescriptor.id, compatibleCredentials: mockCompatibleCredentials, router: router)
+
+    viewModel.close()
+    XCTAssertTrue(router.closeCalled)
+  }
+
   // MARK: Private
 
   // swiftlint:disable all
   private var viewModel: CompatibleCredentialViewModel!
-  private var context: PresentationRequestContext = .Mock.vcSdJwtJwtSample
+  private var context = PresentationRequestContext.Mock.vcSdJwtJwtSample
   private var getVerifierDisplayUseCase = GetVerifierDisplayUseCaseProtocolSpy()
   private let router = MockPresentationRouter()
-  private let mockCompatibleCredentials = [CompatibleCredential(credential: .Mock.sample, requestedFields: [.string("firstName")])]
+  private let mockCompatibleCredentials = [CompatibleCredential(credential: .Mock.sample, requestedFields: [.init(jsonPath: "$.firstName", value: .string("firstName"))])]
   // swiftlint:enable all
 }

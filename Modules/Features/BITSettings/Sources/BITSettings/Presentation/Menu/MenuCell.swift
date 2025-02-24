@@ -20,7 +20,7 @@ struct MenuCell: View {
 
   enum Const {
     static let iconFrame: CGFloat = 25
-    static let spacingHStack: CGFloat = .x5
+    static let spacingHStack = CGFloat.x5
   }
 
   var body: some View {

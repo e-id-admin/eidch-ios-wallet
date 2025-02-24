@@ -22,6 +22,7 @@ only_rules:
   - vertical_whitespace
   - void_return
   - custom_rules
+  - explicit_init
 
 excluded:
   - Carthage
@@ -44,6 +45,15 @@ type_name:
       warning: 3
 
 custom_rules:
+  init_with_name:
+    name: "Init with full object name"
+    message: "Prefer let object = Class() instead of let object: Class = .init()"
+    included: ".*.swift"
+    regex: '(?<!self|super)\.init\('
+    match_kinds:
+      - identifier
+      - keyword
+    severity: warning
   no_objcMembers:
     name: "@objcMembers"
     regex: "@objcMembers"

@@ -21,20 +21,20 @@ class PinCodeViewModel: ObservableObject, Vibrating {
   // MARK: Internal
 
   var error: Error? = nil
-  @Published var isErrorPresented: Bool = false
-  @Published var inputFieldMessage: String?
+  @Published var isErrorPresented = false
+  @Published var inputFieldMessage: String = L10n.tkOnboardingCharactersSubtitle
 
   // attempts allows us to have the ShakeEffect on the inputField
-  @Published var attempts: Int = 0
+  @Published var attempts = 0
 
   @Injected(\.pinCodeErrorAuthHideDelay) var autoHideErrorDelay: Double
 
-  @Published var pinCode: String = "" {
+  @Published var pinCode = "" {
     didSet {
       guard userDidRequestValidation else { return }
       do {
         try validatePinCodeRuleUseCase.execute(pinCode)
-        inputFieldMessage = nil
+        inputFieldMessage = L10n.tkOnboardingCharactersSubtitle
       } catch {
         handleError(error)
       }
@@ -60,7 +60,7 @@ class PinCodeViewModel: ObservableObject, Vibrating {
 
   // MARK: Private
 
-  private var userDidRequestValidation: Bool = false
+  private var userDidRequestValidation = false
 
   @Injected(\.validatePinCodeRuleUseCase) private var validatePinCodeRuleUseCase: ValidatePinCodeRuleUseCaseProtocol
 
@@ -74,7 +74,7 @@ class PinCodeViewModel: ObservableObject, Vibrating {
     pinCode = ""
     isErrorPresented = false
     error = nil
-    inputFieldMessage = nil
+    inputFieldMessage = L10n.tkOnboardingCharactersSubtitle
     attempts = 0
   }
 

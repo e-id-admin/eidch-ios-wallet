@@ -1,4 +1,5 @@
 import BITAppAuth
+import BITSettings
 import Combine
 import Factory
 import Foundation
@@ -11,19 +12,15 @@ class SetupViewModel: ObservableObject {
 
   // MARK: Lifecycle
 
-  init(
-    router: OnboardingInternalRoutes,
-    registerPinCodeUseCase: RegisterPinCodeUseCaseProtocol = Container.shared.registerPinCodeUseCase())
-  {
+  init(router: OnboardingInternalRoutes) {
     self.router = router
-    self.registerPinCodeUseCase = registerPinCodeUseCase
   }
 
   // MARK: Internal
 
-  @AppStorage("rootOnboardingIsEnabled") var isOnboardingEnabled: Bool = true
+  @AppStorage("rootOnboardingIsEnabled") var isOnboardingEnabled = true
 
-  @Published var isAnimating: Bool = true
+  @Published var isAnimating = true
 
   func run() async {
     do {
@@ -33,6 +30,7 @@ class SetupViewModel: ObservableObject {
       try await Task.sleep(nanoseconds: 2_000_000_000)
       guard let pincode = router.context.pincode else { throw SetupError.missingPinCode }
       try registerPinCodeUseCase.execute(pinCode: pincode)
+      await updateAnalyticsStatusUseCase.execute(isAllowed: router.context.analyticsOptIn)
       isOnboardingEnabled = false
       try await Task.sleep(nanoseconds: 2_000_000_000)
       router.completed()
@@ -49,7 +47,8 @@ class SetupViewModel: ObservableObject {
   }
 
   private let router: OnboardingInternalRoutes
-  private var registerPinCodeUseCase: RegisterPinCodeUseCaseProtocol
+  @Injected(\.registerPinCodeUseCase) private var registerPinCodeUseCase: RegisterPinCodeUseCaseProtocol
+  @Injected(\.updateAnalyticsStatusUseCase) private var updateAnalyticsStatusUseCase: UpdateAnalyticStatusUseCaseProtocol
 
 }
 

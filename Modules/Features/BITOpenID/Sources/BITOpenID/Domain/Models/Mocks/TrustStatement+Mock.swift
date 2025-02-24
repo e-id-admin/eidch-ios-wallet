@@ -1,6 +1,5 @@
 #if DEBUG
 import Foundation
-
 @testable import BITTestingCore
 
 extension TrustStatement {
@@ -16,6 +15,15 @@ extension TrustStatement {
     static let noVctClaimSdJwtSample: String = rawText(fromFile: "trust-statement-sdjwt-without-vct-claim-sample")
     static let unsupportedVctSdJwtSample: String = rawText(fromFile: "trust-statement-sdjwt-unsupported-vct-sample")
     static let invalidSample: String = rawText(fromFile: "trust-statement-invalid-sample")
+
+    static let noTypeSample: String = rawText(fromFile: "trust-statement-without-type")
+    static let noSubSample: String = rawText(fromFile: "trust-statement-without-sub")
+    static let noActivationDateSample: String = rawText(fromFile: "trust-statement-without-activation-date")
+    static let noIssuingDateSample: String = rawText(fromFile: "trust-statement-without-issuing-date")
+    static let noVctSample: String = rawText(fromFile: "trust-statement-without-vct")
+    static let noExpirationDateSample: String = rawText(fromFile: "trust-statement-without-expiration-date")
+    static let noStatusSample: String = rawText(fromFile: "trust-statement-without-status")
+    static let incorrectAlgorithmSample: String = rawText(fromFile: "trust-statement-incorrect-algorithm")
 
     // MARK: Private
 

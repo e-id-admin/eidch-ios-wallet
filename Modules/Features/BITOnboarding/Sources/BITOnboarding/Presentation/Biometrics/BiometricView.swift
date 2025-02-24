@@ -18,6 +18,13 @@ struct BiometricView: View {
 
   // MARK: Internal
 
+  enum AccessibilityIdentifier: String {
+    case primaryText
+    case secondaryText
+    case skipButton
+    case settingsButton
+  }
+
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
   @Environment(\.verticalSizeClass) var verticalSizeClass
   @Environment(\.sizeCategory) var sizeCategory
@@ -28,24 +35,25 @@ struct BiometricView: View {
         resetAccessibilityFocus()
       }
       .popup(isPresented: $viewModel.isErrorPresented) {
-        Notification(
-          systemImageName: "exclamationmark.triangle",
-          imageColor: ThemingAssets.Brand.Core.swissRed.swiftUIColor,
-          content: viewModel.error?.localizedDescription ?? L10n.onboardingPinCodeErrorUnknown,
-          contentColor: ThemingAssets.Brand.Core.swissRed.swiftUIColor,
-          closeAction: {
-            viewModel.hideError()
-          })
-          .padding(.horizontal, .x4)
-          .environment(\.colorScheme, .light)
-          .accessibilityElement(children: .combine)
-          .accessibilityLabel(L10n.biometricSetupErrorAltText(viewModel.error?.localizedDescription ?? L10n.onboardingPinCodeErrorUnknown))
-          .accessibilitySortPriority(10)
-          .accessibilityHidden(!viewModel.isErrorPresented)
-          .accessibilityFocused($errorFocusedState)
-          .onAppear {
-            errorFocusedState = viewModel.isErrorPresented
-          }
+        if let error = viewModel.error {
+          Notification(
+            systemImageName: "exclamationmark.triangle",
+            imageColor: ThemingAssets.Brand.Core.swissRed.swiftUIColor,
+            content: error.localizedDescription,
+            contentColor: ThemingAssets.Brand.Core.swissRed.swiftUIColor,
+            closeAction: {
+              viewModel.hideError()
+            })
+            .padding(.horizontal, .x4)
+            .environment(\.colorScheme, .light)
+            .accessibilityElement(children: .combine)
+            .accessibilitySortPriority(10)
+            .accessibilityHidden(!viewModel.isErrorPresented)
+            .accessibilityFocused($errorFocusedState)
+            .onAppear {
+              errorFocusedState = viewModel.isErrorPresented
+            }
+        }
       } customize: {
         $0.type(.floater())
           .appearFrom(.bottomSlide)
@@ -59,7 +67,7 @@ struct BiometricView: View {
 
   private enum Constants {
     static var cardAccessibilityMaxHeight: CGFloat { 150 }
-    static var errorAnimation: Animation = .interpolatingSpring(stiffness: 500, damping: 30)
+    static var errorAnimation = Animation.interpolatingSpring(stiffness: 500, damping: 30)
   }
 
   @AccessibilityFocusState private var errorFocusedState: Bool
@@ -112,12 +120,14 @@ extension BiometricView {
         .accessibilityLabel(viewModel.primaryText)
         .accessibilityFocused($isCurrentPageFocused)
         .accessibilityAddTraits(.isHeader)
+        .accessibilityIdentifier(AccessibilityIdentifier.primaryText.rawValue)
 
       Text(viewModel.secondaryText)
         .font(.custom.body)
         .foregroundStyle(ThemingAssets.Label.secondary.swiftUIColor)
         .multilineTextAlignment(.leading)
         .accessibilityLabel(viewModel.secondaryText)
+        .accessibilityIdentifier(AccessibilityIdentifier.secondaryText.rawValue)
 
       Text(viewModel.tertiaryText)
         .font(.custom.footnote)
@@ -134,7 +144,7 @@ extension BiometricView {
   private func footer() -> some View {
     FooterView {
       Button(action: { viewModel.skip() }) {
-        Text(L10n.biometricSetupDismissButton)
+        Text(L10n.tkGlobalNo)
           .multilineTextAlignment(.center)
           .lineLimit(1)
           .frame(maxWidth: .infinity)
@@ -142,20 +152,20 @@ extension BiometricView {
       .buttonStyle(.bezeledLight)
       .controlSize(.large)
       .accessibilityLabel(L10n.biometricSetupDismissButton)
+      .accessibilityIdentifier(AccessibilityIdentifier.skipButton.rawValue)
 
       if viewModel.hasBiometricAuth {
         Button(action: { Task { await viewModel.registerBiometrics() } }) {
-          Text(L10n.biometricSetupActionButton(viewModel.biometricType.text))
+          Text(L10n.tkOnboardingBiometricios1Primarybutton)
             .multilineTextAlignment(.center)
             .lineLimit(1)
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.filledPrimary)
         .controlSize(.large)
-        .accessibilityLabel(L10n.biometricSetupActionButton(viewModel.biometricType.text))
       } else {
         Button(action: { Task { viewModel.openSettings() } }) {
-          Text(L10n.biometricSetupNoClass3ToSettingsButton)
+          Text(L10n.tkGlobalTothesettings)
             .multilineTextAlignment(.center)
             .lineLimit(1)
             .frame(maxWidth: .infinity)
@@ -163,6 +173,7 @@ extension BiometricView {
         .buttonStyle(.filledPrimary)
         .controlSize(.large)
         .accessibilityLabel(L10n.biometricSetupNoClass3ToSettingsButton)
+        .accessibilityIdentifier(AccessibilityIdentifier.settingsButton.rawValue)
       }
     }
   }
@@ -176,12 +187,8 @@ extension BiometricView {
   @ViewBuilder
   private func portraitLayout() -> some View {
     ZStack(alignment: .center) {
-      if #available(iOS 16, *) {
-        ViewThatFits(in: .vertical) {
-          portraitContentLayout()
-          portraitScrollableContentLayout()
-        }
-      } else {
+      ViewThatFits(in: .vertical) {
+        portraitContentLayout()
         portraitScrollableContentLayout()
       }
     }
@@ -242,12 +249,8 @@ extension BiometricView {
   @ViewBuilder
   private func landscapeLayout() -> some View {
     ZStack(alignment: .center) {
-      if #available(iOS 16, *) {
-        ViewThatFits(in: .vertical) {
-          landscapeContentLayout()
-          landscapeScrollableContentLayout()
-        }
-      } else {
+      ViewThatFits(in: .vertical) {
+        landscapeContentLayout()
         landscapeScrollableContentLayout()
       }
     }

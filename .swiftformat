@@ -1,16 +1,23 @@
 --acronyms ID,URL,UUID
 --allman false
+--anonymousforeach convert
 --assetliterals visual-width
 --asynccapturing 
 --beforemarks 
 --binarygrouping 4,8
+--callsiteparen default
 --categorymark "MARK: %c"
 --classthreshold 0
 --closingparen same-line
 --closurevoid remove
 --commas always
+--complexattrs preserve
+--computedvarattrs preserve
+--condassignment after-property
 --conflictmarkers reject
+--dateformat system
 --decimalgrouping 3,6
+--doccomments before-declarations
 --elseposition same-line
 --emptybraces no-space
 --enumnamespaces always
@@ -24,6 +31,7 @@
 --fragment false
 --funcattributes prev-line
 --generictypes 
+--groupblanklines true
 --groupedextension "MARK: %c"
 --guardelse auto
 --header strip
@@ -34,6 +42,10 @@
 --indent 2
 --indentcase false
 --indentstrings false
+--inferredtypes always
+--initcodernil false
+--inlinedforeach ignore
+--languagemode 0
 --lifecycle 
 --lineaftermarks true
 --linebreaks lf
@@ -43,31 +55,43 @@
 --maxwidth none
 --modifierorder 
 --nevertrailing 
+--nilinit remove
+--noncomplexattrs 
 --nospaceoperators 
 --nowrapoperators 
 --octalgrouping 4,8
 --operatorfunc spaced
+--organizationmode visibility
 --organizetypes class,enum,extension,struct
 --patternlet inline
+--preservedecls 
+--preservedsymbols Mock,Package
+--propertytypes inferred
 --ranges no-space
---redundanttype infer-locals-only
 --self remove
 --selfrequired 
 --semicolons inline
 --shortoptionals always
 --smarttabs enabled
---someAny true
+--someany true
+--sortedpatterns 
+--storedvarattrs preserve
 --stripunusedargs always
 --structthreshold 20
---swiftversion 5.7
+--swiftversion 5.10
 --tabwidth unspecified
 --throwcapturing 
+--timezone system
 --trailingclosures 
 --trimwhitespace always
 --typeattributes prev-line
 --typeblanklines remove
+--typedelimiter space-after
 --typemark "MARK: - %t"
---varattributes preserve
+--typemarks 
+--typeorder 
+--visibilitymarks 
+--visibilityorder 
 --voidtype void
 --wraparguments before-first
 --wrapcollections before-first
@@ -80,6 +104,6 @@
 --wraptypealiases preserve
 --xcodeindentation disabled
 --yodaswap always
---disable andOperator,assertionFailures,blankLinesAtEndOfScope,blankLinesAtStartOfScope,braces,elseOnSameLine,emptyBraces,enumNamespaces,hoistAwait,initCoderUnavailable,leadingDelimiters,linebreakAtEndOfFile,linebreaks,modifierOrder,numberFormatting,redundantBackticks,redundantExtensionACL,redundantFileprivate,redundantPattern,redundantRawValues,redundantVoidReturnType,semicolons,sortDeclarations,spaceAroundBrackets,spaceAroundComments,spaceAroundGenerics,spaceAroundParens,spaceInsideBrackets,spaceInsideComments,spaceInsideGenerics,spaceInsideParens,strongOutlets,trailingClosures,unusedArguments,void,wrap,yodaConditions
---enable isEmpty,markTypes,organizeDeclarations,sortSwitchCases,wrapSwitchCases
+--disable andOperator,assertionFailures,blankLinesAtEndOfScope,blankLinesAtStartOfScope,blankLinesBetweenChainedFunctions,braces,elseOnSameLine,emptyBraces,enumNamespaces,hoistAwait,initCoderUnavailable,leadingDelimiters,linebreakAtEndOfFile,linebreaks,modifierOrder,numberFormatting,redundantBackticks,redundantExtensionACL,redundantFileprivate,redundantPattern,redundantVoidReturnType,semicolons,sortDeclarations,spaceAroundComments,spaceAroundGenerics,spaceAroundParens,spaceInsideBrackets,spaceInsideGenerics,spaceInsideParens,strongOutlets,trailingClosures,unusedArguments,void,wrap
+--enable blankLinesBetweenImports,isEmpty,markTypes,organizeDeclarations,propertyTypes,sortSwitchCases,wrapSwitchCases
 --exclude Pods,Generated,vendor

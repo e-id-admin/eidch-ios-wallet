@@ -16,6 +16,6 @@ public struct PackageDependency: Codable, Identifiable, Equatable {
 
 extension PackageDependency {
   public struct Mock {
-    public static let sample: PackageDependency = .init(name: "Test package", version: "1.3.4", license: "MIT")
+    public static let sample = PackageDependency(name: "Test package", version: "1.3.4", license: "MIT")
   }
 }

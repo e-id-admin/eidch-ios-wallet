@@ -7,7 +7,7 @@ let package = Package(
   name: "BITPresentation",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v15),
+    .iOS(.v16),
   ],
   products: [
     .library(
@@ -62,10 +62,12 @@ let package = Package(
       name: "BITPresentationTests",
       dependencies: [
         "BITPresentation",
+        .product(name: "BITAnyCredentialFormatMocks", package: "BITAnyCredentialFormat"),
         .product(name: "BITCredentialMocks", package: "BITCredential"),
         .product(name: "BITSdJWTMocks", package: "BITSdJWT"),
         .product(name: "BITJWT", package: "BITJWT"),
         .product(name: "BITNavigationTestCore", package: "BITNavigation"),
+        .product(name: "BITAnalyticsMocks", package: "BITAnalytics"),
       ],
       swiftSettings: [.define("DEBUG", .when(configuration: .debug))]),
   ])

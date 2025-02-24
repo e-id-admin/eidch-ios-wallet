@@ -16,6 +16,10 @@ struct PinCodeConfirmationView: View {
 
   // MARK: Internal
 
+  enum AccessibilityIdentifier: String {
+    case continueButton
+  }
+
   var body: some View {
     content()
       .navigationTitle(L10n.tkGlobalConfirmpassword)
@@ -116,7 +120,7 @@ struct PinCodeConfirmationView: View {
 
   @ViewBuilder
   private func secureField() -> some View {
-    SecureTextField(text: $viewModel.pinCode, prompt: L10n.tkLoginPasswordNote) {
+    SecureTextField(text: $viewModel.pinCode, prompt: L10n.tkOnboardingCharactersNote) {
       viewModel.validate()
     }
     .submitLabel(.done)
@@ -132,6 +136,7 @@ struct PinCodeConfirmationView: View {
         inputFocused = true
       }
     }
+    .accessibilityLabel(L10n.tkLoginPasswordAlt)
     .accessibilitySortPriority(800)
     .accessibilityFocused($focus, equals: .input)
   }
@@ -146,6 +151,7 @@ struct PinCodeConfirmationView: View {
     .buttonStyle(.filledPrimary)
     .controlSize(.large)
     .accessibilityFocused($focus, equals: .loginButton)
+    .accessibilityIdentifier(AccessibilityIdentifier.continueButton.rawValue)
   }
 
   @ViewBuilder

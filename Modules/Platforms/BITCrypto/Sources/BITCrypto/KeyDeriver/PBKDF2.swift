@@ -48,8 +48,8 @@ extension PBKDF2 {
 
     fileprivate func hmacVariant() -> HMAC.Variant {
       switch self {
-      case .hmacSHA256: return .sha2(.sha256)
-      case .hmacSHA512: return .sha2(.sha512)
+      case .hmacSHA256: .sha2(.sha256)
+      case .hmacSHA512: .sha2(.sha512)
       }
     }
   }

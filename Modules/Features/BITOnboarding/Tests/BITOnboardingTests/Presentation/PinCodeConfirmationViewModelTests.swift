@@ -2,7 +2,6 @@ import Factory
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITOnboarding
 
 // MARK: - PinCodeViewModelTests

@@ -19,7 +19,7 @@ class GetBuildNumberUseCaseTests: XCTestCase {
   }
 
   func test_getBuildNumber_happyPath() throws {
-    let expectedNumber: BuildNumber = .Mock.sample
+    let expectedNumber = BuildNumber.Mock.sample
     repository.getBuildNumberReturnValue = expectedNumber
 
     let number = try useCase.execute()

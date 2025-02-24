@@ -20,7 +20,7 @@ public struct SdJWTClaim: Equatable {
     self.key = key
     self.digest = digest
     self.disclosure = disclosure
-    value = try .init(anyValue: disclosableClaim[2])
+    value = try CodableValue(anyValue: disclosableClaim[2])
   }
 
   // MARK: Public

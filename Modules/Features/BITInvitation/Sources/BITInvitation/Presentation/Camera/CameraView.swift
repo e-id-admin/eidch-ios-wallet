@@ -17,10 +17,6 @@ struct CameraView: View {
 
   // MARK: Internal
 
-  @Environment(\.horizontalSizeClass) var horizontalSizeClass
-  @Environment(\.verticalSizeClass) var verticalSizeClass
-  @Environment(\.sizeCategory) var sizeCategory
-
   var body: some View {
     content()
       .onAppear {
@@ -65,7 +61,8 @@ struct CameraView: View {
           focus = .loadingTip
         }
         return $0.type(.floater())
-          .appearFrom(.bottomSlide)
+          .appearFrom(.centerScale)
+          .position(.center)
       }
       .popup(isPresented: $viewModel.isPopupErrorPresented) {
         if let invitationError = viewModel.qrScannerError as? CameraViewModel.CameraError {
@@ -84,6 +81,7 @@ struct CameraView: View {
         }
         return $0.type(.floater())
           .appearFrom(.bottomSlide)
+          .autohideIn(voiceOverEnabled ? nil : 7)
           .dismissCallback {
             focus = .camera
           }
@@ -107,6 +105,8 @@ struct CameraView: View {
   private enum FocusableElement {
     case tip, close, flashlight, camera, flashlightTip, loadingTip
   }
+
+  @Environment(\.accessibilityVoiceOverEnabled) private var voiceOverEnabled
 
   @AccessibilityFocusState private var focus: FocusableElement?
   @StateObject private var viewModel: CameraViewModel
@@ -146,7 +146,6 @@ extension CameraView {
       background: ThemingAssets.Background.tertiary.swiftUIColor,
       foreground: ThemingAssets.Label.primary.swiftUIColor)
       .accessibilityFocused($focus, equals: .loadingTip)
-
   }
 
   @ViewBuilder
@@ -156,30 +155,28 @@ extension CameraView {
 
   @ViewBuilder
   private func helpTipView() -> some View {
-    tipView(primary: L10n.cameraQrcodeScannerPrimary, secondary: L10n.cameraQrcodeScannerSecondary, icon: "qrcode", close: viewModel.closeTipView)
+    tipView(primary: L10n.cameraQrcodeScannerPrimary, secondary: L10n.cameraQrcodeScannerSecondary, icon: Assets.qrcode.swiftUIImage, close: viewModel.closeTipView)
       .frame(maxWidth: orientation.isPortrait ? .infinity : Constants.tipViewMaxWidth)
       .padding(.horizontal, orientation.isPortrait ? .x3 : .x1)
   }
 
   @ViewBuilder
   private func errorView(_ error: CameraViewModel.CameraError) -> some View {
-    tipView(primary: error.primaryText, secondary: error.secondaryText, tertiary: error.tertiaryText, icon: error.icon, close: viewModel.closeErrorView)
+    tipView(primary: error.primaryText, secondary: error.secondaryText, icon: error.icon, close: viewModel.closeErrorView)
       .frame(maxWidth: orientation.isPortrait ? .infinity : Constants.tipViewMaxWidth)
       .padding(.horizontal, orientation.isPortrait ? .x3 : .x1)
   }
 
   @ViewBuilder
-  private func tipView(primary: String, secondary: String, tertiary: String? = nil, icon: String, close: @escaping() -> Void) -> some View {
+  private func tipView(primary: String, secondary: String, tertiary: String? = nil, icon: Image, close: @escaping() -> Void) -> some View {
     Notification(
-      systemImageName: icon,
+      image: icon,
       imageColor: ThemingAssets.Label.primary.swiftUIColor,
       title: primary,
       titleColor: ThemingAssets.Label.primary.swiftUIColor,
       content: secondary,
       contentColor: ThemingAssets.Label.secondary.swiftUIColor,
-      subtitle: tertiary,
       closeAction: close,
-      subtitleAction: viewModel.openExternalLink,
       background: ThemingAssets.Background.tertiary.swiftUIColor,
       closeButtonStyle: .bezeledLight)
       .accessibilityFocused($focus, equals: .tip)

@@ -1,8 +1,6 @@
 import Spyable
 import XCTest
-
 @testable import BITOpenID
-
 @testable import BITTestingCore
 
 final class FetchMetadataUseCaseTests: XCTestCase {
@@ -15,8 +13,8 @@ final class FetchMetadataUseCaseTests: XCTestCase {
   }
 
   func testFetchMetadataHappyPath() async throws {
-    let mockMetadata: CredentialMetadata = .Mock.sample
-    guard let mockUrl: URL = .init(string: "http://mock.url") else { fatalError("url generation") }
+    let mockMetadata = CredentialMetadata.Mock.sample
+    guard let mockUrl = URL(string: "http://mock.url") else { fatalError("url generation") }
     spyRepository.fetchMetadataFromReturnValue = mockMetadata
 
     let metadata = try await useCase.execute(from: mockUrl)
@@ -29,7 +27,7 @@ final class FetchMetadataUseCaseTests: XCTestCase {
   }
 
   func testFetchMetadataFailurePath() async throws {
-    guard let mockUrl: URL = .init(string: "http://mock.url") else { fatalError("url generation") }
+    guard let mockUrl = URL(string: "http://mock.url") else { fatalError("url generation") }
     spyRepository.fetchMetadataFromThrowableError = TestingError.error
 
     do {

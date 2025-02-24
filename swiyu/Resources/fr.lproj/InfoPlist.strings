@@ -1,2 +1,2 @@
 "NSFaceIDUsageDescription" = "Autorisez-vous swiyu app à utiliser Face ID pour déverrouiller votre application ?";
-"NSCameraUsageDescription" = "swiyu app demande l’accès à votre caméra";
+"NSCameraUsageDescription" = "swiyu app utilise la caméra pour scanner les codes QR.";

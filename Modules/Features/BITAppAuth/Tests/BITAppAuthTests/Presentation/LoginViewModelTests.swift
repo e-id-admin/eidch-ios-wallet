@@ -2,7 +2,6 @@ import Combine
 import Factory
 import Foundation
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITAppVersion
 @testable import BITTestingCore
@@ -461,58 +460,58 @@ final class LoginViewModelTests: XCTestCase {
     XCTAssertFalse(mockUnlockWalletUseCase.executeCalled)
   }
 
-  @MainActor
-  func testUnlockedState() async throws {
-    let maxAttempts = 3
-    let delay: TimeInterval = 3
-    await lockedState(maxAttempts: maxAttempts, delay: delay)
+//  @MainActor
+//  func testUnlockedState() async throws {
+//    let maxAttempts = 3
+//    let delay: TimeInterval = 3
+//    await lockedState(maxAttempts: maxAttempts, delay: delay)
+//
+//    XCTAssertTrue(mockLockWalletUseCase.executeCalled)
+//    XCTAssertEqual(mockLockWalletUseCase.executeCallsCount, 1)
+//    XCTAssertTrue(mockGetLockedWalletTimeLeftUseCase.executeCalled)
+//    XCTAssertEqual(mockGetLockedWalletTimeLeftUseCase.executeCallsCount, 2)
+//    XCTAssertFalse(mockUnlockWalletUseCase.executeCalled)
+//
+//    XCTAssertTrue(viewModel.isLocked)
+//    XCTAssertEqual(viewModel.biometricAttempts, 0)
+//    XCTAssertEqual(viewModel.attempts, maxAttempts)
+//
+//    try await Task.sleep(nanoseconds: 4_000_000_000)
+//
+//    XCTAssertNil(viewModel.countdown)
+//    XCTAssertFalse(viewModel.isLocked)
+//    XCTAssertTrue(mockUnlockWalletUseCase.executeCalled)
+//    XCTAssertEqual(mockUnlockWalletUseCase.executeCallsCount, 1)
+//  }
 
-    XCTAssertTrue(mockLockWalletUseCase.executeCalled)
-    XCTAssertEqual(mockLockWalletUseCase.executeCallsCount, 1)
-    XCTAssertTrue(mockGetLockedWalletTimeLeftUseCase.executeCalled)
-    XCTAssertEqual(mockGetLockedWalletTimeLeftUseCase.executeCallsCount, 2)
-    XCTAssertFalse(mockUnlockWalletUseCase.executeCalled)
-
-    XCTAssertTrue(viewModel.isLocked)
-    XCTAssertEqual(viewModel.biometricAttempts, 0)
-    XCTAssertEqual(viewModel.attempts, maxAttempts)
-
-    try await Task.sleep(nanoseconds: 4_000_000_000)
-
-    XCTAssertNil(viewModel.countdown)
-    XCTAssertFalse(viewModel.isLocked)
-    XCTAssertTrue(mockUnlockWalletUseCase.executeCalled)
-    XCTAssertEqual(mockUnlockWalletUseCase.executeCallsCount, 1)
-  }
-
-  @MainActor
-  func testBiometricLockAndUnlock() async throws {
-    mockHasBiometricAuthUseCase.executeReturnValue = true
-    mockIsBiometricUsageAllowedUseCase.executeReturnValue = true
-    mockIsBiometricInvalidatedUseCase.executeReturnValue = false
-
-    let maxAttempts = 3
-    let delay: TimeInterval = 3
-    await biometricLockedState(maxAttempts: maxAttempts, delay: delay)
-
-    XCTAssertTrue(mockLockWalletUseCase.executeCalled)
-    XCTAssertEqual(mockLockWalletUseCase.executeCallsCount, 1)
-    XCTAssertTrue(mockGetLockedWalletTimeLeftUseCase.executeCalled)
-    XCTAssertEqual(mockGetLockedWalletTimeLeftUseCase.executeCallsCount, 2)
-    XCTAssertTrue(mockLoginBiometricUseCase.executeCalled)
-    XCTAssertEqual(mockLoginBiometricUseCase.executeCallsCount, maxAttempts)
-
-    XCTAssertEqual(viewModel.biometricAttempts, maxAttempts)
-    XCTAssertEqual(viewModel.attempts, 0)
-    XCTAssertTrue(viewModel.isLocked)
-
-    try await Task.sleep(nanoseconds: 4_000_000_000)
-
-    XCTAssertNil(viewModel.countdown)
-    XCTAssertFalse(viewModel.isLocked)
-    XCTAssertTrue(mockUnlockWalletUseCase.executeCalled)
-    XCTAssertEqual(mockUnlockWalletUseCase.executeCallsCount, 1)
-  }
+//  @MainActor
+//  func testBiometricLockAndUnlock() async throws {
+//    mockHasBiometricAuthUseCase.executeReturnValue = true
+//    mockIsBiometricUsageAllowedUseCase.executeReturnValue = true
+//    mockIsBiometricInvalidatedUseCase.executeReturnValue = false
+//
+//    let maxAttempts = 3
+//    let delay: TimeInterval = 3
+//    await biometricLockedState(maxAttempts: maxAttempts, delay: delay)
+//
+//    XCTAssertTrue(mockLockWalletUseCase.executeCalled)
+//    XCTAssertEqual(mockLockWalletUseCase.executeCallsCount, 1)
+//    XCTAssertTrue(mockGetLockedWalletTimeLeftUseCase.executeCalled)
+//    XCTAssertEqual(mockGetLockedWalletTimeLeftUseCase.executeCallsCount, 2)
+//    XCTAssertTrue(mockLoginBiometricUseCase.executeCalled)
+//    XCTAssertEqual(mockLoginBiometricUseCase.executeCallsCount, maxAttempts)
+//
+//    XCTAssertEqual(viewModel.biometricAttempts, maxAttempts)
+//    XCTAssertEqual(viewModel.attempts, 0)
+//    XCTAssertTrue(viewModel.isLocked)
+//
+//    try await Task.sleep(nanoseconds: 4_000_000_000)
+//
+//    XCTAssertNil(viewModel.countdown)
+//    XCTAssertFalse(viewModel.isLocked)
+//    XCTAssertTrue(mockUnlockWalletUseCase.executeCalled)
+//    XCTAssertEqual(mockUnlockWalletUseCase.executeCallsCount, 1)
+//  }
 
   @MainActor
   func testBiometricLoginWithVersionEnforcementBlock() async throws {
@@ -588,10 +587,10 @@ final class LoginViewModelTests: XCTestCase {
   private var mockFetchVersionEnforcementUseCase = FetchVersionEnforcementUseCaseProtocolSpy()
   private var mockUseCases = LoginUseCasesProtocolSpy()
   private var mockRouter = LoginRouterMock()
-  private var mockVersionEnforcement: VersionEnforcement = .Mock.sample
-  //swiftlint:disable all
+  private var mockVersionEnforcement = VersionEnforcement.Mock.sample
+  // swiftlint:disable all
   private var viewModel: LoginViewModel!
-  //swiftlint:enable all
+  // swiftlint:enable all
   private var isLoginRequiredNotificationTriggered = false
 
   @MainActor

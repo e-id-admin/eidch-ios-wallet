@@ -8,7 +8,7 @@ extension CredentialMetadata {
   public protocol AnyCredentialConfigurationSupported {
     var format: String { get }
     var scope: String? { get }
-    var cryptographicBindingMethodsSupported: [String]? { get }
+    var cryptographicBindingMethodsSupported: [CryptographicBindingMethod]? { get }
     var credentialSigningAlgValuesSupported: [String]? { get }
     var display: [CredentialSupportedDisplay]? { get }
     var proofTypesSupported: [ProofType] { get }
@@ -22,6 +22,7 @@ extension CredentialMetadata {
 
   enum AnyCredentialConfigurationSupportedError: Error {
     case invalidProofType
+    case invalidCryptographicBindingMethod
   }
 
 }

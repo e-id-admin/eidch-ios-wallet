@@ -21,14 +21,14 @@ public struct Credential: Identifiable, Codable {
   // MARK: Lifecycle
 
   init(
-    id: UUID = .init(),
+    id: UUID = UUID(),
     status: VcStatus = .valid,
     keyBindingIdentifier: UUID? = nil,
     keyBindingAlgorithm: String? = nil,
     payload: CredentialPayload,
     format: String,
     issuer: String,
-    createdAt: Date = .init(),
+    createdAt: Date = Date(),
     updatedAt: Date? = nil,
     claims: [CredentialClaim] = [],
     issuerDisplays: [CredentialIssuerDisplay] = [],
@@ -46,7 +46,11 @@ public struct Credential: Identifiable, Codable {
     self.claims = claims
     self.issuerDisplays = issuerDisplays
     self.displays = displays
-    environment = RegexHelper.matches(demoCredentialPattern, in: issuer) ? .demo : .none
+
+    environment = .none
+    if let regex = try? Regex(demoCredentialPattern), !issuer.matches(of: regex).isEmpty {
+      environment = .demo
+    }
 
     preferredDisplay = displays.findDisplayWithFallback() as? CredentialDisplay
     preferredIssuerDisplay = issuerDisplays.findDisplayWithFallback() as? CredentialIssuerDisplay
@@ -112,20 +116,20 @@ public struct Credential: Identifiable, Codable {
       updatedAt: nil,
       claims: credentialClaims,
       issuerDisplays: metadataWrapper.credentialMetadata.display.map { CredentialIssuerDisplay($0, credentialId: id) },
-      displays: selectedCredential.display?.map { .init($0) } ?? [])
+      displays: selectedCredential.display?.map { CredentialDisplay($0) } ?? [])
   }
 
   // MARK: Public
 
-  public var id: UUID = .init()
-  public var status: VcStatus = .unknown
+  public var id = UUID()
+  public var status = VcStatus.unknown
   public var keyBindingIdentifier: UUID? = nil
   public var keyBindingAlgorithm: String? = nil
   public var payload: CredentialPayload
   public var format: String
   public var issuer: String
 
-  public var createdAt: Date = .init()
+  public var createdAt = Date()
   public var updatedAt: Date? = nil
 
   public var claims: [CredentialClaim] = []

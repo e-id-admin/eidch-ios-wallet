@@ -1,6 +1,5 @@
 import Factory
 import XCTest
-
 @testable import BITCrypto
 @testable import BITJWT
 @testable import BITOpenID

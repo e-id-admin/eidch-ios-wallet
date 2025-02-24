@@ -10,7 +10,8 @@ struct ValidateRequestObjectUseCase: ValidateRequestObjectUseCaseProtocol {
     guard
       hasValidResponse(for: requestObject),
       hasValidClientInformation(for: requestObject),
-      hasValidClientId(for: requestObject)
+      hasValidClientId(for: requestObject),
+      hasValidInputDescriptors(for: requestObject)
     else {
       return false
     }
@@ -25,9 +26,9 @@ struct ValidateRequestObjectUseCase: ValidateRequestObjectUseCaseProtocol {
 
   // MARK: Private
 
-  private static let didKey: String = "did"
-  private static let vpTokenKey: String = "vp_token"
-  private static let directPostKey: String = "direct_post"
+  private static let didKey = "did"
+  private static let vpTokenKey = "vp_token"
+  private static let directPostKey = "direct_post"
   private static let regex = "^did:[a-z0-9]+:[a-zA-Z0-9.\\-_:]+$"
 
   @Injected(\.jwtSignatureValidator) private var jwtSignatureValidator: JWTSignatureValidatorProtocol
@@ -42,7 +43,15 @@ struct ValidateRequestObjectUseCase: ValidateRequestObjectUseCaseProtocol {
   }
 
   private func hasValidClientId(for requestObject: RequestObject) -> Bool {
-    RegexHelper.matches(Self.regex, in: requestObject.clientId)
+    guard let regex = try? Regex(Self.regex) else { return false }
+    return !requestObject.clientId.matches(of: regex).isEmpty
+  }
+
+  private func hasValidInputDescriptors(for requestObject: RequestObject) -> Bool {
+    let descriptors = requestObject.presentationDefinition.inputDescriptors
+    return descriptors.allSatisfy { descriptor in
+      !descriptor.constraints.fields.isEmpty
+    }
   }
 
   private func validateJWTIntegrity(of jwtRequestObject: JWTRequestObject) async -> Bool {

@@ -2,7 +2,6 @@ import Factory
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITCredential
 @testable import BITCredentialMocks
 @testable import BITCredentialShared
@@ -17,7 +16,7 @@ final class CredentialOfferViewModelTests: XCTestCase {
 
   // swiftlint:disable all
   var viewModel: CredentialOfferViewModel!
-  var credential: Credential = .Mock.sample
+  var credential = Credential.Mock.sample
   var trustStatement: TrustStatement? = .Mock.validSample
   var router: MockRoutes!
   var delayAfterAcceptingCredential: UInt64 = 0

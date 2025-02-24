@@ -5,7 +5,7 @@ import SwiftUI
 public struct OnFirstAppear: ViewModifier {
   let perform: () -> Void
 
-  @State public var hasAppeared: Bool = false
+  @State public var hasAppeared = false
 
   public func body(content: Content) -> some View {
     content.onAppear {

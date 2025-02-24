@@ -1,5 +1,4 @@
 import BITAppAuth
-import BITSecurity
 import Factory
 import Foundation
 import SwiftUI
@@ -9,18 +8,6 @@ import UIKit
 
 @MainActor
 final class SplashScreenScene: SceneManagerProtocol {
-
-  // MARK: Lifecycle
-
-  init() {
-    hasDevicePinUseCase = Container.shared.hasDevicePinUseCase()
-    jailbreakDetector = Container.shared.jailbreakDetector()
-  }
-
-  init(hasDevicePinUseCase: HasDevicePinUseCaseProtocol = Container.shared.hasDevicePinUseCase(), jailbreakDetector: JailbreakDetectorProtocol = Container.shared.jailbreakDetector()) {
-    self.hasDevicePinUseCase = hasDevicePinUseCase
-    self.jailbreakDetector = jailbreakDetector
-  }
 
   // MARK: Internal
 
@@ -40,23 +27,15 @@ final class SplashScreenScene: SceneManagerProtocol {
 
   // MARK: Private
 
-  @AppStorage("rootOnboardingIsEnabled") private var isOnboardingEnabled: Bool = true
+  @AppStorage("rootOnboardingIsEnabled") private var isOnboardingEnabled = true
 
-  private var hasDevicePinUseCase: HasDevicePinUseCaseProtocol
-  private var jailbreakDetector: JailbreakDetectorProtocol
-
+  @Injected(\.hasDevicePinUseCase) private var hasDevicePinUseCase: HasDevicePinUseCaseProtocol
 }
 
 // MARK: SplashScreenDelegate
 
 extension SplashScreenScene: SplashScreenDelegate {
-
   func didCompleteSplashScreen() {
-    guard !jailbreakDetector.isDeviceJailbroken() else {
-      delegate?.changeScene(to: JailbreakScene.self, animated: false)
-      return
-    }
-
     guard hasDevicePinUseCase.execute() else {
       delegate?.changeScene(to: NoDevicePinCodeScene.self, animated: false)
       return
@@ -69,5 +48,4 @@ extension SplashScreenScene: SplashScreenDelegate {
 
     delegate?.changeScene(to: AppScene.self)
   }
-
 }

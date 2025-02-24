@@ -10,7 +10,7 @@ public struct GetBuildNumberUseCase: GetBuildNumberUseCaseProtocol {
   }
 
   public func execute() throws -> BuildNumber {
-    try .init(repository.getBuildNumber())
+    try BuildNumber(repository.getBuildNumber())
   }
 
 }

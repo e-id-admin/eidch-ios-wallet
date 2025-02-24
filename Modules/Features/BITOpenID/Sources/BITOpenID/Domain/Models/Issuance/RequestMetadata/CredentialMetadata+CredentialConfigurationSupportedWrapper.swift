@@ -13,6 +13,8 @@ extension CredentialMetadata {
         anyCredentialConfigurationSupported = try container.decode(VcSdJwtCredentialConfigurationSupported.self)
       } catch AnyCredentialConfigurationSupportedError.invalidProofType {
         throw AnyCredentialConfigurationSupportedError.invalidProofType
+      } catch AnyCredentialConfigurationSupportedError.invalidCryptographicBindingMethod {
+        throw AnyCredentialConfigurationSupportedError.invalidCryptographicBindingMethod
       } catch {
         // Unknown credential configuration type
         anyCredentialConfigurationSupported = nil

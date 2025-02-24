@@ -51,6 +51,8 @@ class AppVersionTests: XCTestCase {
   }
 
   func testLessThanComparison() {
+    XCTAssertTrue(AppVersion("0.1.1") < AppVersion("0.1.2"))
+    XCTAssertTrue(AppVersion("0.0.1") < AppVersion("0.0.2"))
     XCTAssertTrue(AppVersion("1.2.3") < AppVersion("2.0.0"))
     XCTAssertTrue(AppVersion("1.2.3") < AppVersion("1.3.0"))
     XCTAssertTrue(AppVersion("1.2.3") < AppVersion("1.2.4"))

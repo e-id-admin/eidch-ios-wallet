@@ -1,6 +1,5 @@
 import Spyable
 import XCTest
-
 @testable import BITCredential
 @testable import BITInvitation
 @testable import BITTestingCore

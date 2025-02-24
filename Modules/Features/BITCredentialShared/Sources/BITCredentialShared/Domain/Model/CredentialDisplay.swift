@@ -10,13 +10,12 @@ public struct CredentialDisplay: Codable, Identifiable, DisplayLocalizable {
   // MARK: Lifecycle
 
   init(
-    id: UUID = .init(),
+    id: UUID = UUID(),
     name: String,
     backgroundColor: String? = nil,
     locale: UserLocale,
     logoAltText: String? = nil,
     logoBase64: Data? = nil,
-    logoUrl: URL? = nil,
     summary: String? = nil,
     credentialId: UUID? = nil)
   {
@@ -26,7 +25,6 @@ public struct CredentialDisplay: Codable, Identifiable, DisplayLocalizable {
     self.locale = locale
     self.logoAltText = logoAltText
     self.logoBase64 = logoBase64
-    self.logoUrl = logoUrl
     self.summary = summary
     self.credentialId = credentialId
   }
@@ -39,7 +37,6 @@ public struct CredentialDisplay: Codable, Identifiable, DisplayLocalizable {
     locale = try container.decodeIfPresent(String.self, forKey: .locale) ?? UserLocale.defaultLocaleIdentifier
     logoAltText = try container.decodeIfPresent(String.self, forKey: .logoAltText)
     logoBase64 = try container.decodeIfPresent(Data.self, forKey: .logoBase64)
-    logoUrl = try container.decodeIfPresent(URL.self, forKey: .logoUrl)
     summary = try container.decodeIfPresent(String.self, forKey: .summary)
     credentialId = try container.decodeIfPresent(UUID.self, forKey: .credentialId)
   }
@@ -51,8 +48,7 @@ public struct CredentialDisplay: Codable, Identifiable, DisplayLocalizable {
       backgroundColor: entity.backgroundColor,
       locale: entity.locale ?? UserLocale.defaultLocaleIdentifier,
       logoAltText: entity.logoAltText,
-      logoBase64: entity.logoData ?? .init(),
-      logoUrl: URL(string: entity.logoUrl ?? ""),
+      logoBase64: entity.logoData ?? Data(),
       summary: entity.summary,
       credentialId: entity.credential.first?.id)
   }
@@ -66,7 +62,6 @@ public struct CredentialDisplay: Codable, Identifiable, DisplayLocalizable {
       locale: credentialSupported.locale ?? UserLocale.defaultLocaleIdentifier,
       logoAltText: credentialSupported.logo?.altText,
       logoBase64: logoUri.data,
-      logoUrl: logoUri.logoUrl,
       summary: credentialSupported.summary)
   }
 
@@ -79,7 +74,6 @@ public struct CredentialDisplay: Codable, Identifiable, DisplayLocalizable {
     case locale
     case logoAltText = "logo_alt_text"
     case logoBase64 = "logo_data"
-    case logoUrl = "logo_url"
     case summary
     case credentialId = "credential_id"
   }
@@ -90,7 +84,6 @@ public struct CredentialDisplay: Codable, Identifiable, DisplayLocalizable {
   public var locale: UserLocale?
   public var logoAltText: String?
   public var logoBase64: Data?
-  public var logoUrl: URL?
   public var summary: String?
   public var credentialId: UUID?
 }
@@ -130,7 +123,6 @@ extension CredentialDisplay: Equatable {
       lhs.locale == rhs.locale &&
       lhs.logoAltText == rhs.logoAltText &&
       lhs.logoBase64 == rhs.logoBase64 &&
-      lhs.logoUrl == rhs.logoUrl &&
       lhs.summary == rhs.summary &&
       lhs.credentialId == rhs.credentialId
   }

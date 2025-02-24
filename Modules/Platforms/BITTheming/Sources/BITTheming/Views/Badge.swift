@@ -144,7 +144,7 @@ public struct ErrorBadgeStyle: BadgeStyle {
       .padding(.vertical, .x2)
       .background(ThemingAssets.Brand.Bright.swissRed.swiftUIColor)
       .foregroundColor(ThemingAssets.Brand.Bright.swissRedLabel.swiftUIColor)
-      .colorScheme(.light)
+      .preferredColorScheme(.light)
   }
 }
 
@@ -218,7 +218,7 @@ extension BadgeStyle where Self == InfoBadgeStyle {
 // MARK: - BadgeLabelStyle
 
 public struct BadgeLabelStyle: LabelStyle {
-  private var spacing: Double = 0.0
+  private var spacing = 0.0
 
   public init(spacing: Double) {
     self.spacing = spacing

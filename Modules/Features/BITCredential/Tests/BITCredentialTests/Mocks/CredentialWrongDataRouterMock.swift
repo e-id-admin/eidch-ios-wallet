@@ -1,6 +1,5 @@
 import BITCredential
 import Foundation
-
 @testable import BITNavigationTestCore
 
 class CredentialWrongDataRouterMock: ClosableRoutesMock, CredentialWrongDataRouterRoutes {

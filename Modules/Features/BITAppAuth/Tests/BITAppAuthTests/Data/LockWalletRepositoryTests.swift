@@ -71,11 +71,11 @@ final class LockWalletRepositoryTests: XCTestCase {
 
   // MARK: Private
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   private var keyManagerProtocolSpy: KeyManagerProtocolSpy!
   private var processInfoService: ProcessInfoServiceProtocolSpy!
   private var secretManagerProtocolSpy: SecretManagerProtocolSpy!
   private var repository: LockWalletRepositoryProtocol!
-  //swiftlint:enable all
+  // swiftlint:enable all
 
 }

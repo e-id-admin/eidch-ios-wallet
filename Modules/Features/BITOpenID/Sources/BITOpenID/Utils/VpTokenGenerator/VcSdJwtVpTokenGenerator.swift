@@ -28,9 +28,7 @@ struct VcSdJwtVpTokenGenerator: AnyVpTokenGeneratorProtocol {
       throw AnyVpTokenGeneratorError.invalidFormat
     }
 
-    guard let disclosures = getRequiredDisclosures(from: originalVcSdJwt, considering: fields) else {
-      throw AnyVpTokenGeneratorError.claimsMismatch
-    }
+    let disclosures = getRequiredDisclosures(from: originalVcSdJwt, considering: fields)
 
     let presentedVcSdJwt = try VcSdJwt(from: originalVcSdJwt.raw, rawDisclosures: disclosures)
 
@@ -45,13 +43,13 @@ struct VcSdJwtVpTokenGenerator: AnyVpTokenGeneratorProtocol {
 
   private let sha256Hasher: Hashable
   private let jwtHelper: JWTHelperProtocol
-  private let bindingProofType: String = "kb+jwt"
+  private let bindingProofType = "kb+jwt"
 
   private static func combine(vcSdJwt: VcSdJwt, and keyBinding: JWT) -> VpToken {
     vcSdJwt.raw + keyBinding.raw
   }
 
-  private func getRequiredDisclosures(from vcSdJwt: VcSdJwt, considering fields: [String]) -> String? {
+  private func getRequiredDisclosures(from vcSdJwt: VcSdJwt, considering fields: [String]) -> String {
     let requiredDisclosures: [String] = fields.compactMap { claimKey in
       let anyClaim = vcSdJwt.claims.first(where: { $0.key == claimKey })
       guard let sdJwtClaim = anyClaim as? SdJWTClaim else {
@@ -59,10 +57,6 @@ struct VcSdJwtVpTokenGenerator: AnyVpTokenGeneratorProtocol {
       }
 
       return sdJwtClaim.disclosure
-    }
-
-    guard requiredDisclosures.count == fields.count else {
-      return nil
     }
 
     return requiredDisclosures.joined(separator: String(SdJWT.disclosuresSeparator))

@@ -28,18 +28,18 @@ class BiometricChangeViewModel: ObservableObject, Vibrating {
   var router: BiometricChangeRouterRoutes
 
   @Published var inputFieldMessage: String?
-  @Published var attempts: Int = 0
-  @Published var inputFieldState: InputFieldState = .normal
-  @Published var biometricType: BiometricType = .none
-  @Published var state: State = .password
+  @Published var attempts = 0
+  @Published var inputFieldState = InputFieldState.normal
+  @Published var biometricType = BiometricType.none
+  @Published var state = State.password
 
-  var isBiometricEnabled: Bool = false
+  var isBiometricEnabled = false
 
   var title: String {
     isBiometricEnabled ? L10n.tkMenuDeactivatingBiometricsIosTitle(biometricType.text) : L10n.tkMenuActivatingBiometricsIosTitle(biometricType.text)
   }
 
-  @Published var pinCode: String = "" {
+  @Published var pinCode = "" {
     didSet {
       guard userDidRequestValidation else { return }
       inputFieldState = .normal
@@ -76,7 +76,7 @@ class BiometricChangeViewModel: ObservableObject, Vibrating {
 
   // MARK: Private
 
-  private var userDidRequestValidation: Bool = false
+  private var userDidRequestValidation = false
   private var bag: Set<AnyCancellable> = []
 
   @Injected(\.getUniquePassphraseUseCase) private var getUniquePassphraseUseCase: GetUniquePassphraseUseCaseProtocol

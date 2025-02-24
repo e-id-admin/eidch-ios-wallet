@@ -39,6 +39,9 @@ extension PresentationRequestContext {
       requests[inputDescriptorID] = compatibleCredentials
       // swiftlint: enable all
     }
+    if let descriptorId = inputDescriptors.first, let credential = compatibleCredentials.first {
+      selectedCredentials[descriptorId] = credential
+    }
 
     self.trustStatement = trustStatement
   }
@@ -46,10 +49,10 @@ extension PresentationRequestContext {
   // MARK: Internal
 
   enum Mock {
-    static let vcSdJwtSample: PresentationRequestContext = .init(requestObject: .Mock.VcSdJwt.sample, compatibleCredentials: CompatibleCredential.Mock.array)
-    static let vcSdJwtJwtSample: PresentationRequestContext = .init(requestObject: JWTRequestObject.Mock.sample, compatibleCredentials: CompatibleCredential.Mock.array, trustStatement: .Mock.validSample)
-    static let vcSdJwtSampleWithoutInputDescriptors: PresentationRequestContext = .init(requestObject: .Mock.VcSdJwt.sampleWithoutInputDescriptors, compatibleCredentials: CompatibleCredential.Mock.array)
-    static let unsupportedResponseTypeVcSdJwtSample: PresentationRequestContext = .init(requestObject: .Mock.VcSdJwt.unsupportedResponseTypeSample, compatibleCredentials: CompatibleCredential.Mock.array)
+    static let vcSdJwtSample = PresentationRequestContext(requestObject: .Mock.VcSdJwt.sample, compatibleCredentials: CompatibleCredential.Mock.array)
+    static let vcSdJwtJwtSample = PresentationRequestContext(requestObject: JWTRequestObject.Mock.sample, compatibleCredentials: CompatibleCredential.Mock.array, trustStatement: .Mock.validSample)
+    static let vcSdJwtSampleWithoutInputDescriptors = PresentationRequestContext(requestObject: .Mock.VcSdJwt.sampleWithoutInputDescriptors, compatibleCredentials: CompatibleCredential.Mock.array)
+    static let unsupportedResponseTypeVcSdJwtSample = PresentationRequestContext(requestObject: .Mock.VcSdJwt.unsupportedResponseTypeSample, compatibleCredentials: CompatibleCredential.Mock.array)
   }
 }
 #endif

@@ -18,7 +18,7 @@ class GetAppVersionUseCaseTests: XCTestCase {
   }
 
   func test_getVersion_happyPath() throws {
-    let expectedVersion: AppVersion = .Mock.sample
+    let expectedVersion = AppVersion.Mock.sample
     repository.getVersionReturnValue = expectedVersion.rawValue
 
     let version = try useCase.execute()

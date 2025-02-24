@@ -21,14 +21,14 @@ struct GetCredentialIssuerDisplayUseCase: GetCredentialIssuerDisplayUseCaseProto
       return credential.preferredIssuerDisplay
     }
 
-    return .init(name: name, credentialId: credential.id, image: Data(base64Encoded: decodedURI))
+    return CredentialIssuerDisplay(name: name, credentialId: credential.id, image: Data(base64Encoded: decodedURI))
   }
 
   // MARK: Private
 
-  private static let orgNameKey: String = "orgName"
-  private static let logoUriKey: String = "logoUri"
-  private static let prefLangKey: String = "prefLang"
+  private static let orgNameKey = "orgName"
+  private static let logoUriKey = "logoUri"
+  private static let prefLangKey = "prefLang"
 
   @Injected(\.preferredUserLanguageCodes) private var preferredUserLanguageCodes: [UserLanguageCode]
 

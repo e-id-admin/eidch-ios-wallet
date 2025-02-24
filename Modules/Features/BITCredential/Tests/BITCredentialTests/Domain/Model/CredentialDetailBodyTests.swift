@@ -1,7 +1,6 @@
 import BITCore
 import Factory
 import XCTest
-
 @testable import BITCredential
 @testable import BITCredentialMocks
 @testable import BITCredentialShared
@@ -18,10 +17,10 @@ final class CredentialDetailBodyTests: XCTestCase {
 
   func testLoadSampleCredentialHappyPath() throws {
     Container.shared.preferredUserLocales.register { [UserLocale.LocaleIdentifier.swissGerman.rawValue] }
-    let languageCode: UserLanguageCode = .LanguageIdentifier.german.rawValue
-    let mockCredential: Credential = .Mock.sample
+    let languageCode = UserLanguageCode.LanguageIdentifier.german.rawValue
+    let mockCredential = Credential.Mock.sample
 
-    let credentialDetailBody: CredentialDetailBody = .init(from: mockCredential)
+    let credentialDetailBody = CredentialDetailBody(from: mockCredential)
 
     XCTAssertEqual(mockCredential.preferredDisplay?.name, credentialDetailBody.display.name)
     XCTAssertEqual(mockCredential.claims.count, credentialDetailBody.claims.count)
@@ -42,16 +41,16 @@ final class CredentialDetailBodyTests: XCTestCase {
   }
 
   func testLoadMultipassCredentialHappyPath() throws {
-    let mockCredential: Credential = .Mock.sample
-    let credentialDetailBody: CredentialDetailBody = .init(from: mockCredential)
+    let mockCredential = Credential.Mock.sample
+    let credentialDetailBody = CredentialDetailBody(from: mockCredential)
     XCTAssertEqual(mockCredential.claims.count, credentialDetailBody.claims.count)
   }
 
   func testLoadDiplomaCredentialHappyPath() throws {
     Container.shared.preferredUserLocales.register { [UserLocale.LocaleIdentifier.swissGerman.rawValue] }
-    let languageCode: UserLanguageCode = .LanguageIdentifier.german.rawValue
-    let mockCredential: Credential = .Mock.diploma
-    let credentialDetailBody: CredentialDetailBody = .init(from: mockCredential)
+    let languageCode = UserLanguageCode.LanguageIdentifier.german.rawValue
+    let mockCredential = Credential.Mock.diploma
+    let credentialDetailBody = CredentialDetailBody(from: mockCredential)
 
     XCTAssertEqual(mockCredential.preferredDisplay?.name, credentialDetailBody.display.name)
     XCTAssertEqual(mockCredential.claims.count, credentialDetailBody.claims.count)
@@ -74,11 +73,11 @@ final class CredentialDetailBodyTests: XCTestCase {
   func testLoadCredentialDefaultLanguage() throws {
     let unmanagedCode = "cz"
     Container.shared.preferredUserLocales.register { [unmanagedCode] }
-    let germanLanguageCode: UserLanguageCode = .LanguageIdentifier.german.rawValue
+    let germanLanguageCode = UserLanguageCode.LanguageIdentifier.german.rawValue
     let unmanagedLanguageCode: UserLanguageCode = "cz"
-    let mockCredential: Credential = .Mock.sample
+    let mockCredential = Credential.Mock.sample
 
-    let credentialDetailBody: CredentialDetailBody = .init(from: mockCredential)
+    let credentialDetailBody = CredentialDetailBody(from: mockCredential)
 
     XCTAssertEqual(mockCredential.preferredDisplay?.name, credentialDetailBody.display.name)
     XCTAssertEqual(mockCredential.status, credentialDetailBody.status)
@@ -108,11 +107,11 @@ final class CredentialDetailBodyTests: XCTestCase {
   func testLoadCredentialNoDisplays() throws {
     let unmanagedCode = "cz"
     Container.shared.preferredUserLocales.register { [unmanagedCode] }
-    let germanLanguageCode: UserLanguageCode = .LanguageIdentifier.german.rawValue
+    let germanLanguageCode = UserLanguageCode.LanguageIdentifier.german.rawValue
     let unmanagedLanguageCode: UserLanguageCode = "cz"
-    let mockCredential: Credential = .Mock.sampleDisplaysEmpty
+    let mockCredential = Credential.Mock.sampleDisplaysEmpty
 
-    let credentialDetailBody: CredentialDetailBody = .init(from: mockCredential)
+    let credentialDetailBody = CredentialDetailBody(from: mockCredential)
 
     // Ensure that the default text of a claim without translations is "not assigned"
     XCTAssertEqual(L10n.globalNotAssigned, credentialDetailBody.display.name)

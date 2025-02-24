@@ -61,7 +61,7 @@ final class ColorAsset {
 
   #if canImport(SwiftUI)
   @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-  private(set) lazy var swiftUIColor: SwiftUI.Color = .init(asset: self)
+  private(set) lazy var swiftUIColor = SwiftUI.Color(asset: self)
   #endif
 
   #if os(iOS) || os(tvOS)

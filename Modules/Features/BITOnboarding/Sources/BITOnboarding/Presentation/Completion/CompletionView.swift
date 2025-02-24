@@ -1,9 +1,6 @@
 import BITL10n
 import BITTheming
-import Foundation
 import SwiftUI
-
-// MARK: - CompletionView
 
 struct CompletionView: View {
 
@@ -11,14 +8,14 @@ struct CompletionView: View {
 
   var body: some View {
     InformationView(
-      primary: L10n.onboardingReadyPrimary,
-      secondary: L10n.onboardingReadySecondary,
+      primary: L10n.tkOnboardingAllsetTitle,
+      secondary: L10n.tkOnboardingAllsetBody,
       image: Assets.checkmarkCircle.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      buttonLabel: L10n.onboardingReadyButtonText)
-    {
-      router.context.onboardingDelegate?.didCompleteOnboarding()
-    }
-    .navigationBarBackButtonHidden(true)
+      primaryButtonLabel: L10n.tkGlobalContinue,
+      primaryButtonAction: {
+        router.context.onboardingDelegate?.didCompleteOnboarding()
+      })
+      .navigationBarBackButtonHidden(true)
   }
 }

@@ -1,3 +1,4 @@
+import BITCrypto
 import BITJWT
 import Foundation
 
@@ -23,7 +24,7 @@ public struct VcSdJwtDecoder: VcSdJwtDecoderProtocol {
       let kid = jwk["kid"] as? String
     else { return nil }
 
-    return .init(jwk: .init(kty: kty, kid: kid, crv: crv, x: x, y: y))
+    return VcSdJwt.KeyBinding(jwk: PublicKeyInfo.JWK(kty: kty, kid: kid, crv: crv, x: x, y: y))
   }
 
   public func decodeVct(from rawVcSdJwt: String) -> String? {

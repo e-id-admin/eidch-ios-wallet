@@ -22,8 +22,8 @@ extension CGFloat {
   public static var x25: CGFloat = 100
   public static var x30: CGFloat = 120
 
-  public static var defaultHorizontal: CGFloat = .x6
-  public static var defaultVertical: CGFloat = .x4
+  public static var defaultHorizontal = CGFloat.x6
+  public static var defaultVertical = CGFloat.x4
 
 }
 

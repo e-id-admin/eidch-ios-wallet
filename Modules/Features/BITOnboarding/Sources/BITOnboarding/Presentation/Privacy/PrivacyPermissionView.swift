@@ -15,12 +15,21 @@ struct PrivacyPermissionView: View {
 
     image = Assets.verifyCross.swiftUIImage
     backgroundImage = ThemingAssets.Gradient.gradient6.swiftUIImage
-    primary = L10n.onboardingPrivacyPrimary
-    secondary = L10n.onboardingPrivacySecondary
-    tertiary = L10n.onboardingPrivacyLinkText
+    primary = L10n.tkOnboardingImprovementTitle
+    secondary = L10n.tkOnboardingImprovementBody
+    tertiary = L10n.tkOnboardingImprovementLinkText
   }
 
   // MARK: Internal
+
+  enum AccessibilityIdentifier: String {
+    case image
+    case primaryText
+    case secondaryText
+    case privacyLink
+    case acceptButton
+    case declineButton
+  }
 
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
   @Environment(\.verticalSizeClass) var verticalSizeClass
@@ -46,8 +55,8 @@ struct PrivacyPermissionView: View {
   @StateObject private var viewModel: PrivacyPermissionViewModel
 
   private let primary: String
-  private let secondary: String?
-  private let tertiary: String?
+  private let secondary: String
+  private let tertiary: String
   private let image: Image
   private let backgroundImage: Image
 
@@ -78,6 +87,7 @@ extension PrivacyPermissionView {
     Card(background: .image(backgroundImage), image: image)
       .foregroundStyle(ThemingAssets.Brand.Core.white.swiftUIColor)
       .accessibilityHidden(true)
+      .accessibilityIdentifier(AccessibilityIdentifier.image.rawValue)
   }
 
   @ViewBuilder
@@ -92,24 +102,21 @@ extension PrivacyPermissionView {
         .accessibilityLabel(primary)
         .accessibilityFocused($isCurrentPageFocused)
         .accessibilityAddTraits(.isHeader)
+        .accessibilityIdentifier(AccessibilityIdentifier.primaryText.rawValue)
 
-      if let secondary {
-        Text(secondary)
-          .font(.custom.body)
-          .foregroundStyle(ThemingAssets.Label.secondary.swiftUIColor)
-          .multilineTextAlignment(.leading)
-          .accessibilityLabel(secondary)
-      }
-
-      if let tertiary {
-        ButtonLinkText(tertiary, {
-          viewModel.openPrivacyPolicy()
-        })
-        .font(.custom.footnote)
+      Text(secondary)
+        .font(.custom.body)
         .foregroundStyle(ThemingAssets.Label.secondary.swiftUIColor)
         .multilineTextAlignment(.leading)
-        .accessibilityLabel(tertiary)
-      }
+        .accessibilityLabel(secondary)
+
+      ButtonLinkText(tertiary, {
+        viewModel.openPrivacyPolicy()
+      })
+      .font(.custom.footnote)
+      .foregroundStyle(ThemingAssets.Label.secondary.swiftUIColor)
+      .multilineTextAlignment(.leading)
+      .accessibilityLabel(tertiary)
     }
     .frame(maxWidth: .infinity)
     .padding(.horizontal, .x6)
@@ -120,7 +127,7 @@ extension PrivacyPermissionView {
   private func footer() -> some View {
     FooterView {
       Button(action: { Task { await viewModel.updatePrivacyPolicy(to: false) } }) {
-        Text(L10n.onboardingPrivacyDeclineLoggingButton)
+        Text(L10n.tkGlobalNotallow)
           .multilineTextAlignment(.center)
           .lineLimit(1)
           .frame(maxWidth: .infinity)
@@ -128,36 +135,18 @@ extension PrivacyPermissionView {
       .buttonStyle(.bezeledLight)
       .controlSize(.large)
       .accessibilityLabel(L10n.onboardingPrivacyDeclineLoggingButton)
-      .disabled(viewModel.isLoading)
+      .accessibilityIdentifier(AccessibilityIdentifier.acceptButton.rawValue)
 
       Button(action: { Task { await viewModel.updatePrivacyPolicy(to: true) } }) {
-        Text(L10n.onboardingPrivacyAcceptLoggingButton)
+        Text(L10n.tkGlobalAllow)
           .multilineTextAlignment(.center)
           .lineLimit(1)
           .frame(maxWidth: .infinity)
       }
       .buttonStyle(.filledPrimary)
       .controlSize(.large)
-      .disabled(viewModel.isLoading)
+      .accessibilityIdentifier(AccessibilityIdentifier.declineButton.rawValue)
     }
-  }
-
-  @ViewBuilder
-  private func progressView() -> some View {
-    VStack {
-      ZStack {
-        VisualEffectView(effect: UIBlurEffect(style: .extraLight))
-
-        ProgressView()
-          .scaleEffect(2)
-      }
-      .frame(width: 150, height: 150)
-      .clipShape(.rect(cornerRadius: .x4))
-    }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .ignoresSafeArea(.container, edges: .all)
-    .background(Color.black.opacity(0.4).ignoresSafeArea(edges: .all))
-    .opacity(viewModel.isLoading ? 1 : 0)
   }
 
 }
@@ -168,17 +157,9 @@ extension PrivacyPermissionView {
 
   @ViewBuilder
   private func portraitLayout() -> some View {
-    ZStack(alignment: .center) {
-      if #available(iOS 16, *) {
-        ViewThatFits(in: .vertical) {
-          portraitContentLayout()
-          portraitScrollableContentLayout()
-        }
-      } else {
-        portraitScrollableContentLayout()
-      }
-
-      progressView()
+    ViewThatFits(in: .vertical) {
+      portraitContentLayout()
+      portraitScrollableContentLayout()
     }
   }
 
@@ -236,17 +217,9 @@ extension PrivacyPermissionView {
 
   @ViewBuilder
   private func landscapeLayout() -> some View {
-    ZStack(alignment: .center) {
-      if #available(iOS 16, *) {
-        ViewThatFits(in: .vertical) {
-          landscapeContentLayout()
-          landscapeScrollableContentLayout()
-        }
-      } else {
-        landscapeScrollableContentLayout()
-      }
-
-      progressView()
+    ViewThatFits(in: .vertical) {
+      landscapeContentLayout()
+      landscapeScrollableContentLayout()
     }
   }
 

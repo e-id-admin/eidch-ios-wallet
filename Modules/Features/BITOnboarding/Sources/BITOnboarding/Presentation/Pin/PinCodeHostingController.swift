@@ -48,7 +48,7 @@ class PinCodeHostingController<Content>: UIHostingController<Content> where Cont
     backButtonAppearance.highlighted.titleTextAttributes = [.foregroundColor: UIColor.clear]
     backButtonAppearance.focused.titleTextAttributes = [.foregroundColor: UIColor.clear]
 
-    let backImage = ThemingAssets.back.image.withAlignmentRectInsets(.init(top: 0, left: -.x3, bottom: .x1, right: 0))
+    let backImage = ThemingAssets.back.image.withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -.x3, bottom: .x1, right: 0))
     appearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
     appearance.backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
 

@@ -1,6 +1,5 @@
 import BITAppAuth
 import BITHome
-import BITSecurity
 import BITTheming
 import Factory
 import SwiftUI
@@ -13,7 +12,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
   var window: UIWindow?
 
-  var permissionAlertPresented: Bool = false
+  var permissionAlertPresented = false
 
   var deeplinkUrl: URL? {
     didSet {
@@ -75,6 +74,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     NotificationCenter.default.addObserver(forName: .permissionAlertFinished, object: nil, queue: .main) { [weak self] _ in
       self?.permissionAlertPresented = false
     }
+
+    NotificationCenter.default.addObserver(forName: .didLoginClose, object: nil, queue: .main) { [weak self] _ in
+      self?.hidePrivacyOverlayView()
+    }
   }
 }
 
@@ -86,7 +89,9 @@ extension SceneDelegate: SceneManagerDelegate {
 
   func changeScene(to sceneManager: any SceneManagerProtocol.Type, animated: Bool) {
     let currentScene = currentScene
+    // swiftlint: disable init_with_name
     var scene = sceneManager.init()
+    // swiftlint: enable init_with_name
     scene.delegate = self
     self.currentScene = scene
 

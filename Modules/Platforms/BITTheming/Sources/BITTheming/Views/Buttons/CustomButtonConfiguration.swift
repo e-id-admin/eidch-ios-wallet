@@ -26,10 +26,10 @@ public struct CustomButtonConfiguration {
 
   var foregroundColor: Color = ThemingAssets.Label.primary.swiftUIColor
   var foregroundColorDisabled: Color = ThemingAssets.Label.tertiary.swiftUIColor
-  var backgroundColor: Color = .clear
-  var backgroundColorDisabled: Color = .clear
+  var backgroundColor = Color.clear
+  var backgroundColorDisabled = Color.clear
   var progressViewTint: Color = ThemingAssets.Label.primary.swiftUIColor
-  var isMaterialEnabled: Bool = false
+  var isMaterialEnabled = false
 }
 
 extension CustomButtonConfiguration {
@@ -80,6 +80,18 @@ extension CustomButtonConfiguration {
     backgroundColor: ThemingAssets.Brand.Core.swissRed.swiftUIColor,
     backgroundColorDisabled: ThemingAssets.Fills.tertiary.swiftUIColor,
     progressViewTint: ThemingAssets.Brand.Core.white.swiftUIColor)
+
+  public static var firGreen = CustomButtonConfiguration(
+    foregroundColor: ThemingAssets.Brand.Core.firGreen.swiftUIColor,
+    backgroundColor: ThemingAssets.Brand.Core.firGreenLabel.swiftUIColor,
+    backgroundColorDisabled: ThemingAssets.Fills.tertiary.swiftUIColor,
+    progressViewTint: ThemingAssets.Brand.Core.firGreen.swiftUIColor)
+
+  public static var navyBlue = CustomButtonConfiguration(
+    foregroundColor: ThemingAssets.Brand.Core.navyBlue.swiftUIColor,
+    backgroundColor: ThemingAssets.Brand.Core.navyBlueLabel.swiftUIColor,
+    backgroundColorDisabled: ThemingAssets.Fills.tertiary.swiftUIColor,
+    progressViewTint: ThemingAssets.Brand.Core.navyBlue.swiftUIColor)
 
   public static var material = CustomButtonConfiguration(
     foregroundColor: ThemingAssets.Brand.Core.white.swiftUIColor,

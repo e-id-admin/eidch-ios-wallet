@@ -35,7 +35,7 @@ struct DidResolverHelper: DidResolverHelperProtocol {
     return didDocument.getVerificationMethod()
       .filter({ $0.id == keyIdentifier })
       .compactMap(\.publicKeyJwk)
-      .compactMap({ .init(from: $0) })
+      .compactMap({ PublicKeyInfo.JWK(from: $0) })
   }
 
   @Injected(\.didResolverRepository) private var didResolverRepository: DidResolverRepositoryProtocol

@@ -1,3 +1,4 @@
+import BITNavigation
 import Factory
 import Foundation
 import SwiftUI
@@ -10,7 +11,7 @@ public class HomeModule {
 
   // MARK: Lifecycle
 
-  public init(router: HomeRouter = Container.shared.homeRouter()) {
+  public init(router: Router<UIViewController> & HomeRouterRoutes = Container.shared.homeRouter()) {
     let viewModel = Container.shared.homeViewModel(router)
     let view = HomeComposerView(viewModel: viewModel)
       .environment(\.font, .custom.body)

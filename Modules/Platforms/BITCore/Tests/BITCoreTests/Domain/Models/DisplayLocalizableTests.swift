@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITCore
 
 // MARK: - DisplayLocalizableTests

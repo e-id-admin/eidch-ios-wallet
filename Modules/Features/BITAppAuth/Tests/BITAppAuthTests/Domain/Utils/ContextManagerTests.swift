@@ -17,7 +17,7 @@ final class ContextManagerTests: XCTestCase {
   }
 
   func testSetCredentialSuccess() throws {
-    let mockData: Data = .init()
+    let mockData = Data()
     spyContext.setCredentialTypeReturnValue = true
 
     try contextManager.setCredential(mockData, context: spyContext)
@@ -27,7 +27,7 @@ final class ContextManagerTests: XCTestCase {
   }
 
   func testSetCredentialError() throws {
-    let mockData: Data = .init()
+    let mockData = Data()
     spyContext.setCredentialTypeReturnValue = false
 
     do {
@@ -44,7 +44,7 @@ final class ContextManagerTests: XCTestCase {
 
   // MARK: Private
 
-  private let credentialType: LACredentialType = .applicationPassword
+  private let credentialType = LACredentialType.applicationPassword
 
   // swiftlint:disable all
   private var contextManager: ContextManagerProtocol!

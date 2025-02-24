@@ -20,6 +20,10 @@ struct CredentialOfferView: View {
 
   // MARK: Internal
 
+  enum AccessibilityIdentifier: String {
+    case acceptButton
+  }
+
   var body: some View {
     content()
       .accessibilityAction(named: L10n.credentialOfferAcceptButton, {
@@ -29,7 +33,7 @@ struct CredentialOfferView: View {
         Task { await viewModel.send(event: .decline) }
       })
       .readSize(onChange: { size in
-        compression = .init(height: size.height)
+        compression = UICompressionStyle(height: size.height)
       })
       .navigationBarHidden(true)
   }
@@ -39,8 +43,8 @@ struct CredentialOfferView: View {
   @Environment(\.sizeCategory) private var sizeCategory
   @Environment(\.accessibilityVoiceOverEnabled) private var isVoiceOverEnabled
 
-  @State private var compression: UICompressionStyle = .normal
-  @State private var viewport: CGRect = .zero
+  @State private var compression = UICompressionStyle.normal
+  @State private var viewport = CGRect.zero
 
   @StateObject private var viewModel: CredentialOfferViewModel
 
@@ -98,23 +102,20 @@ extension CredentialOfferView {
   @ViewBuilder
   private func credentialContainer() -> some View {
     VStack {
-      Spacer()
-      VStack {
-        Spacer(minLength: compression.isCompressed ? .x4 : .x12)
-        CredentialCard(viewModel.credential)
-          .padding(.horizontal, .x10)
-          .accessibilityHidden(true)
-        Spacer(minLength: compression.isCompressed ? .x6 : .x12)
+      Spacer(minLength: compression.isCompressed ? .x4 : .x12)
+      CredentialCard(viewModel.credential)
+        .padding(.horizontal, .x10)
+        .accessibilityHidden(true)
+      Spacer(minLength: compression.isCompressed ? .x6 : .x12)
 
-        footerButtons()
-          .accessibilityElement(children: .contain)
-      }
-      .padding(.x6)
-      .background(ThemingAssets.Background.secondary.swiftUIColor)
-      .clipShape(.rect(cornerRadius: .x8))
-      .accessibilityElement(children: .contain)
-      .accessibilitySortPriority(500)
+      footerButtons(addAccessibilityIdentifier: true)
+        .accessibilityElement(children: .contain)
     }
+    .padding(.x6)
+    .background(ThemingAssets.Background.secondary.swiftUIColor)
+    .clipShape(.rect(cornerRadius: .x8))
+    .accessibilityElement(children: .contain)
+    .accessibilitySortPriority(500)
   }
 
   @ViewBuilder
@@ -129,7 +130,9 @@ extension CredentialOfferView {
             .accessibilityHidden(true)
           Spacer(minLength: compression.isCompressed ? .x6 : .x12)
 
-          progressView()
+          ProgressView()
+            .controlSize(.large)
+            .padding(.bottom, .x10)
         }
         .padding(.vertical, .x6)
       }
@@ -189,21 +192,21 @@ extension CredentialOfferView {
   @ViewBuilder
   private func issuerHeader() -> some View {
     if let issuer = viewModel.issuerDisplay {
-      TrustHeaderView(name: issuer.name ?? L10n.tkErrorNotregisteredTitle, trustStatus: viewModel.issuerTrustStatus, subtitle: L10n.credentialOfferHeaderSecondary, imageData: issuer.image)
-        .padding(.horizontal, .x6)
-        .padding(.top, .x3)
+      ActorHeaderView(issuer: issuer, trustStatus: viewModel.issuerTrustStatus)
         .accessibilitySortPriority(500)
     }
   }
 
   @ViewBuilder
-  private func progressView() -> some View {
-    ProgressView()
-      .padding(.bottom, .x10)
+  private func subtitle() -> some View {
+    Text(L10n.credentialOfferHeaderSecondary)
+      .font(.custom.title3)
+      .foregroundStyle(ThemingAssets.Label.primary.swiftUIColor)
+      .accessibilityLabel(L10n.credentialOfferHeaderSecondary)
   }
 
   @ViewBuilder
-  private func footerButtons() -> some View {
+  private func footerButtons(addAccessibilityIdentifier: Bool = false) -> some View {
     VStack {
       ButtonStackView {
         Button { Task { await viewModel.send(event: .decline) } } label: {
@@ -226,6 +229,7 @@ extension CredentialOfferView {
         .buttonStyle(.filledSecondary)
         .controlSize(.large)
         .accessibilityLabel(L10n.credentialOfferAcceptButton)
+        .accessibilityIdentifier(addAccessibilityIdentifier ? AccessibilityIdentifier.acceptButton.rawValue : "")
         .accessibilitySortPriority(100)
       }
     }
@@ -241,7 +245,7 @@ extension CredentialOfferView {
           .frame(maxWidth: .infinity)
       }
       .buttonStyle(.bezeledLightReversed)
-      .colorScheme(.light)
+      .preferredColorScheme(.light)
       .controlSize(.large)
       .accessibilityLabel(L10n.tkReceiveDeny1Primarybutton)
       .accessibilitySortPriority(100)
@@ -267,25 +271,14 @@ extension CredentialOfferView {
 extension CredentialOfferView {
   @ViewBuilder
   private func portraitLayout() -> some View {
-    if #available(iOS 16, *) {
-      ViewThatFits(in: .vertical) {
-        portraitLayoutContent()
-
-        ScrollView {
-          portraitLayoutContent()
-        }
+    VStack(alignment: .leading) {
+      VStack(spacing: .x4) {
+        issuerHeader()
+        subtitle()
       }
-    } else {
-      ScrollView {
-        portraitLayoutContent()
-      }
-    }
-  }
+      .padding(.horizontal, .x6)
+      .padding(.top, .x3)
 
-  @ViewBuilder
-  private func portraitLayoutContent() -> some View {
-    VStack(alignment: .leading, spacing: .x6) {
-      issuerHeader()
       switch viewModel.state {
       case .result:
         credentialContainer()
@@ -298,7 +291,9 @@ extension CredentialOfferView {
         EmptyView()
       }
     }
+    .applyScrollViewIfNeeded()
   }
+
 }
 
 // MARK: - Landscape
@@ -306,98 +301,74 @@ extension CredentialOfferView {
 extension CredentialOfferView {
   @ViewBuilder
   private func landscapeLayout() -> some View {
-    VStack(alignment: .leading, spacing: .x6) {
-      switch viewModel.state {
-      case .loading,
-           .result:
-        credentialLandscapeContainer()
-      case .decline:
-        declineLandscapeContainer()
-          .padding(.horizontal, .x3)
-      case .error:
-        EmptyView()
-      }
+    switch viewModel.state {
+    case .loading,
+         .result:
+      credentialLandscapeContainer(isLoading: viewModel.state == .loading)
+    case .decline:
+      declineLandscapeContainer()
+        .padding(.horizontal, .x3)
+    case .error:
+      EmptyView()
     }
   }
 
   @ViewBuilder
-  private func credentialLandscapeContainer() -> some View {
-    HStack {
-      VStack {
-        Spacer()
-        VStack {
-          CredentialCard(viewModel.credential)
-            .dynamicTypeSize(sizeCategory.isAccessibilityCategory ? ...DynamicTypeSize.xxxLarge : ...DynamicTypeSize.accessibility5)
+  private func credentialLandscapeContainer(isLoading: Bool) -> some View {
+    HStack(spacing: .x5) {
+      credentialCard()
+      if isLoading {
+        ProgressView()
+          .controlSize(.large)
+          .frame(maxWidth: .infinity)
+      } else {
+        VStack(alignment: .leading, spacing: .x6) {
+          issuerHeader()
+          subtitle()
+          claimsList()
+          Spacer() // Pushes buttons down if VStack is not filling screen
         }
-        .padding(.x5)
-        .background(Color(uiColor: .secondarySystemBackground))
-        .clipShape(.rect(cornerRadius: .x8))
-        .accessibilityElement(children: .contain)
-
-        Spacer()
-      }
-      .padding(.leading)
-
-      switch viewModel.state {
-      case .result:
-        ScrollView(showsIndicators: false) {
-          VStack(alignment: .leading) {
-            issuerHeader()
-            claimsList()
-          }
-        }.safeAreaInset(edge: .bottom) {
+        .padding(.top, .x4)
+        .applyScrollViewIfNeeded()
+        .safeAreaInset(edge: .bottom) {
           if !sizeCategory.isAccessibilityCategory {
             footerButtons()
               .padding(.x3)
               .background(ThemingAssets.Background.primary.swiftUIColor)
           }
         }
-
-      case .loading:
-        Spacer()
-
-        VStack(alignment: .center) {
-          if sizeCategory < .accessibilityExtraLarge {
-            issuerHeader()
-          }
-
-          HStack {
-            Spacer()
-            progressView()
-              .padding(.vertical, .x12)
-            Spacer()
-          }
-        }
-
-      default: EmptyView()
       }
     }
   }
 
   @ViewBuilder
-  private func declineLandscapeContainer() -> some View {
-    if #available(iOS 16, *) {
-      ViewThatFits(in: .vertical) {
-        VStack {
-          issuerHeader()
-          declineContainer()
-        }
-
-        ScrollView {
-          VStack {
-            issuerHeader()
-            declineContainer()
-          }
-        }.ignoresSafeArea(edges: .bottom)
+  private func credentialCard() -> some View {
+    VStack {
+      Spacer()
+      VStack {
+        CredentialCard(viewModel.credential)
+          .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
       }
-    } else {
-      ScrollView {
-        VStack {
-          issuerHeader()
-          declineContainer()
-        }
-      }.ignoresSafeArea(edges: .bottom)
+      .padding(.x5)
+      .background(Color(uiColor: .secondarySystemBackground))
+      .clipShape(.rect(cornerRadius: .x8))
+      .accessibilityElement(children: .contain)
+
+      Spacer()
     }
+    .padding(.leading)
+  }
+
+  @ViewBuilder
+  private func declineLandscapeContainer() -> some View {
+    VStack {
+      issuerHeader()
+      subtitle()
+      declineContainer()
+    }
+    .padding(.top, .x4)
+    .applyScrollViewIfNeeded()
+    .ignoresSafeArea(edges: .bottom)
   }
 
 }

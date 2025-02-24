@@ -1,5 +1,6 @@
 import BITL10n
 import BITNavigation
+import BITTheming
 import Factory
 import Spyable
 import SwiftUI
@@ -94,7 +95,7 @@ extension OnboardingInternalRoutes where Self: RouterProtocol {
   }
 
   func setup() {
-    let viewController = SetupHostingController(rootView: SetupView(router: self))
+    let viewController = HideBackButtonHostingController(rootView: SetupView(router: self))
     open(viewController, as: NavigationPushOpeningStyle())
   }
 
@@ -108,12 +109,12 @@ extension OnboardingInternalRoutes where Self: RouterProtocol {
   }
 
   func setupError(delegate: SetupDelegate) {
-    let viewController = CompletionHostingController(rootView: CompletionErrorView(router: self, delegate: delegate))
+    let viewController = HideBackButtonHostingController(rootView: CompletionErrorView(router: self, delegate: delegate))
     open(viewController, as: NavigationPushOpeningStyle())
   }
 
   func completed() {
-    let viewController = CompletionHostingController(rootView: CompletionView(router: self))
+    let viewController = HideBackButtonHostingController(rootView: CompletionView(router: self))
     open(viewController, as: NavigationPushOpeningStyle())
   }
 

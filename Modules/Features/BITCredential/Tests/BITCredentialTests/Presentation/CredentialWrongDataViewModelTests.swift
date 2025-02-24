@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITCredential
 
 final class CredentialWrongDataViewModelTests: XCTestCase {

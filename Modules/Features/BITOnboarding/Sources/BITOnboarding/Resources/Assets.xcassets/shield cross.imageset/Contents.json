@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "shield cross.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "shield cross@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "shield cross@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "shield cross.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

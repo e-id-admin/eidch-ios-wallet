@@ -1,5 +1,6 @@
 import BITL10n
 import BITTheming
+import Factory
 import Foundation
 import SwiftUI
 
@@ -7,18 +8,39 @@ import SwiftUI
 
 struct WelcomeIntroductionView: View {
 
-  let router: OnboardingInternalRoutes
+  private let viewModel: WelcomeIntroductionViewModel
+
+  init(router: OnboardingInternalRoutes) {
+    viewModel = Container.shared.welcomeIntroductionViewModel(router)
+  }
 
   var body: some View {
     InformationView(
-      primary: L10n.onboardingIntroPrimary,
-      primaryAlt: L10n.onboardingIntroPrimaryAlt,
-      secondary: L10n.onboardingIntroSecondary,
-      tertiary: L10n.onboardingIntroDetails,
+      primary: L10n.tkOnboardingStartTitle,
+      primaryAlt: L10n.tkOnboardingStartAlt,
+      secondary: L10n.tkOnboardingStartBody,
       image: Assets.shieldCross.swiftUIImage,
-      buttonLabel: L10n.onboardingIntroButtonText)
-    {
-      router.infoScreenCredential()
-    }
+      primaryButtonLabel: L10n.tkOnboardingStartPrimarybutton,
+      primaryButtonAction: viewModel.primaryAction)
   }
+}
+
+// MARK: - WelcomeIntroductionViewModel
+
+class WelcomeIntroductionViewModel {
+
+  // MARK: Lifecycle
+
+  init(router: OnboardingInternalRoutes) {
+    self.router = router
+  }
+
+  // MARK: Internal
+
+  let router: OnboardingInternalRoutes
+
+  func primaryAction() {
+    router.infoScreenSecurity()
+  }
+
 }

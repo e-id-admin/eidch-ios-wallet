@@ -1,14 +1,12 @@
 import Factory
 import Spyable
 import XCTest
-
 @testable import BITAnyCredentialFormat
 @testable import BITAnyCredentialFormatMocks
 @testable import BITCredential
 @testable import BITCredentialMocks
 @testable import BITCredentialShared
 @testable import BITOpenID
-
 @testable import BITTestingCore
 
 // MARK: - SaveCredentialUseCaseTests

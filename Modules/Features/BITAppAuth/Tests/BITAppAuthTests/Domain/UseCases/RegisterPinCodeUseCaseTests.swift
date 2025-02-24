@@ -1,7 +1,6 @@
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITDataStore
 @testable import BITLocalAuthentication
@@ -88,9 +87,9 @@ final class RegisterPinCodeUseCaseTests: XCTestCase {
 extension RegisterPinCodeUseCaseTests {
 
   private func testHappyPath(pinCode: PinCode) throws {
-    let mockPinCodeEncrypted: Data = .init()
-    let mockUniquePassphraseData: Data = .init()
-    let mockSalt: Data = .init()
+    let mockPinCodeEncrypted = Data()
+    let mockUniquePassphraseData = Data()
+    let mockSalt = Data()
     let mockPepperKey: SecKey = SecKeyTestsHelper.createPrivateKey()
     isBiometricUsageAllowedUseCase.executeReturnValue = true
     configureSpy(pinCodeEncrypted: mockPinCodeEncrypted, uniquePassphrase: mockUniquePassphraseData, salt: mockSalt, pepperKey: mockPepperKey)

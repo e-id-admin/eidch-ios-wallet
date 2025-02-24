@@ -3,7 +3,6 @@ import BITCrypto
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITTestingCore
 @testable import BITVault
@@ -58,9 +57,9 @@ final class SaltRepositoryTests: XCTestCase {
 
   // MARK: Private
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   private var secretManagerSpy: SecretManagerProtocolSpy!
   private var keyManagerSpy: KeyManagerProtocolSpy!
   private var repository: SaltRepositoryProtocol!
-  //swiftlint:enable all
+  // swiftlint:enable all
 }

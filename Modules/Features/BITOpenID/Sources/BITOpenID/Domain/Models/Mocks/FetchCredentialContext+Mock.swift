@@ -1,6 +1,5 @@
 #if DEBUG
 import Foundation
-
 @testable import BITCrypto
 @testable import BITTestingCore
 

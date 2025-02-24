@@ -50,6 +50,9 @@ public struct MenuComposerView: View {
           MenuCell(systemImage: "envelope", text: L10n.settingsContact, disclosureIndicator: .externalLink) {
             openLink(L10n.settingsContactLink)
           }
+          MenuCell(systemImage: "text.bubble", text: L10n.tkMenuSettingWalletFeedback, disclosureIndicator: .externalLink) {
+            openLink(L10n.tkMenuSettingWalletFeedbackLinkValue)
+          }
           .hasDivider(false)
         }
 

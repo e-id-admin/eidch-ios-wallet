@@ -20,18 +20,18 @@ class CameraPermissionViewModel: ObservableObject {
 
   var primary: String {
     switch cameraPermissionStatus {
-    case .notDetermined: L10n.cameraPermissionPrimary
+    case .notDetermined: L10n.tkReceiveCameraaccessneeded1Title
     case .denied,
-         .restricted: L10n.cameraPermissionDeniedPrimary
+         .restricted: L10n.tkReceiveCameraaccessneeded3Title
     default: ""
     }
   }
 
   var secondary: String {
     switch cameraPermissionStatus {
-    case .notDetermined: L10n.cameraPermissionSecondary
+    case .notDetermined: L10n.tkReceiveCameraaccessneeded1Body
     case .denied,
-         .restricted: L10n.cameraPermissionDeniedSecondary
+         .restricted: L10n.tkReceiveCameraaccessneeded3Body
     default: ""
     }
   }
@@ -47,9 +47,9 @@ class CameraPermissionViewModel: ObservableObject {
 
   var buttonText: String {
     switch cameraPermissionStatus {
-    case .notDetermined: L10n.cameraPermissionContinueButton
+    case .notDetermined: L10n.tkGlobalContinue
     case .denied,
-         .restricted: L10n.cameraPermissionDeniedSettingsButton
+         .restricted: L10n.tkGlobalTothesettings
     default: ""
     }
   }

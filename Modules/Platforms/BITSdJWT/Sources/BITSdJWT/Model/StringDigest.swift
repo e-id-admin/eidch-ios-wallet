@@ -37,11 +37,11 @@ extension StringDigest {
     func hash(data: Data) -> Data {
       switch self {
       case .sha256:
-        return SHA256Hasher().hash(data)
+        SHA256Hasher().hash(data)
       case .sha384:
-        return SHA384Hasher().hash(data)
+        SHA384Hasher().hash(data)
       case .sha512:
-        return SHA512Hasher().hash(data)
+        SHA512Hasher().hash(data)
       }
     }
   }

@@ -1,8 +1,0 @@
-xcassets:
-  inputs:
-    - Sources/BITSecurity/Resources/Assets.xcassets
-  outputs:
-    - templateName: swift5
-      output: Sources/BITSecurity/Module/Assets.swift
-      params:
-        enumName: Assets

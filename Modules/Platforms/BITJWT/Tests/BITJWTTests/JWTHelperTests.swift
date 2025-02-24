@@ -1,16 +1,21 @@
 import BITCore
+import Factory
 import Foundation
 import JOSESwift
 import XCTest
-
 @testable import BITCrypto
 @testable import BITJWT
+@testable import BITTestingCore
 
 final class JWTHelperTests: XCTestCase {
 
   // MARK: Internal
 
-  func testInitWithPayloadData_JWTHelperVcJson_ShouldInitialize() throws {
+  override func setUp() {
+    Container.shared.reset()
+  }
+
+  func testJwt_Valid_ReturnsJwt() throws {
     let payloadData = Data("Test Payload".utf8)
     let keyPair = try generateKeyPair()
 
@@ -21,45 +26,11 @@ final class JWTHelperTests: XCTestCase {
     XCTAssertEqual(3, jwt.raw.split(separator: ".").count)
   }
 
-  func testInitWithPayloadData_DIDJWK_ShouldInitialize() throws {
-    let payloadData = Data("Test Payload".utf8)
-    let keyPair = try generateKeyPair()
-    let didJwk = "did:jwk:example"
-
-    let jwt = try JWTHelper().jwt(with: payloadData, keyPair: keyPair, type: proofType, didJwk: didJwk)
-
-    XCTAssertNotNil(jwt.raw)
-    XCTAssertEqual(jwt.algorithm, SignatureAlgorithm.ES256.rawValue)
-    XCTAssertEqual(jwt.kid, didJwk)
-    XCTAssertEqual(3, jwt.raw.split(separator: ".").count)
-  }
-
-  func testInitWithPayloadData_InvalidDIDJWK_ShouldThrowError() throws {
-    let payloadData = Data("Test Payload".utf8)
-    let keyPair = try generateKeyPair()
-    let didJwk = "" // Invalid DID JWK
-
-    XCTAssertThrowsError(try JWTHelper().jwt(with: payloadData, keyPair: keyPair, type: proofType, didJwk: didJwk)) { error in
-      XCTAssertEqual(error as? JWTHelperError, .invalidDid)
-    }
-  }
-
-  func testInitWithPayloadData_InvalidDIDJWKAlternative_ShouldThrowError() throws {
-    let payloadData = Data("Test Payload".utf8)
-    let keyPair = try generateKeyPair()
-    let didJwk = "did:tdw:xyz" // Invalid DID JWK
-
-    XCTAssertThrowsError(try JWTHelper().jwt(with: payloadData, keyPair: keyPair, type: proofType, didJwk: didJwk)) { error in
-      XCTAssertEqual(error as? JWTHelperError, .invalidDid)
-    }
-  }
-
-  func testHasValidSignature_InvalidAlgorithm_ShouldThrowError() throws {
+  func testJwt_InvalidAlgorithm_ShouldThrowError() throws {
     let payloadData = Data("Test Payload".utf8)
     let keyPair = try generateKeyPair(algorithm: "unknown")
-    let didJwk = "did:jwk:example"
 
-    XCTAssertThrowsError(try JWTHelper().jwt(with: payloadData, keyPair: keyPair, type: proofType, didJwk: didJwk)) { error in
+    XCTAssertThrowsError(try JWTHelper().jwt(with: payloadData, keyPair: keyPair, type: proofType)) { error in
       XCTAssertEqual(error as? JWTHelperError, .invalidAlgorithm)
     }
   }

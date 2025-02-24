@@ -19,8 +19,10 @@ public struct InformationView: View {
     image: Image,
     imageId: String? = nil,
     backgroundImage: Image = ThemingAssets.Gradient.gradient4.swiftUIImage,
-    buttonLabel: String? = nil,
-    onNextAction: (() -> Void)? = nil)
+    primaryButtonLabel: String? = nil,
+    primaryButtonAction: (() -> Void)? = nil,
+    secondaryButtonLabel: String? = nil,
+    secondaryButtonAction: (() -> Void)? = nil)
   {
     self.init(
       primary: primary,
@@ -34,8 +36,10 @@ public struct InformationView: View {
       image: image,
       backgroundImage: backgroundImage,
       backgroundColor: nil,
-      buttonLabel: buttonLabel,
-      onNextAction: onNextAction)
+      primaryButtonLabel: primaryButtonLabel,
+      primaryButtonAction: primaryButtonAction,
+      secondaryButtonLabel: secondaryButtonLabel,
+      secondaryButtonAction: secondaryButtonAction)
   }
 
   public init(
@@ -49,8 +53,10 @@ public struct InformationView: View {
     isTertiaryTapable: Bool = false,
     image: Image,
     backgroundColor: Color,
-    buttonLabel: String? = nil,
-    onNextAction: (() -> Void)? = nil)
+    primaryButtonLabel: String? = nil,
+    primaryButtonAction: (() -> Void)? = nil,
+    secondaryButtonLabel: String? = nil,
+    secondaryButtonAction: (() -> Void)? = nil)
   {
     self.init(
       primary: primary,
@@ -64,8 +70,10 @@ public struct InformationView: View {
       image: image,
       backgroundImage: nil,
       backgroundColor: backgroundColor,
-      buttonLabel: buttonLabel,
-      onNextAction: onNextAction)
+      primaryButtonLabel: primaryButtonLabel,
+      primaryButtonAction: primaryButtonAction,
+      secondaryButtonLabel: secondaryButtonLabel,
+      secondaryButtonAction: secondaryButtonAction)
   }
 
   private init(
@@ -80,8 +88,10 @@ public struct InformationView: View {
     image: Image,
     backgroundImage: Image?,
     backgroundColor: Color?,
-    buttonLabel: String?,
-    onNextAction: (() -> Void)?)
+    primaryButtonLabel: String?,
+    primaryButtonAction: (() -> Void)?,
+    secondaryButtonLabel: String?,
+    secondaryButtonAction: (() -> Void)?)
   {
     self.primary = primary
     self.primaryAlt = primaryAlt ?? primary
@@ -94,8 +104,10 @@ public struct InformationView: View {
     self.image = image
     self.backgroundImage = backgroundImage
     self.backgroundColor = backgroundColor
-    self.buttonLabel = buttonLabel
-    self.onNextAction = onNextAction
+    self.primaryButtonLabel = primaryButtonLabel
+    self.primaryButtonAction = primaryButtonAction
+    self.secondaryButtonLabel = secondaryButtonLabel
+    self.secondaryButtonAction = secondaryButtonAction
   }
 
   // MARK: Public
@@ -114,7 +126,8 @@ public struct InformationView: View {
     case secondaryText
     case tertiaryText
     case image
-    case continueButton
+    case primaryButton
+    case secondaryButton
   }
 
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -131,7 +144,7 @@ public struct InformationView: View {
 
   @AccessibilityFocusState private var isCurrentPageFocused: Bool
 
-  @State private var nextScreenPresented: Bool = false
+  @State private var nextScreenPresented = false
 
   private let primary: String
   private let primaryAlt: String
@@ -144,8 +157,10 @@ public struct InformationView: View {
   private let image: Image
   private let backgroundImage: Image?
   private let backgroundColor: Color?
-  private let buttonLabel: String?
-  private let onNextAction: (() -> Void)?
+  private let primaryButtonLabel: String?
+  private let primaryButtonAction: (() -> Void)?
+  private let secondaryButtonLabel: String?
+  private let secondaryButtonAction: (() -> Void)?
 
   @ViewBuilder
   private func content() -> some View {
@@ -233,23 +248,36 @@ extension InformationView {
   @ViewBuilder
   private func footer() -> some View {
     FooterView {
-      if !sizeCategory.isAccessibilityCategory {
+      if secondaryButtonLabel == nil {
         Spacer()
       }
 
-      if let buttonLabel {
-        Button(action: { onNextAction?() }) {
-          Text(buttonLabel)
+      if let secondaryButtonLabel {
+        Button(action: { secondaryButtonAction?() }) {
+          Text(secondaryButtonLabel)
             .multilineTextAlignment(.center)
             .lineLimit(1)
-            .if(sizeCategory.isAccessibilityCategory) {
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.bezeledLight)
+        .controlSize(.large)
+        .accessibilityIdentifier(AccessibilityIdentifier.secondaryButton.rawValue)
+        .accessibilityLabel(secondaryButtonLabel)
+      }
+
+      if let primaryButtonLabel {
+        Button(action: { primaryButtonAction?() }) {
+          Text(primaryButtonLabel)
+            .multilineTextAlignment(.center)
+            .lineLimit(1)
+            .if(sizeCategory.isAccessibilityCategory || secondaryButtonLabel != nil) {
               $0.frame(maxWidth: .infinity)
             }
         }
         .buttonStyle(.filledPrimary)
         .controlSize(.large)
-        .accessibilityIdentifier(AccessibilityIdentifier.continueButton.rawValue)
-        .accessibilityLabel(buttonLabel)
+        .accessibilityIdentifier(AccessibilityIdentifier.primaryButton.rawValue)
+        .accessibilityLabel(primaryButtonLabel)
       }
     }
   }
@@ -262,12 +290,8 @@ extension InformationView {
 
   @ViewBuilder
   private func portraitLayout() -> some View {
-    if #available(iOS 16, *) {
-      ViewThatFits(in: .vertical) {
-        portraitContentLayout()
-        portraitScrollableContentLayout()
-      }
-    } else {
+    ViewThatFits(in: .vertical) {
+      portraitContentLayout()
       portraitScrollableContentLayout()
     }
   }
@@ -326,12 +350,8 @@ extension InformationView {
 
   @ViewBuilder
   private func landscapeLayout() -> some View {
-    if #available(iOS 16, *) {
-      ViewThatFits(in: .vertical) {
-        landscapeContentLayout()
-        landscapeScrollableContentLayout()
-      }
-    } else {
+    ViewThatFits(in: .vertical) {
+      landscapeContentLayout()
       landscapeScrollableContentLayout()
     }
   }

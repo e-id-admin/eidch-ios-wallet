@@ -2,7 +2,6 @@ import BITNetworking
 import Factory
 import Spyable
 import XCTest
-
 @testable import BITOpenID
 @testable import BITTestingCore
 
@@ -16,7 +15,7 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
   }
 
   func testFetchJwtRequestObject_Success() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else {
+    guard let mockUrl = URL(string: strURL) else {
       fatalError("url generation")
     }
 
@@ -31,7 +30,7 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
   }
 
   func testFetchJsonRequestObject_Success() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else {
+    guard let mockUrl = URL(string: strURL) else {
       fatalError("url generation")
     }
 
@@ -45,7 +44,7 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
   }
 
   func testFetchRequestObject_InvalidUrl_Failure() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else {
+    guard let mockUrl = URL(string: strURL) else {
       fatalError("url generation")
     }
 
@@ -54,7 +53,7 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
     do {
       _ = try await useCase.execute(mockUrl)
       XCTFail("Should have thrown an exception")
-    } catch is FetchRequestObjectError {
+    } catch is NetworkError {
       XCTAssertTrue(repository.fetchRequestObjectFromCalled)
       XCTAssertEqual(1, repository.fetchRequestObjectFromCallsCount)
     } catch {
@@ -63,7 +62,7 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
   }
 
   func testFetchRequestObject_Failure() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else {
+    guard let mockUrl = URL(string: strURL) else {
       fatalError("url generation")
     }
 

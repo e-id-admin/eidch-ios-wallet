@@ -16,6 +16,10 @@ struct PinCodeView: View {
 
   // MARK: Internal
 
+  enum AccessibilityIdentifier: String {
+    case continueButton
+  }
+
   var body: some View {
     content()
       .navigationTitle(L10n.tkGlobalEnterpassword)
@@ -31,40 +35,12 @@ struct PinCodeView: View {
           focus = .input
         }
       }
-      .popup(isPresented: $viewModel.isErrorPresented) {
-        Notification(
-          systemImageName: "exclamationmark.triangle",
-          imageColor: ThemingAssets.Brand.Core.swissRed.swiftUIColor,
-          content: viewModel.error?.localizedDescription ?? L10n.onboardingPinCodeErrorUnknown,
-          contentColor: ThemingAssets.Brand.Core.swissRed.swiftUIColor,
-          closeAction: {
-            viewModel.isErrorPresented = false
-          })
-          .padding(.x4)
-          .environment(\.colorScheme, .light)
-          .accessibilityElement(children: .combine)
-          .accessibilityLabel(L10n.onboardingPinCodeErrorAltText(viewModel.error?.localizedDescription ?? ""))
-          .accessibilitySortPriority(10)
-          .accessibilityHidden(!viewModel.isErrorPresented)
-          .accessibilityFocused($errorFocusedState)
-          .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-              focus = .error
-            }
-          }
-      } customize: {
-        $0.type(.floater())
-          .appearFrom(.bottomSlide)
-          .closeOnTap(true)
-          .autohideIn(UIAccessibility.isVoiceOverRunning ? nil : viewModel.autoHideErrorDelay)
-          .animation(Defaults.errorAnimation)
-      }
   }
 
   // MARK: Private
 
   private enum Defaults {
-    static let errorAnimation: Animation = .interpolatingSpring(stiffness: 500, damping: 30)
+    static let errorAnimation = Animation.interpolatingSpring(stiffness: 500, damping: 30)
   }
 
   private enum Focus: Hashable {
@@ -111,10 +87,8 @@ struct PinCodeView: View {
           .buttonStyle(.filledPrimary)
       }
 
-      if let message = viewModel.inputFieldMessage {
-        inputFieldMessage(message)
-          .padding(.horizontal, .x3)
-      }
+      inputFieldMessage(viewModel.inputFieldMessage)
+        .padding(.horizontal, .x3)
     }
   }
 
@@ -123,10 +97,8 @@ struct PinCodeView: View {
     VStack(alignment: .leading) {
       secureField()
 
-      if let message = viewModel.inputFieldMessage {
-        inputFieldMessage(message)
-          .padding(.horizontal, .x3)
-      }
+      inputFieldMessage(viewModel.inputFieldMessage)
+        .padding(.horizontal, .x3)
     }
     .padding(.top, sizeCategory.isAccessibilityCategory ? 0 : 100)
     .accessibilityElement(children: .combine)
@@ -149,7 +121,7 @@ struct PinCodeView: View {
 
   @ViewBuilder
   private func secureField() -> some View {
-    SecureTextField(text: $viewModel.pinCode, prompt: L10n.tkLoginPasswordNote) {
+    SecureTextField(text: $viewModel.pinCode, prompt: L10n.tkOnboardingCharactersNote) {
       viewModel.validate()
     }
     .submitLabel(.done)
@@ -165,6 +137,7 @@ struct PinCodeView: View {
         inputFocused = true
       }
     }
+    .accessibilityLabel(L10n.tkLoginPasswordAlt)
     .accessibilitySortPriority(800)
     .accessibilityFocused($focus, equals: .input)
   }
@@ -179,6 +152,7 @@ struct PinCodeView: View {
     .buttonStyle(.filledPrimary)
     .controlSize(.large)
     .accessibilityFocused($focus, equals: .loginButton)
+    .accessibilityIdentifier(AccessibilityIdentifier.continueButton.rawValue)
   }
 
   @ViewBuilder

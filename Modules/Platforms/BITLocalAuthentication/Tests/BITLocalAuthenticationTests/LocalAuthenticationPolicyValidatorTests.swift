@@ -12,7 +12,7 @@ final class LocalAuthenticationPolicyValidatorTests: XCTestCase {
   }
 
   func testValidatePolicySuccess() throws {
-    let policy: LocalAuthenticationPolicy = .deviceOwnerAuthenticationWithBiometrics
+    let policy = LocalAuthenticationPolicy.deviceOwnerAuthenticationWithBiometrics
     spyContext.canEvaluatePolicyErrorReturnValue = true
 
     try validator.validatePolicy(policy, context: spyContext)
@@ -21,7 +21,7 @@ final class LocalAuthenticationPolicyValidatorTests: XCTestCase {
   }
 
   func testValidatePolicyFailed() throws {
-    let policy: LocalAuthenticationPolicy = .deviceOwnerAuthenticationWithBiometrics
+    let policy = LocalAuthenticationPolicy.deviceOwnerAuthenticationWithBiometrics
     spyContext.canEvaluatePolicyErrorReturnValue = false
 
     do {

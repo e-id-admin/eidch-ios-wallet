@@ -39,10 +39,10 @@ final class PinCodeManagerTests: XCTestCase {
     let pinCode: PinCode = "123456"
     guard let pinCodeData = pinCode.data(using: .utf8) else { fatalError("Data conversion") }
     let mockPepperKey: SecKey = SecKeyTestsHelper.createPrivateKey()
-    let mockSalt: Data = .init()
-    let mockHashedPinCode: Data = .init()
-    let mockInitialVector: Data = .init()
-    let mockPinCodeEncrypted: Data = .init()
+    let mockSalt = Data()
+    let mockHashedPinCode = Data()
+    let mockInitialVector = Data()
+    let mockPinCodeEncrypted = Data()
     spySaltRepository.getPinSaltReturnValue = mockSalt
     spyPepperRepository.getPepperKeyReturnValue = mockPepperKey
     spyPepperRepository.getPepperInitialVectorReturnValue = mockInitialVector

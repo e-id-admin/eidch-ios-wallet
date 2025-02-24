@@ -7,7 +7,7 @@ class VersionEnforcementRouterMock: VersionEnforcementRouterRoutes {
   var closeCalled = false
   var popCalled = false
   var popNumberCalled = false
-  var popNumberCalledValue: Int = 0
+  var popNumberCalledValue = 0
   var popToRootCalled = false
   var dismissCalled = false
 

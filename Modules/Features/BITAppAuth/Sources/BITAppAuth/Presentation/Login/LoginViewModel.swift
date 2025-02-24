@@ -59,13 +59,13 @@ public class LoginViewModel: ObservableObject {
 
   // MARK: Internal
 
-  @Published var isBiometricAuthenticationAvailable: Bool = false
-  @Published var isBiometricTriggered: Bool = false
-  @Published var biometricType: BiometricType = .faceID
+  @Published var isBiometricAuthenticationAvailable = false
+  @Published var isBiometricTriggered = false
+  @Published var biometricType = BiometricType.faceID
   @Published var pinCode: PinCode
-  @Published var pinCodeState: PinCodeState = .normal
-  @Published var biometricAttempts: Int = 0
-  @Published var attempts: Int = 0
+  @Published var pinCodeState = PinCodeState.normal
+  @Published var biometricAttempts = 0
+  @Published var attempts = 0
   @Published var countdown: TimeInterval?
 
   @Published var state: ViewState
@@ -83,7 +83,7 @@ public class LoginViewModel: ObservableObject {
     let formatter = DateComponentsFormatter()
     formatter.allowedUnits = timeLeft <= 60 ? [.second] : [.minute]
     let value = formatter.string(from: timeLeft) ?? ""
-    return timeLeft <= 60 ? L10n.tkLoginLockedSeconds(value) : L10n.tkLoginLockedBody
+    return timeLeft <= 60 ? L10n.tkLoginLockedBodySecondsIos(value) : L10n.tkLoginLockedBodyIos(value)
   }
 
   var isLocked: Bool {

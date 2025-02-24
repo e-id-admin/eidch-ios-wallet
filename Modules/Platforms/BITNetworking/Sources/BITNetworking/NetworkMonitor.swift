@@ -34,11 +34,11 @@ public class NetworkMonitor: NetworkMonitorProtocol {
   // MARK: Public
 
   @Published public var isActive = false
-  @Published public var connectionType: NWInterface.InterfaceType = .other
+  @Published public var connectionType = NWInterface.InterfaceType.other
 
   // MARK: Private
 
-  private let monitor: NWPathMonitor = .init()
-  private let queue: DispatchQueue = .init(label: "Monitor")
+  private let monitor = NWPathMonitor()
+  private let queue = DispatchQueue(label: "NetworkMonitor")
 
 }

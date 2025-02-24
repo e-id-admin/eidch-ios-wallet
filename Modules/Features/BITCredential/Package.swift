@@ -7,7 +7,7 @@ let package = Package(
   name: "BITCredential",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v15),
+    .iOS(.v16),
   ],
   products: [
     .library(

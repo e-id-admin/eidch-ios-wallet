@@ -143,7 +143,7 @@ extension CodableValue {
   public static func convert(dictionaryOfAny: [String: Any]) throws -> [String: CodableValue] {
     var dictionaryOfCodableValue: [String: CodableValue] = [:]
     for (key, value) in dictionaryOfAny {
-      dictionaryOfCodableValue[key] = try .init(anyValue: value)
+      dictionaryOfCodableValue[key] = try CodableValue(anyValue: value)
     }
     return dictionaryOfCodableValue
   }
@@ -151,7 +151,7 @@ extension CodableValue {
   public static func convert(arrayOfAny: [Any]) throws -> [CodableValue?] {
     var arrayOfCodableValue: [CodableValue?] = []
     for value in arrayOfAny {
-      try arrayOfCodableValue.append(.init(anyValue: value))
+      try arrayOfCodableValue.append(CodableValue(anyValue: value))
     }
     return arrayOfCodableValue
   }

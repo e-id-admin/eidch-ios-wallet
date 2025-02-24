@@ -1,13 +1,12 @@
 import BITCore
 import XCTest
-
 @testable import BITOpenID
 @testable import BITTestingCore
 
 final class CredentialMetadataTests: XCTestCase {
 
   func testDecodeMetadata() async throws {
-    let credentialMetadata: CredentialMetadata = .Mock.sample
+    let credentialMetadata = CredentialMetadata.Mock.sample
 
     XCTAssertFalse(credentialMetadata.credentialConfigurationsSupported.isEmpty)
     XCTAssertFalse(credentialMetadata.display.isEmpty)
@@ -42,7 +41,7 @@ final class CredentialMetadataTests: XCTestCase {
   }
 
   func testDecodeMetadata_WithoutProofTypes_ReturnsMetadataWithoutProofTypes() async throws {
-    let credentialMetadata: CredentialMetadata = .Mock.sampleWithoutProofTypes
+    let credentialMetadata = CredentialMetadata.Mock.sampleWithoutProofTypes
     guard let credentialSupported = credentialMetadata.credentialConfigurationsSupported.first(where: { $0.key == "elfa-sdjwt" })?.value else {
       return XCTFail("credentialSupported is nil")
     }
@@ -54,6 +53,13 @@ final class CredentialMetadataTests: XCTestCase {
     let credentialMetadataData = CredentialMetadata.Mock.sampleUnsupportedProofTypeAlgorithmData
     XCTAssertThrowsError(try JSONDecoder().decode(CredentialMetadata.self, from: credentialMetadataData)) { error in
       XCTAssertEqual(error as? CredentialMetadata.AnyCredentialConfigurationSupportedError, .invalidProofType)
+    }
+  }
+
+  func testDecodeMetadata_WithUnsupportedCryptographicBindingMethod_ThrowsError() async throws {
+    let credentialMetadataData = CredentialMetadata.Mock.sampleUnsupportedCryptographicBindingMethodData
+    XCTAssertThrowsError(try JSONDecoder().decode(CredentialMetadata.self, from: credentialMetadataData)) { error in
+      XCTAssertEqual(error as? CredentialMetadata.AnyCredentialConfigurationSupportedError, .invalidCryptographicBindingMethod)
     }
   }
 

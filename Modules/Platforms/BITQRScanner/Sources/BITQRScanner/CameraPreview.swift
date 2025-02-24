@@ -99,7 +99,7 @@ public class CameraPreviewView: UIView {
 
   private static let scannerTimeoutInterval: TimeInterval = 0.5
 
-  private static let focusAreaDefaultSize: Double = 200.0
+  private static let focusAreaDefaultSize = 200.0
   private static let focusAreaPadding: CGFloat = 16
 
   private var lastScannedItemDate: Date?
@@ -111,7 +111,7 @@ public class CameraPreviewView: UIView {
     return shapeLayer
   }()
 
-  private var lastBounds: CGRect = .zero
+  private var lastBounds = CGRect.zero
 
   private func adjustVideoOrientation() {
     guard

@@ -3,7 +3,7 @@ targets:
   swiyu:
     type: application
     platform: iOS
-    deploymentTarget: "15.0"
+    deploymentTarget: "16.0"
     sources:
       - path: ../swiyu
         excludes:
@@ -96,7 +96,7 @@ targets:
         TARGETED_DEVICE_FAMILY: 1
         CODE_SIGN_STYLE: Manual
         SDKROOT: iphoneos
-        IPHONEOS_DEPLOYMENT_TARGET: 15.0
+        IPHONEOS_DEPLOYMENT_TARGET: 16.0
         CURRENT_PROJECT_VERSION: 1
         MARKETING_VERSION: 0.1
         SWIFT_VERSION: 5.7
@@ -332,10 +332,10 @@ targets:
       - package: BITHome
       - package: BITLocalAuthentication
       - package: BITAnalytics
-      - package: BITSecurity
       - package: BITEntities
       - package: BITOpenID
       - package: BITAnyCredentialFormat
+      - package: BITEIDRequest
 
     preBuildScripts:
       - path: ../Scripts/format_generated_files.sh
@@ -364,7 +364,7 @@ targets:
   swiyuTests:
     type: bundle.unit-test
     platform: iOS
-    deploymentTarget: "15.0"
+    deploymentTarget: "16.0"
     sources: ../swiyuTests
     dependencies:
       - target: swiyu
@@ -391,7 +391,7 @@ targets:
         - package: BITCredential
         - package: BITPresentation
         - package: BITHome
-      deploymentTarget: "15.0"
+      deploymentTarget: "16.0"
       settings:
         base:
           DEVELOPMENT_TEAM: 2NG6YF3PM2

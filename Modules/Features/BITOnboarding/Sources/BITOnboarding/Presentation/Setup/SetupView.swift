@@ -14,8 +14,8 @@ struct SetupView: View {
     _viewModel = StateObject(wrappedValue: Container.shared.setupViewModel(router))
 
     backgroundColor = ThemingAssets.Background.secondary.swiftUIColor
-    primary = L10n.storageSetupTitle
-    secondary = L10n.storageSetupText
+    primary = L10n.tkOnboardingApplysettingsTitle
+    secondary = L10n.tkOnboardingApplysettingsBody
   }
 
   // MARK: Internal
@@ -43,15 +43,15 @@ struct SetupView: View {
 
   private enum Constants {
     static var cardAccessibilityMaxHeight: CGFloat { 150 }
-    static var animation: Animation = .easeInOut
-    static let errorAnimation: Animation = .easeInOut
+    static var animation = Animation.easeInOut
+    static let errorAnimation = Animation.easeInOut
     static let gradientWidth: CGFloat = 1000
     static let gradientHeight: CGFloat = 1000
     static let animationSequenceSizes: [(size: CGSize, duration: Double, offsetX: CGFloat)] = [
-      (.init(width: 250, height: 4), 1, offsetX: -20),
-      (.init(width: 235, height: 28), 1, offsetX: 75),
-      (.init(width: 235, height: 28), 1, offsetX: -50),
-      (.init(width: 235, height: 28), 1, offsetX: 120),
+      (CGSize(width: 250, height: 4), 1, offsetX: -20),
+      (CGSize(width: 235, height: 28), 1, offsetX: 75),
+      (CGSize(width: 235, height: 28), 1, offsetX: -50),
+      (CGSize(width: 235, height: 28), 1, offsetX: 120),
     ]
   }
 
@@ -60,8 +60,8 @@ struct SetupView: View {
 
   @StateObject private var viewModel: SetupViewModel
 
-  @State private var size: CGSize = .zero
-  @State private var offsetX: CGFloat = .zero
+  @State private var size = CGSize.zero
+  @State private var offsetX = CGFloat.zero
 
   private let primary: String
   private let secondary: String?
@@ -170,12 +170,8 @@ extension SetupView {
   @ViewBuilder
   private func portraitLayout() -> some View {
     VStack(alignment: .leading) {
-      if #available(iOS 16, *) {
-        ViewThatFits(in: .vertical) {
-          portraitContentLayout()
-          portraitScrollableContentLayout()
-        }
-      } else {
+      ViewThatFits(in: .vertical) {
+        portraitContentLayout()
         portraitScrollableContentLayout()
       }
     }
@@ -221,12 +217,8 @@ extension SetupView {
   @ViewBuilder
   private func landscapeLayout() -> some View {
     VStack(alignment: .leading) {
-      if #available(iOS 16, *) {
-        ViewThatFits(in: .vertical) {
-          landscapeContentLayout()
-          landscapeScrollableContentLayout()
-        }
-      } else {
+      ViewThatFits(in: .vertical) {
+        landscapeContentLayout()
         landscapeScrollableContentLayout()
       }
     }

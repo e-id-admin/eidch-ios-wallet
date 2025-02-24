@@ -74,7 +74,7 @@ final class UniquePassphraseManagerTests: XCTestCase {
 extension UniquePassphraseManagerTests {
 
   private func testSave(withBiometrics: Bool) throws {
-    let uniquePassphrase: Data = .init()
+    let uniquePassphrase = Data()
     let context: LAContextProtocol = LAContextProtocolSpy()
 
     try uniquePassphraseManager.save(uniquePassphrase: uniquePassphrase, context: context)
@@ -95,7 +95,7 @@ extension UniquePassphraseManagerTests {
   }
 
   private func testGetUniquePassphrase(authMethod: AuthMethod) throws {
-    let mockUniquePassphrase: Data = .init()
+    let mockUniquePassphrase = Data()
     let spyContext: LAContextProtocol = LAContextProtocolSpy()
     spyUniquePassphraseRepository.getUniquePassphraseForAuthMethodInContextReturnValue = mockUniquePassphrase
     let uniquePassphrase = try uniquePassphraseManager.getUniquePassphrase(authMethod: authMethod, context: spyContext)

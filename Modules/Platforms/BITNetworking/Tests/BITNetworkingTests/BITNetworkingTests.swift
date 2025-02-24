@@ -43,7 +43,7 @@ final class Tests: XCTestCase {
 
   func test_apiError500() async throws {
     NetworkContainer.shared.endpointClosure.register {
-      .networkResponse(500, .init())
+      .networkResponse(500, Data())
     }
 
     do {

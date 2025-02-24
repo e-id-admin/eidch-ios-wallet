@@ -3,7 +3,6 @@ import BITCrypto
 import Foundation
 import Spyable
 import XCTest
-
 @testable import BITAppAuth
 @testable import BITLocalAuthentication
 @testable import BITVault
@@ -22,34 +21,34 @@ final class UniquePassphraseRepositoryTests: XCTestCase {
   }
 
   func testSaveUniquePassphrase_appPin() throws {
-    let mockData: Data = .init()
-    let appPinAuthMethod: AuthMethod = .appPin
+    let mockData = Data()
+    let appPinAuthMethod = AuthMethod.appPin
     let mockAccessControl = try createAccessControl(accessControlFlags: AuthMethod.appPin.accessControlFlags)
     try repository.saveUniquePassphrase(mockData, forAuthMethod: appPinAuthMethod, inContext: spyContext)
     XCTAssertTrue(spySecretManager.setForKeyQueryCalled)
     XCTAssertEqual(mockData, spySecretManager.setForKeyQueryReceivedArguments?.value as? Data)
     XCTAssertEqual(AuthMethod.appPin.identifierKey, spySecretManager.setForKeyQueryReceivedArguments?.key)
-    //swiftlint:disable force_cast
+    // swiftlint:disable force_cast
     XCTAssertEqual(mockAccessControl, spySecretManager.setForKeyQueryReceivedArguments?.query?[kSecAttrAccessControl as String] as! SecAccessControl)
-    //swiftlint:enable force_cast
+    // swiftlint:enable force_cast
   }
 
   func testSaveUniquePassphrase_biometric() throws {
-    let mockData: Data = .init()
-    let appPinAuthMethod: AuthMethod = .biometric
+    let mockData = Data()
+    let appPinAuthMethod = AuthMethod.biometric
     let mockAccessControl = try createAccessControl(accessControlFlags: AuthMethod.biometric.accessControlFlags)
     try repository.saveUniquePassphrase(mockData, forAuthMethod: appPinAuthMethod, inContext: spyContext)
     XCTAssertTrue(spySecretManager.setForKeyQueryCalled)
     XCTAssertEqual(mockData, spySecretManager.setForKeyQueryReceivedArguments?.value as? Data)
     XCTAssertEqual(AuthMethod.biometric.identifierKey, spySecretManager.setForKeyQueryReceivedArguments?.key)
-    //swiftlint:disable force_cast
+    // swiftlint:disable force_cast
     XCTAssertEqual(mockAccessControl, spySecretManager.setForKeyQueryReceivedArguments?.query?[kSecAttrAccessControl as String] as! SecAccessControl)
-    //swiftlint:enable force_cast
+    // swiftlint:enable force_cast
   }
 
   func testGetUniquePassphrase_appPin() throws {
-    let mockData: Data = .init()
-    let appPinAuthMethod: AuthMethod = .appPin
+    let mockData = Data()
+    let appPinAuthMethod = AuthMethod.appPin
     spySecretManager.dataForKeyQueryReturnValue = mockData
     let data = try repository.getUniquePassphrase(forAuthMethod: appPinAuthMethod, inContext: spyContext)
     XCTAssertEqual(mockData, data)
@@ -58,8 +57,8 @@ final class UniquePassphraseRepositoryTests: XCTestCase {
   }
 
   func testGetUniquePassphrase_biometric() throws {
-    let mockData: Data = .init()
-    let appPinAuthMethod: AuthMethod = .biometric
+    let mockData = Data()
+    let appPinAuthMethod = AuthMethod.biometric
     spySecretManager.dataForKeyQueryReturnValue = mockData
     let data = try repository.getUniquePassphrase(forAuthMethod: appPinAuthMethod, inContext: spyContext)
     XCTAssertEqual(mockData, data)
@@ -108,15 +107,15 @@ final class UniquePassphraseRepositoryTests: XCTestCase {
 
   // MARK: Private
 
-  private let vaultAlgorithm: VaultAlgorithm = .eciesEncryptionStandardVariableIVX963SHA256AESGCM
+  private let vaultAlgorithm = VaultAlgorithm.eciesEncryptionStandardVariableIVX963SHA256AESGCM
 
-  //swiftlint:disable all
+  // swiftlint:disable all
   private var spyContext: LAContextProtocolSpy!
   private var keyManagerProtocolSpy: KeyManagerProtocolSpy!
   private var spySecretManager: SecretManagerProtocolSpy!
   private var repository: UniquePassphraseRepositoryProtocol!
 
-  //swiftlint:enable all
+  // swiftlint:enable all
 
   private func createAccessControl(
     accessControlFlags: SecAccessControlCreateFlags = [.privateKeyUsage, .applicationPassword],

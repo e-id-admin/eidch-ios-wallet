@@ -18,11 +18,17 @@ class SecurityIntroductionScreen: InformationScreen {
   let tertiaryText: XCUIElement
   let expectedImageLabel = "shield person"
 
-  override func assert() {
-    super.assert()
+  override func assertDisplayed() {
+    super.assertDisplayed()
     XCTAssertEqual(getImagelabel(), expectedImageLabel)
     XCTAssertTrue(secondaryText.exists)
-    XCTAssertTrue(tertiaryText.exists)
+  }
+
+  func navigateFromAppStartToScreen() {
+    let welcomeScreen = WelcomeIntroductionScreen(app: app)
+    welcomeScreen.primaryButton.tap()
+    assertDisplayed()
+
   }
 
 }

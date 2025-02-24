@@ -1,8 +1,6 @@
 import AVFoundation
 import BITDeeplink
 import BITNavigation
-import Factory
-import Foundation
 import UIKit
 
 // MARK: - InvitationRoutes
@@ -11,6 +9,7 @@ public protocol InvitationRoutes {
   func invitation()
   func deeplink(url: URL, animated: Bool) -> Bool
   func camera(openingStyle: OpeningStyle)
+  func betaId()
 }
 
 // MARK: - InvitationInternalRoutes
@@ -63,6 +62,15 @@ extension InvitationRoutes where Self: RouterProtocol {
     if style is ModalOpeningStyle {
       viewController = UINavigationController(rootViewController: viewController)
     }
+
+    module.router.current = style
+    open(viewController, on: self.viewController, as: style)
+  }
+
+  public func betaId() {
+    let module = BetaIdModule()
+    let viewController = module.viewController
+    let style = NavigationPushOpeningStyle()
 
     module.router.current = style
     open(viewController, on: self.viewController, as: style)

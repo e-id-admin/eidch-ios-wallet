@@ -22,7 +22,7 @@ For more information about the project please visit the [introduction into open 
 
 ## Installation and building
 
-The app requires at least iOS 15.<br/>
+The app requires at least iOS 16.<br/>
 The app has been build with Xcode 16.0.
 
 In your terminal, after having cloned the current repository, run the following command:
@@ -35,6 +35,7 @@ The `make` command will set everything up and provide you with an up and running
 
 Once in Xcode:
 - Select the `swiyu Dev` scheme
+- We are using some Macros part of our development process. Make sure to trust them.
 - Be aware that it's more appropriate to run on real devices rather than in Simulator because of several restrictions and KeyChain usage
 - Finally, just build & run in Xcode with `command + R`
 

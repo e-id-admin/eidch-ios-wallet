@@ -22,10 +22,6 @@ public struct FetchRequestObjectUseCase: FetchRequestObjectUseCaseProtocol {
     } catch is DecodingError {
       throw FetchRequestObjectError.invalidPresentationInvitation
     } catch {
-      guard let err = error as? NetworkError else { throw error }
-      if err.status == .hostnameNotFound {
-        throw FetchRequestObjectError.invalidPresentationInvitation
-      }
       throw error
     }
   }

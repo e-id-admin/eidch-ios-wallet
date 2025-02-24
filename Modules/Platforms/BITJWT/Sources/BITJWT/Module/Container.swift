@@ -5,10 +5,6 @@ extension Container {
 
   // MARK: Public
 
-  public var jwkHelper: Factory<JWKHelperProtocol> {
-    self { JWKHelper() }
-  }
-
   public var jwtHelper: Factory<JWTHelperProtocol> {
     self { JWTHelper() }
   }

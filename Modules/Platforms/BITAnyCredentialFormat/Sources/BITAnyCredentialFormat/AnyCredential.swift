@@ -12,4 +12,5 @@ public protocol AnyCredential {
   var issuer: String { get }
   var claims: [any AnyClaim] { get }
   var status: (any AnyStatus)? { get }
+  var validUntil: Date? { get }
 }

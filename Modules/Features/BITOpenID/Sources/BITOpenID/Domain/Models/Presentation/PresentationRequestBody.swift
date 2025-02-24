@@ -19,7 +19,7 @@ public struct PresentationRequestBody: Codable, Equatable {
 
   // MARK: Public
 
-  public func asDictionnary() -> [String: Any] {
+  public func asDictionary() -> [String: Any] {
     do {
       let encoder = JSONEncoder()
       encoder.keyEncodingStrategy = .convertToSnakeCase
@@ -56,13 +56,11 @@ extension PresentationRequestBody {
     let id: String
     let format: String
     let path: String
-    let pathNested: PathNested?
 
-    public init(id: String, format: String, path: String, pathNested: PathNested? = nil) {
+    public init(id: String, format: String, path: String) {
       self.id = id
       self.format = format
       self.path = path
-      self.pathNested = pathNested
     }
   }
 
@@ -82,11 +80,6 @@ extension PresentationRequestBody {
       case definitionId = "definition_id"
       case descriptorMap = "descriptor_map"
     }
-  }
-
-  public struct PathNested: Codable, Equatable {
-    let path: String
-    let format: String
   }
 
 }

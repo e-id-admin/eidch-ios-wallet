@@ -32,7 +32,7 @@ public class TorchManager: ObservableObject {
   // MARK: Public
 
   @Published public private(set) var torchError: TorchError?
-  @Published public private(set) var isEnabled: AVCaptureDevice.FlashMode = .off
+  @Published public private(set) var isEnabled = AVCaptureDevice.FlashMode.off
 
   public func turnOff() {
     do {

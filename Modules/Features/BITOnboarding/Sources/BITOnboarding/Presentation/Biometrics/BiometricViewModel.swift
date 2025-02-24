@@ -43,24 +43,24 @@ class BiometricViewModel: ObservableObject {
     case biometricRegistrationFailed
   }
 
-  @Published var hasBiometricAuth: Bool = false
+  @Published var hasBiometricAuth = false
   var biometricType: BiometricType
 
   @Published var error: Error?
-  @Published var isErrorPresented: Bool = false
+  @Published var isErrorPresented = false
 
   let autoHideErrorDelay: Double
 
   var primaryText: String {
-    hasBiometricAuth ? L10n.biometricSetupTitle(biometricType.text) : L10n.biometricSetupDisabledTitle
+    hasBiometricAuth ? L10n.tkOnboardingBiometricios1Title(biometricType.text) : L10n.tkOnboardingBiometricios3Title(biometricType.text)
   }
 
   var secondaryText: String {
-    hasBiometricAuth ? L10n.biometricSetupContent(biometricType.text) : L10n.biometricSetupDisabledContent
+    hasBiometricAuth ? L10n.tkOnboardingBiometricios1Body(biometricType.text) : L10n.tkOnboardingBiometricios3Body(biometricType.text)
   }
 
   var tertiaryText: String {
-    hasBiometricAuth ? L10n.biometricSetupDetail(biometricType.text) : L10n.biometricSetupDisabledDetail
+    hasBiometricAuth ? L10n.tkOnboardingBiometricios1Smallbody(biometricType.text) : L10n.tkOnboardingBiometricios3Smallbody(biometricType.text)
   }
 
   var image: Image {
@@ -73,7 +73,7 @@ class BiometricViewModel: ObservableObject {
 
   func registerBiometrics() async {
     do {
-      try await requestBiometricAuthUseCase.execute(reason: L10n.onboardingBiometricPermissionReason(BiometricType(type: biometricType).text), context: authContext)
+      try await requestBiometricAuthUseCase.execute(reason: L10n.onboardingBiometricPermissionReason, context: authContext)
       try allowBiometricUsageUseCase.execute(allow: true)
 
       router.setup()

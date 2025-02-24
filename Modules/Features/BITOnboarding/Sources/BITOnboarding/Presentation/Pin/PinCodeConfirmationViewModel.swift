@@ -25,7 +25,7 @@ public class PinCodeConfirmationViewModel: ObservableObject {
   @Published var inputFieldMessage: String?
   @Published var attempts = 0
 
-  @Published var pinCode: String = "" {
+  @Published var pinCode = "" {
     didSet {
       guard userDidRequestValidation else { return }
       do {
@@ -52,7 +52,7 @@ public class PinCodeConfirmationViewModel: ObservableObject {
 
   // MARK: Private
 
-  private var userDidRequestValidation: Bool = false
+  private var userDidRequestValidation = false
   private let router: OnboardingInternalRoutes
 
   private weak var delegate: PinCodeDelegate?
@@ -89,7 +89,7 @@ public class PinCodeConfirmationViewModel: ObservableObject {
     }
 
     withAnimation {
-      inputFieldMessage = L10n.tkChangepasswordError1IosNote2(attemptLeft)
+      inputFieldMessage = "\(L10n.tkLoginPasswordfailedNotification) \(L10n.tkLoginPasswordfailedIosSubtitle(attemptLeft))"
     }
   }
 

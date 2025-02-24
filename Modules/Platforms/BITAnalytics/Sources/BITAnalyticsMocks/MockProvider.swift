@@ -9,9 +9,9 @@ public final class MockProvider: AnalyticsProviderProtocol {
 
   // MARK: Public
 
-  public var logCounter: Int = 0
+  public var logCounter = 0
 
-  public var isAnalyticsEnabled: Bool = true
+  public var isAnalyticsEnabled = true
 
   public func log(_ event: AnalyticsEventProtocol) {
     logCounter += 1

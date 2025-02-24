@@ -37,6 +37,17 @@ extension Container {
     self { SetupViewModel(router: $0) }
   }
 
+  var securityIntroductionViewModel: ParameterFactory<OnboardingInternalRoutes, SecurityIntroductionViewModel> {
+    self { SecurityIntroductionViewModel(router: $0) }
+  }
+
+  var credentialIntroductionViewModel: ParameterFactory<OnboardingInternalRoutes, CredentialIntroductionViewModel> {
+    self { CredentialIntroductionViewModel(router: $0) }
+  }
+
+  var welcomeIntroductionViewModel: ParameterFactory<OnboardingInternalRoutes, WelcomeIntroductionViewModel> {
+    self { WelcomeIntroductionViewModel(router: $0) }
+  }
 }
 
 extension Container {

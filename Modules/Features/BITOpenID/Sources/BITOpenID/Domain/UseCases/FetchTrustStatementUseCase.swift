@@ -23,8 +23,8 @@ struct FetchTrustStatementUseCase: FetchTrustStatementUseCaseProtocol {
 
   // MARK: Private
 
-  private static let vctKey: String = "vct"
-  private static let trustStatementMetadataV1Key: String = "TrustStatementMetadataV1"
+  private static let vctKey = "vct"
+  private static let trustStatementMetadataV1Key = "TrustStatementMetadataV1"
 
   @Injected(\.baseRegistryDomainPattern) private var baseRegistryDomainPattern: String
   @Injected(\.openIDRepository) private var openIDRepository: OpenIDRepositoryProtocol
@@ -33,13 +33,14 @@ struct FetchTrustStatementUseCase: FetchTrustStatementUseCaseProtocol {
 
   private func getBaseRegistryDomain(from did: String) -> String? {
     guard
-      let match = RegexHelper.firstMatch(baseRegistryDomainPattern, in: did),
-      let domainRange = Range(match.range(at: 1), in: did)
+      let regex = try? Regex(baseRegistryDomainPattern),
+      let match = did.firstMatch(of: regex),
+      match.output.count > 1,
+      let range = match.output[1].range
     else {
       return nil
     }
-
-    return String(did[domainRange])
+    return String(did[range])
   }
 
   private func fetchTrustStatement(from issuer: String) async throws -> TrustStatement? {
@@ -53,7 +54,7 @@ struct FetchTrustStatementUseCase: FetchTrustStatementUseCaseProtocol {
 
     let trustStatementJwts = try await openIDRepository.fetchTrustStatements(from: trustStatementURL, issuerDid: issuer)
     let trustStatements: [TrustStatement] = trustStatementJwts
-      .compactMap { try? .init(from: $0) }
+      .compactMap { try? TrustStatement(from: $0) }
       .filter {
         $0.disclosableClaims.contains(where: { $0.key == Self.vctKey && $0.value?.rawValue == Self.trustStatementMetadataV1Key })
       }

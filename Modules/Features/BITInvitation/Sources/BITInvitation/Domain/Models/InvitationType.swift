@@ -11,9 +11,9 @@ extension InvitationType {
   var scheme: String {
     switch self {
     case .credentialOffer:
-      return "openid-credential-offer"
+      "openid-credential-offer"
     case .presentation:
-      return "https"
+      "https"
     }
   }
 }

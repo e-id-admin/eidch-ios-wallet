@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BITAppVersion
 
 final class VersionEnforcementViewModelTests: XCTestCase {
@@ -9,7 +8,7 @@ final class VersionEnforcementViewModelTests: XCTestCase {
   override func setUp() {
     mockRouter = VersionEnforcementRouterMock()
 
-    viewModel = .init(router: mockRouter, versionEnforcement: mockVersionEnforcement)
+    viewModel = VersionEnforcementViewModel(router: mockRouter, versionEnforcement: mockVersionEnforcement)
   }
 
   func testInitialState() {
@@ -18,7 +17,7 @@ final class VersionEnforcementViewModelTests: XCTestCase {
   }
 
   func testVersionEnforcementWithoutDisplay() {
-    viewModel = .init(versionEnforcement: .Mock.noDisplaysSample)
+    viewModel = VersionEnforcementViewModel(versionEnforcement: .Mock.noDisplaysSample)
 
     XCTAssertEqual(viewModel.title, "n/a")
     XCTAssertEqual(viewModel.content, "n/a")
@@ -34,7 +33,7 @@ final class VersionEnforcementViewModelTests: XCTestCase {
 
   // swiftlint:disable all
   private var mockRouter: VersionEnforcementRouterMock!
-  private var mockVersionEnforcement: VersionEnforcement = .Mock.sample
+  private var mockVersionEnforcement = VersionEnforcement.Mock.sample
   private var viewModel: VersionEnforcementViewModel!
   // swiftlint:enable all
 }

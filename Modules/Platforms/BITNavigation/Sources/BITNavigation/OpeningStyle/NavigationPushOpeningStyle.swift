@@ -19,7 +19,7 @@ public class NavigationPushOpeningStyle: NSObject {
   // MARK: Internal
 
   var animation: OpeningStyleAnimation?
-  var isAnimated: Bool = true
+  var isAnimated = true
   var completionHandler: (() -> Void)?
 
 }

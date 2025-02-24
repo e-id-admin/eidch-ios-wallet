@@ -1,7 +1,7 @@
 import BITNetworking
 import Factory
+import Moya
 import XCTest
-
 @testable import BITAnyCredentialFormat
 @testable import BITCredentialShared
 @testable import BITJWT
@@ -50,7 +50,7 @@ final class SubmitPresentationUseCaseTests: XCTestCase {
     mockContext.selectedCredentials = [:]
 
     do {
-      try await useCase.execute(context: .Mock.vcSdJwtSample)
+      try await useCase.execute(context: mockContext)
       XCTFail("Should have thrown an exception")
     } catch SubmitPresentationError.inputDescriptorsNotFound {
       XCTAssertFalse(spyRepository.submitPresentationFromPresentationRequestBodyCalled)
@@ -63,7 +63,7 @@ final class SubmitPresentationUseCaseTests: XCTestCase {
     spyPresentationRequestBodyGenerator.generateForRequestObjectInputDescriptorThrowableError = TestingError.error
 
     do {
-      try await useCase.execute(context: .Mock.vcSdJwtSample)
+      try await useCase.execute(context: mockContext)
       XCTFail("Should have thrown an exception")
     } catch TestingError.error {
       XCTAssertTrue(spyPresentationRequestBodyGenerator.generateForRequestObjectInputDescriptorCalled)
@@ -72,59 +72,7 @@ final class SubmitPresentationUseCaseTests: XCTestCase {
     }
   }
 
-  func testSubmitPresentation_ServerError_ThrowsPresentationFailed() async throws {
-    spyRepository.submitPresentationFromPresentationRequestBodyThrowableError = NetworkError(status: .internalServerError)
-
-    do {
-      try await useCase.execute(context: mockContext)
-      XCTFail("Should have thrown an exception")
-    } catch SubmitPresentationError.presentationFailed {
-      XCTAssertTrue(spyRepository.submitPresentationFromPresentationRequestBodyCalled)
-    } catch {
-      XCTFail("Not the expected execution")
-    }
-  }
-
-  func testSubmitPresentation_UnprocessableEntity_ThrowsPresentationFailed() async throws {
-    spyRepository.submitPresentationFromPresentationRequestBodyThrowableError = NetworkError(status: .unprocessableEntity)
-
-    do {
-      try await useCase.execute(context: mockContext)
-      XCTFail("Should have thrown an exception")
-    } catch SubmitPresentationError.presentationFailed {
-      XCTAssertTrue(spyRepository.submitPresentationFromPresentationRequestBodyCalled)
-    } catch {
-      XCTFail("Not the expected execution")
-    }
-  }
-
-  func testSubmitPresentation_VerificationFailed_invalidCredential() async throws {
-    spyRepository.submitPresentationFromPresentationRequestBodyThrowableError = NetworkError(status: .invalidGrant)
-
-    do {
-      try await useCase.execute(context: mockContext)
-      XCTFail("Should have thrown an exception")
-    } catch SubmitPresentationError.credentialInvalid {
-      XCTAssertTrue(spyRepository.submitPresentationFromPresentationRequestBodyCalled)
-    } catch {
-      XCTFail("Not the expected execution")
-    }
-  }
-
-  func testSubmitPresentation_BadRequest_invalidCredential() async throws {
-    spyRepository.submitPresentationFromPresentationRequestBodyThrowableError = NetworkError(status: .badRequest)
-
-    do {
-      try await useCase.execute(context: mockContext)
-      XCTFail("Should have thrown an exception")
-    } catch SubmitPresentationError.credentialInvalid {
-      XCTAssertTrue(spyRepository.submitPresentationFromPresentationRequestBodyCalled)
-    } catch {
-      XCTFail("Not the expected execution")
-    }
-  }
-
-  func testSubmitPresentation_OtherError_invalidCredential() async throws {
+  func testSubmitPresentation_RepositoryThrows_ThrowsException() async throws {
     spyRepository.submitPresentationFromPresentationRequestBodyThrowableError = TestingError.error
 
     do {
@@ -133,13 +81,13 @@ final class SubmitPresentationUseCaseTests: XCTestCase {
     } catch TestingError.error {
       XCTAssertTrue(spyRepository.submitPresentationFromPresentationRequestBodyCalled)
     } catch {
-      XCTFail("Not the expected execution")
+      XCTFail("Not the error expected")
     }
   }
 
   // MARK: Private
 
-  private let mockContext: PresentationRequestContext = .Mock.vcSdJwtSample
+  private let mockContext = PresentationRequestContext.Mock.vcSdJwtSample
   private var mockPresentationRequestBody = PresentationRequestBody(vpToken: "vpToken", presentationSubmission: PresentationRequestBody.PresentationSubmission(id: "id", definitionId: "definitionId", descriptorMap: []))
 
   // swiftlint:disable all

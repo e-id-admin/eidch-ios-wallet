@@ -2,7 +2,6 @@ import BITCore
 import BITNetworking
 import BITSdJWT
 import XCTest
-
 @testable import BITJWT
 @testable import BITOpenID
 @testable import BITSdJWTMocks
@@ -25,8 +24,8 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   // MARK: - Metadata
 
   func testFetchMetadataSuccess() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
-    let expectedMetadata: CredentialMetadata = .Mock.sample
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
+    let expectedMetadata = CredentialMetadata.Mock.sample
 
     NetworkContainer.shared.endpointClosure.register {
       .networkResponse(200, CredentialMetadata.Mock.sampleData)
@@ -42,9 +41,9 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   }
 
   func testFetchMetadataNetworkError() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
     NetworkContainer.shared.endpointClosure.register {
-      .networkResponse(500, .init())
+      .networkResponse(500, Data())
     }
 
     do {
@@ -59,8 +58,8 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   // MARK: - OpenIdConfiguration
 
   func testFetchOpenIdConfigurationSuccess() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
-    let expectedConfiguration: OpenIdConfiguration = .Mock.sample
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
+    let expectedConfiguration = OpenIdConfiguration.Mock.sample
 
     NetworkContainer.shared.endpointClosure.register {
       .networkResponse(200, OpenIdConfiguration.Mock.sampleData)
@@ -72,9 +71,9 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   }
 
   func testFetchOpenIdConfigurationNetworkError() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
     NetworkContainer.shared.endpointClosure.register {
-      .networkResponse(500, .init())
+      .networkResponse(500, Data())
     }
 
     do {
@@ -89,9 +88,9 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   // MARK: - AccessToken
 
   func testFetchAccessToken_success() async throws {
-    guard let mockURL: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockURL = URL(string: strURL) else { fatalError("url building") }
     let preAuthorizedCode = "code"
-    let expectedAccessToken: AccessToken = .Mock.sample
+    let expectedAccessToken = AccessToken.Mock.sample
 
     NetworkContainer.shared.endpointClosure.register {
       .networkResponse(200, AccessToken.Mock.sampleData)
@@ -104,7 +103,7 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   }
 
   func testFetchAccessToken_invalidGrant() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
     let preAuthorizedCode = "code"
 
     let mockInvalidGandError = ["error": "invalid_grant"]
@@ -123,7 +122,7 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   }
 
   func testFetchAccessToken_unknownBadRequest() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
     let preAuthorizedCode = "code"
 
     let mockInvalidGandError = ["error": "something_unknown"]
@@ -142,11 +141,11 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   }
 
   func testFetchAccessToken_failure() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
     let preAuthorizedCode = "code"
 
     NetworkContainer.shared.endpointClosure.register {
-      .networkResponse(500, .init())
+      .networkResponse(500, Data())
     }
 
     do {
@@ -161,7 +160,7 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   // MARK: - Credential
 
   func testFetchCredential_success() async throws {
-    guard let mockURL: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockURL = URL(string: strURL) else { fatalError("url building") }
 
     let accessToken = AccessToken.Mock.sample
     let credentialRequestBody = CredentialRequestBody.Mock.sample
@@ -169,7 +168,7 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
     NetworkContainer.shared.endpointClosure.register {
       .networkResponse(200, CredentialResponse.Mock.sampleData)
     }
-    let expectedCredential: VcSdJwt = .Mock.sample
+    let expectedCredential = VcSdJwt.Mock.sample
 
     let credentialResponse = try await repository.fetchCredential(from: mockURL, credentialRequestBody: credentialRequestBody, acccessToken: accessToken)
     XCTAssertEqual(credentialResponse.rawCredential, expectedCredential.raw)
@@ -184,13 +183,13 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   }
 
   func testFetchCredential_failure() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
 
     let accessToken = AccessToken.Mock.sample
     let credentialRequestBody = CredentialRequestBody.Mock.sample
 
     NetworkContainer.shared.endpointClosure.register {
-      .networkResponse(500, .init())
+      .networkResponse(500, Data())
     }
 
     do {
@@ -205,20 +204,20 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   // MARK: - Status
 
   func testFetchCredentialStatus_success() async throws {
-    guard let mockURL: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockURL = URL(string: strURL) else { fatalError("url building") }
     NetworkContainer.shared.endpointClosure.register {
       .networkResponse(200, JWT.Mock.validStatusSampleData)
     }
-    let expectedJWT: JWT = .Mock.validStatusSample
+    let expectedJWT = JWT.Mock.validStatusSample
     let jwt = try await repository.fetchCredentialStatus(from: mockURL)
     XCTAssertEqual(jwt, expectedJWT)
   }
 
   func testFetchCredentialStatus_failure() async throws {
-    guard let mockURL: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockURL = URL(string: strURL) else { fatalError("url building") }
 
     NetworkContainer.shared.endpointClosure.register {
-      .networkResponse(500, .init())
+      .networkResponse(500, Data())
     }
 
     do {
@@ -233,7 +232,7 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   // MARK: - RequestObject
 
   func testFetchRequestObjetSuccess() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
     let expectedRequestObject = RequestObject.Mock.VcSdJwt.jsonSampleData
 
     NetworkContainer.shared.endpointClosure.register {
@@ -246,9 +245,9 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   }
 
   func testFetchRequestObjetFailure() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
     NetworkContainer.shared.endpointClosure.register {
-      .networkResponse(500, .init())
+      .networkResponse(500, Data())
     }
 
     do {
@@ -263,7 +262,7 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   // MARK: - Trust Statements
 
   func testTrustStatementsSuccess() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
     let expectedStatements: [String] = [ TrustStatement.Mock.sdJwtSample, TrustStatement.Mock.sdJwtSample]
     let mockStatementData = try JSONEncoder().encode(expectedStatements)
 
@@ -277,9 +276,9 @@ final class OpenIDCredentialRepositoryTests: XCTestCase {
   }
 
   func testTrustStatementsNetworkError() async throws {
-    guard let mockUrl: URL = .init(string: strURL) else { fatalError("url building") }
+    guard let mockUrl = URL(string: strURL) else { fatalError("url building") }
     NetworkContainer.shared.endpointClosure.register {
-      .networkResponse(500, .init())
+      .networkResponse(500, Data())
     }
 
     do {

@@ -23,10 +23,10 @@ public struct EdgeBorder: Shape {
   public func path(in rect: CGRect) -> Path {
     edges.map { edge -> Path in
       switch edge {
-      case .top: Path(.init(x: rect.minX, y: rect.minY, width: rect.width, height: width))
-      case .bottom: Path(.init(x: rect.minX, y: rect.maxY - width, width: rect.width, height: width))
-      case .leading: Path(.init(x: rect.minX, y: rect.minY, width: width, height: rect.height))
-      case .trailing: Path(.init(x: rect.maxX - width, y: rect.minY, width: width, height: rect.height))
+      case .top: Path(CGRect(x: rect.minX, y: rect.minY, width: rect.width, height: width))
+      case .bottom: Path(CGRect(x: rect.minX, y: rect.maxY - width, width: rect.width, height: width))
+      case .leading: Path(CGRect(x: rect.minX, y: rect.minY, width: width, height: rect.height))
+      case .trailing: Path(CGRect(x: rect.maxX - width, y: rect.minY, width: width, height: rect.height))
       }
     }.reduce(into: Path()) { $0.addPath($1) }
   }

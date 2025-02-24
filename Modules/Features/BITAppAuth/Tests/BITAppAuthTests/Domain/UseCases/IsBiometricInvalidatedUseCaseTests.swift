@@ -1,7 +1,6 @@
 import BITCore
 import Foundation
 import XCTest
-
 @testable import BITAppAuth
 
 // MARK: - ValidateBiometricUseCaseTests

@@ -4,18 +4,6 @@ import Foundation
 
 class IsBiometricInvalidatedUseCase: IsBiometricInvalidatedUseCaseProtocol {
 
-  // MARK: Lifecycle
-
-  init(
-    isBiometricUsageAllowed: IsBiometricUsageAllowedUseCaseProtocol = Container.shared.isBiometricUsageAllowedUseCase(),
-    hasBiometricAuth: HasBiometricAuthUseCaseProtocol = Container.shared.hasBiometricAuthUseCase(),
-    uniquePassphraseManager: UniquePassphraseManagerProtocol = Container.shared.uniquePassphraseManager())
-  {
-    self.isBiometricUsageAllowed = isBiometricUsageAllowed
-    self.hasBiometricAuth = hasBiometricAuth
-    self.uniquePassphraseManager = uniquePassphraseManager
-  }
-
   // MARK: Internal
 
   func execute() -> Bool {
@@ -27,7 +15,7 @@ class IsBiometricInvalidatedUseCase: IsBiometricInvalidatedUseCaseProtocol {
 
   // MARK: Private
 
-  private let isBiometricUsageAllowed: IsBiometricUsageAllowedUseCaseProtocol
-  private let hasBiometricAuth: HasBiometricAuthUseCaseProtocol
-  private let uniquePassphraseManager: UniquePassphraseManagerProtocol
+  @Injected(\.isBiometricUsageAllowedUseCase) private var isBiometricUsageAllowed: IsBiometricUsageAllowedUseCaseProtocol
+  @Injected(\.hasBiometricAuthUseCase) private var hasBiometricAuth: HasBiometricAuthUseCaseProtocol
+  @Injected(\.uniquePassphraseManager) private var uniquePassphraseManager: UniquePassphraseManagerProtocol
 }

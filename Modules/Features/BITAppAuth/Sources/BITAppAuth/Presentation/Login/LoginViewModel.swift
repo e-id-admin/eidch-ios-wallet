@@ -129,11 +129,23 @@ public class LoginViewModel: ObservableObject {
 
   private func configureObservers() {
     $pinCode
-      .filter { !$0.isEmpty && self.pinCodeState == .error }
+      .filter { [weak self] in !$0.isEmpty && self?.pinCodeState == .error }
       .delay(for: .seconds(pinCodeObserverDelay), scheduler: DispatchQueue.main)
       .sink { [weak self] _ in
         self?.pinCodeState = .normal
       }.store(in: &bag)
+
+    NotificationCenter.default.addObserver(forName: .willEnterForeground, object: nil, queue: .main) { [weak self] _ in
+      Task { @MainActor in
+        self?.startCountdown()
+      }
+    }
+
+    NotificationCenter.default.addObserver(forName: .didEnterBackground, object: nil, queue: .main) { [weak self] _ in
+      Task { @MainActor in
+        self?.stopCountdown()
+      }
+    }
   }
 
   private func didLogin() {
@@ -197,12 +209,18 @@ extension LoginViewModel {
       Task { @MainActor [weak self] in
         guard let self else { return }
         countdown = useCases.getLockedWalletTimeLeftUseCase.execute()
+
         if !isLocked {
           state = .loginPassword
           unlockApp()
         }
       }
     })
+  }
+
+  private func stopCountdown() {
+    timer?.invalidate()
+    timer = nil
   }
 
   private func evaluateLockedWallet() {

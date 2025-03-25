@@ -1,9 +1,8 @@
+import Factory
 import Foundation
-import Spyable
 import XCTest
 @testable import BITAppAuth
-@testable import BITCore
-@testable import BITVault
+@testable import BITTestingCore
 
 // MARK: - LockWalletUseCaseTests
 
@@ -13,35 +12,35 @@ final class LockWalletUseCaseTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    processInfoService = ProcessInfoServiceProtocolSpy()
-    keyManagerProtocolSpy = KeyManagerProtocolSpy()
-    spySecretManager = SecretManagerProtocolSpy()
-    let repository = SecretsRepository(keyManager: keyManagerProtocolSpy, secretManager: spySecretManager, processInfoService: processInfoService)
-    useCase = LockWalletUseCase(repository: repository)
+    registerMocks()
+    useCase = LockWalletUseCase()
   }
 
-  func testLockWallet() throws {
-    processInfoService.systemUptime = timeInterval
+  func testExecute_success() throws {
     try useCase.execute()
 
-    spySecretManager.setForKeyQueryClosure = { value, _, _ in
-      guard let value = value as? TimeInterval else { return XCTFail("Expected a TimeInterval...") }
-      XCTAssertEqual(value, self.timeInterval)
-    }
+    XCTAssertTrue(lockWalletRepositorySpy.lockWalletCalled)
+  }
 
-    XCTAssertTrue(spySecretManager.setForKeyQueryCalled)
-    XCTAssertEqual(spySecretManager.setForKeyQueryCallsCount, 1)
+  func testExecute_repositoryThrowsError_throwsError() throws {
+    lockWalletRepositorySpy.lockWalletThrowableError = TestingError.error
+
+    XCTAssertThrowsError(try useCase.execute()) { error in
+      XCTAssertEqual(error as? TestingError, .error)
+    }
   }
 
   // MARK: Private
 
-  private let timeInterval: TimeInterval = 1000
-
   // swiftlint:disable all
+  private var lockWalletRepositorySpy: LockWalletRepositoryProtocolSpy!
   private var useCase: LockWalletUseCase!
-  private var spySecretManager: SecretManagerProtocolSpy!
-  private var processInfoService: ProcessInfoServiceProtocolSpy!
-  private var keyManagerProtocolSpy: KeyManagerProtocolSpy!
+
   // swiftlint:enable all
+
+  private func registerMocks() {
+    lockWalletRepositorySpy = LockWalletRepositoryProtocolSpy()
+    Container.shared.lockWalletRepository.register { self.lockWalletRepositorySpy }
+  }
 
 }

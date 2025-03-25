@@ -53,22 +53,19 @@ public struct CredentialClaim: Codable {
       displays: displays)
   }
 
-  public init(_ claim: CredentialMetadata.Claim, anyClaim: AnyClaim, credentialId: UUID) throws {
-    guard
-      let type = claim.valueType?.rawValue,
-      let value = anyClaim.value else
-    {
-      throw CredentialClaimError.invalidCredentialClaim(key: anyClaim.key)
-    }
+  public init?(_ metadataClaim: CredentialMetadata.Claim?, anyClaim: AnyClaim, credentialId: UUID) {
+    guard let value = anyClaim.value?.rawValue else { return nil }
+
+    let order = metadataClaim?.order ?? Int(Int16.max)
     let id = UUID()
     self.init(
       id: id,
       key: anyClaim.key,
-      valueType: type,
-      value: value.rawValue,
-      order: Int16(claim.order),
+      valueType: metadataClaim?.valueType?.rawValue ?? ValueType.string.rawValue,
+      value: value,
+      order: Int16(order),
       credentialId: credentialId,
-      displays: claim.display?.map({ CredentialClaimDisplay($0, claimId: id) }) ?? [])
+      displays: metadataClaim?.display?.map({ CredentialClaimDisplay($0, claimId: id) }) ?? [])
   }
 
   // MARK: Public
@@ -108,13 +105,7 @@ extension CredentialClaim {
 
 }
 
-// MARK: - CredentialClaimError
-
-public enum CredentialClaimError: Error {
-  case invalidCredentialClaim(key: String)
-}
-
-// MARK: - CredentialClaim + Equatable
+// MARK: Equatable
 
 extension CredentialClaim: Equatable {
 

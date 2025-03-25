@@ -11,7 +11,8 @@ struct ValidateRequestObjectUseCase: ValidateRequestObjectUseCaseProtocol {
       hasValidResponse(for: requestObject),
       hasValidClientInformation(for: requestObject),
       hasValidClientId(for: requestObject),
-      hasValidInputDescriptors(for: requestObject)
+      hasValidInputDescriptors(for: requestObject),
+      hasValidConstraintsPath(for: requestObject)
     else {
       return false
     }
@@ -31,6 +32,7 @@ struct ValidateRequestObjectUseCase: ValidateRequestObjectUseCaseProtocol {
   private static let directPostKey = "direct_post"
   private static let regex = "^did:[a-z0-9]+:[a-zA-Z0-9.\\-_:]+$"
 
+  @Injected(\.constraintPathRegex) private var constraintPathRegex: String
   @Injected(\.jwtSignatureValidator) private var jwtSignatureValidator: JWTSignatureValidatorProtocol
 
   private func hasValidResponse(for requestObject: RequestObject) -> Bool {
@@ -54,6 +56,20 @@ struct ValidateRequestObjectUseCase: ValidateRequestObjectUseCaseProtocol {
     }
   }
 
+  private func hasValidConstraintsPath(for requestObject: RequestObject) -> Bool {
+    guard let regex = try? Regex(constraintPathRegex) else {
+      return false
+    }
+
+    return requestObject.presentationDefinition.inputDescriptors.allSatisfy { descriptor in
+      descriptor.constraints.fields.allSatisfy { field in
+        field.path.allSatisfy { path in
+          !path.contains(regex)
+        }
+      }
+    }
+  }
+
   private func validateJWTIntegrity(of jwtRequestObject: JWTRequestObject) async -> Bool {
     guard
       jwtRequestObject.jwt.algorithm == JWTAlgorithm.ES256.rawValue,
@@ -65,5 +81,4 @@ struct ValidateRequestObjectUseCase: ValidateRequestObjectUseCaseProtocol {
 
     return true
   }
-
 }

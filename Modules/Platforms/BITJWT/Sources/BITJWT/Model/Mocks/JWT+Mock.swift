@@ -30,7 +30,7 @@ extension JWT: Mockable {
     private static let keyBindingValid = "jwt-key-binding-valid"
 
     private static func decodeRawText(fromFile filename: String, bundle: Bundle = Bundle.module) -> JWT {
-      guard let fileURL = Bundle.module.url(forResource: filename, withExtension: "txt")
+      guard let fileURL = bundle.url(forResource: filename, withExtension: "txt")
       else { fatalError("Impossible to read \(filename)") }
       do { return try JWT(
         from:

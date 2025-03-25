@@ -37,6 +37,29 @@ final class VcSdJwtTests: XCTestCase {
 
     XCTAssertNotNil(vcSdJwt.keyBinding)
     XCTAssertNotNil(vcSdJwt.vct)
+    XCTAssertNotNil(vcSdJwt.vctIntegrity)
+    XCTAssertNotNil(vcSdJwt.statusList)
+  }
+
+  func testDecodeFullSample() throws {
+    let vcSdJwt = VcSdJwt.Mock.fullSample
+
+    XCTAssertFalse(vcSdJwt.raw.isEmpty)
+
+    XCTAssertNotNil(vcSdJwt.iss)
+    XCTAssertNotNil(vcSdJwt.vcIssuer)
+    XCTAssertNotNil(vcSdJwt.subject)
+    XCTAssertNotNil(vcSdJwt.audience)
+    XCTAssertNotNil(vcSdJwt.expiredAt)
+    XCTAssertNotNil(vcSdJwt.issuedAt)
+    XCTAssertNotNil(vcSdJwt.activatedAt)
+
+    XCTAssertFalse(vcSdJwt.digests.isEmpty)
+    XCTAssertEqual(16, vcSdJwt.disclosableClaims.count)
+    XCTAssertEqual(16, vcSdJwt.digests.count)
+
+    XCTAssertNotNil(vcSdJwt.keyBinding)
+    XCTAssertNotNil(vcSdJwt.vct)
     XCTAssertNotNil(vcSdJwt.statusList)
   }
 
@@ -63,6 +86,14 @@ final class VcSdJwtTests: XCTestCase {
 
     XCTAssertThrowsError(try VcSdJwt(from: rawString)) { error in
       XCTAssertEqual(error as? VcSdJwtError, .keyNotFound("iss"))
+    }
+  }
+
+  func testDecode_NonDisclosableClaims_ShouldThrow() throws {
+    let rawString = VcSdJwt.Mock.sampleNonDisclosableClaims
+
+    XCTAssertThrowsError(try VcSdJwt(from: rawString)) { error in
+      XCTAssertEqual(error as? VcSdJwtError, .nonDisclosableClaimFound)
     }
   }
 

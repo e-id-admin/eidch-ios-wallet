@@ -56,7 +56,7 @@ struct FetchTrustStatementUseCase: FetchTrustStatementUseCaseProtocol {
     let trustStatements: [TrustStatement] = trustStatementJwts
       .compactMap { try? TrustStatement(from: $0) }
       .filter {
-        $0.disclosableClaims.contains(where: { $0.key == Self.vctKey && $0.value?.rawValue == Self.trustStatementMetadataV1Key })
+        $0.vct == Self.trustStatementMetadataV1Key
       }
 
     for trustStatement in trustStatements where await validateTrustStatementUseCase.execute(trustStatement) {

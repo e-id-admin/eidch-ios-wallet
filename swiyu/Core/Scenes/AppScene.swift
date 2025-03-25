@@ -52,13 +52,11 @@ final class AppScene: SceneManagerProtocol {
       return
     }
 
-    Container.shared.authContext.reset()
+    userSession.endSession()
   }
 
   func didReceiveDeeplink(url: URL) {
-    let isLoggedIn = Container.shared.authContext().isCredentialSet(.applicationPassword)
-
-    guard isLoggedIn, router.deeplink(url: url, animated: true) else {
+    guard userSession.isLoggedIn, router.deeplink(url: url, animated: true) else {
       return
     }
 
@@ -69,19 +67,18 @@ final class AppScene: SceneManagerProtocol {
 
   private var hasDevicePinUseCase: HasDevicePinUseCaseProtocol
   private var router: RootRouterRoutes
+  @Injected(\.userSession) private var userSession: Session
 
   private func registerNotifications() {
     NotificationCenter.default.addObserver(forName: .userInactivityTimeout, object: nil, queue: .main) { _ in
-      Task { @MainActor in
-        Container.shared.authContext.reset()
-        self.presentLogin()
+      Task { @MainActor [weak self] in
+        self?.presentLogin()
       }
     }
 
     NotificationCenter.default.addObserver(forName: .logout, object: nil, queue: .main) { _ in
-      Task { @MainActor in
-        Container.shared.authContext.reset()
-        self.presentLogin()
+      Task { @MainActor [weak self] in
+        self?.presentLogin()
       }
     }
 
@@ -91,6 +88,7 @@ final class AppScene: SceneManagerProtocol {
   }
 
   private func presentLogin() {
+    userSession.endSession()
     router.login(animated: true)
   }
 

@@ -18,7 +18,7 @@ final class CredentialOfferViewModelTests: XCTestCase {
   var viewModel: CredentialOfferViewModel!
   var credential = Credential.Mock.sample
   var trustStatement: TrustStatement? = .Mock.validSample
-  var router: MockRoutes!
+  var router: MockCredentialOfferRouter!
   var delayAfterAcceptingCredential: UInt64 = 0
   var deleteCredentialUseCase = DeleteCredentialUseCaseProtocolSpy()
   var getCredentialIssuerDisplayUseCase = GetCredentialIssuerDisplayUseCaseProtocolSpy()
@@ -26,7 +26,7 @@ final class CredentialOfferViewModelTests: XCTestCase {
   // swiftlint:enable all
 
   override func setUp() {
-    router = MockRoutes()
+    router = MockCredentialOfferRouter()
 
     Container.shared.delayAfterAcceptingCredential.register { self.delayAfterAcceptingCredential }
     Container.shared.deleteCredentialUseCase.register { self.deleteCredentialUseCase }

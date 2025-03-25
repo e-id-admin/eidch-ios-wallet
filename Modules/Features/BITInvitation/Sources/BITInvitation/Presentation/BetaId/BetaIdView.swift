@@ -17,12 +17,18 @@ struct BetaIdView: View {
 
   var body: some View {
     InformationView(
-      primary: L10n.tkGetBetaIdCreateTitle,
-      secondary: L10n.tkGetBetaIdCreateBody,
       image: Assets.betaId.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      primaryButtonLabel: L10n.tkGlobalGetbetaidPrimarybutton,
-      primaryButtonAction: viewModel.openBetaIdLink)
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.tkGetBetaIdCreateTitle,
+          secondary: L10n.tkGetBetaIdCreateBody)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.tkGlobalGetbetaidPrimarybutton,
+          primaryButtonAction: viewModel.openBetaIdLink)
+      })
   }
 }
 

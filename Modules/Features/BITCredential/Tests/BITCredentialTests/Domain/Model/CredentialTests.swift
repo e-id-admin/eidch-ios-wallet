@@ -26,8 +26,8 @@ final class CredentialTests: XCTestCase {
     let mockAnyCredential = AnyCredentialSpy()
     mockAnyCredential.format = "some-format"
     mockAnyCredential.issuer = mockDemoIssuerDid
-    let mockCredentialWithKeyBinding = CredentialWithKeyBinding(anyCredential: mockAnyCredential, boundTo: mockKeyPair)
-
+    mockAnyCredential.validFrom = Date()
+    let mockCredentialWithKeyBinding: (credential: AnyCredential, keyPair: KeyPair?) = (mockAnyCredential, mockKeyPair)
     let mockAnyClaim = AnyClaimSpy()
     mockAnyClaim.key = "firstName"
     mockAnyClaim.value = .string("John")
@@ -45,12 +45,13 @@ final class CredentialTests: XCTestCase {
 
     mockAnyCredential.raw = rawCredential
 
-    let credential = try Credential(credentialWithKeyBinding: mockCredentialWithKeyBinding, metadataWrapper: mockMetadataWrapper)
+    let credential = try Credential(anyCredential: mockCredentialWithKeyBinding.credential, keyPair: mockCredentialWithKeyBinding.keyPair, metadataWrapper: mockMetadataWrapper)
 
     XCTAssertEqual(mockCredential.payload, credential.payload)
-    XCTAssertEqual(mockCredentialWithKeyBinding.keyPair?.algorithm, credential.keyBindingAlgorithm)
-    XCTAssertEqual(mockCredentialWithKeyBinding.keyPair?.identifier, credential.keyBindingIdentifier)
+    XCTAssertEqual(mockCredentialWithKeyBinding.1?.algorithm, credential.keyBindingAlgorithm)
+    XCTAssertEqual(mockCredentialWithKeyBinding.1?.identifier, credential.keyBindingIdentifier)
     XCTAssertEqual(mockAnyCredential.format, credential.format)
+    XCTAssertEqual(mockAnyCredential.validFrom, credential.validFrom)
     XCTAssertEqual(1, credential.claims.count)
 
     XCTAssertEqual(mockAnyClaim.key, credential.claims.first?.key)
@@ -64,7 +65,8 @@ final class CredentialTests: XCTestCase {
     let mockAnyCredential = AnyCredentialSpy()
     mockAnyCredential.format = "some-format"
     mockAnyCredential.issuer = mockIssuerDid
-    let mockCredentialWithKeyBinding = CredentialWithKeyBinding(anyCredential: mockAnyCredential, boundTo: mockKeyPair)
+    mockAnyCredential.validFrom = Date()
+    let mockCredentialWithKeyBinding: (credential: AnyCredential, keyPair: KeyPair?) = (mockAnyCredential, mockKeyPair)
 
     let mockAnyClaim = AnyClaimSpy()
     mockAnyClaim.key = "firstName"
@@ -83,12 +85,13 @@ final class CredentialTests: XCTestCase {
 
     mockAnyCredential.raw = rawCredential
 
-    let credential = try Credential(credentialWithKeyBinding: mockCredentialWithKeyBinding, metadataWrapper: mockMetadataWrapper)
+    let credential = try Credential(anyCredential: mockCredentialWithKeyBinding.credential, keyPair: mockCredentialWithKeyBinding.keyPair, metadataWrapper: mockMetadataWrapper)
 
     XCTAssertEqual(mockCredential.payload, credential.payload)
-    XCTAssertEqual(mockCredentialWithKeyBinding.keyPair?.algorithm, credential.keyBindingAlgorithm)
-    XCTAssertEqual(mockCredentialWithKeyBinding.keyPair?.identifier, credential.keyBindingIdentifier)
+    XCTAssertEqual(mockCredentialWithKeyBinding.1?.algorithm, credential.keyBindingAlgorithm)
+    XCTAssertEqual(mockCredentialWithKeyBinding.1?.identifier, credential.keyBindingIdentifier)
     XCTAssertEqual(mockAnyCredential.format, credential.format)
+    XCTAssertEqual(mockAnyCredential.validFrom, credential.validFrom)
     XCTAssertEqual(1, credential.claims.count)
 
     XCTAssertEqual(mockAnyClaim.key, credential.claims.first?.key)
@@ -102,7 +105,7 @@ final class CredentialTests: XCTestCase {
     let mockAnyCredential = AnyCredentialSpy()
     mockAnyCredential.format = "some-format"
     mockAnyCredential.issuer = mockIssuerDid
-    let mockCredentialWithKeyBinding = CredentialWithKeyBinding(anyCredential: mockAnyCredential, boundTo: nil)
+    let mockCredentialWithKeyBinding: (credential: AnyCredential, keyPair: KeyPair?) = (mockAnyCredential, nil)
 
     let mockAnyClaim = AnyClaimSpy()
     mockAnyClaim.key = "firstName"
@@ -121,7 +124,7 @@ final class CredentialTests: XCTestCase {
 
     mockAnyCredential.raw = rawCredential
 
-    let credential = try Credential(credentialWithKeyBinding: mockCredentialWithKeyBinding, metadataWrapper: mockMetadataWrapper)
+    let credential = try Credential(anyCredential: mockCredentialWithKeyBinding.credential, keyPair: mockCredentialWithKeyBinding.keyPair, metadataWrapper: mockMetadataWrapper)
 
     XCTAssertEqual(mockCredential.payload, credential.payload)
     XCTAssertNil(credential.keyBindingAlgorithm)
@@ -147,21 +150,19 @@ final class CredentialTests: XCTestCase {
     let mockAnyCredential = AnyCredentialSpy()
     mockAnyCredential.format = "some-format"
     mockAnyCredential.raw = rawCredential
+    mockAnyCredential.issuer = "issuer"
     let mockAnyClaim = AnyClaimSpy()
     mockAnyClaim.key = "unknown-claim"
     mockAnyClaim.value = .string("John")
     mockAnyCredential.claims = [
       mockAnyClaim,
     ]
-    let mockCredentialWithKeyBinding = CredentialWithKeyBinding(anyCredential: mockAnyCredential, boundTo: nil)
+    let mockCredentialWithKeyBinding: (AnyCredential, KeyPair?) = (mockAnyCredential, nil)
 
     do {
-      _ = try Credential(credentialWithKeyBinding: mockCredentialWithKeyBinding, metadataWrapper: mockMetadataWrapper)
-      XCTFail("Should fail instead...")
-    } catch CredentialClaimError.invalidCredentialClaim {
-      /* expected error ✅ */
+      _ = try Credential(anyCredential: mockCredentialWithKeyBinding.0, keyPair: mockCredentialWithKeyBinding.1, metadataWrapper: mockMetadataWrapper)
     } catch {
-      XCTFail("Not the expected error")
+      XCTFail("Credential init shouldn't fail")
     }
   }
 

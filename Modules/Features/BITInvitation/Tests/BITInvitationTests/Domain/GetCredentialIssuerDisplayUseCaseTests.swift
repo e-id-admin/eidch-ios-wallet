@@ -7,13 +7,15 @@ import XCTest
 
 final class GetCredentialIssuerDisplayUseCaseTests: XCTestCase {
 
+  // MARK: Internal
+
   // swiftlint:disable all
   var useCase: GetCredentialIssuerDisplayUseCase!
   var mockCredential = Credential.Mock.sample
   var preferredUserLanguageCodes: [UserLanguageCode] = []
 
-  var mockITIssuerName = "IT issuer"
-  var mockENIssuerName = "EN issuer"
+  var mockITIssuerName = "IT trusted issuer"
+  var mockENIssuerName = "EN trusted issuer"
 
   // swiftlint:enable all
 
@@ -33,7 +35,9 @@ final class GetCredentialIssuerDisplayUseCaseTests: XCTestCase {
     let issuer = useCase.execute(for: mockCredential, trustStatement: mockTrustStatement)
 
     XCTAssertNotEqual(issuer, mockCredential.preferredIssuerDisplay)
+    XCTAssertNotEqual(issuer?.name, mockCredential.preferredIssuerDisplay?.name)
     XCTAssertEqual(issuer?.name, mockENIssuerName)
+    assertCredentialIssuerDisplayImage(from: issuer, preferredIssuerDisplay: mockCredential.preferredIssuerDisplay)
   }
 
   func testExecuteWithTrustStatement_ReturnsDefaultLanguage() {
@@ -46,7 +50,9 @@ final class GetCredentialIssuerDisplayUseCaseTests: XCTestCase {
     let issuer = useCase.execute(for: mockCredential, trustStatement: mockTrustStatement)
 
     XCTAssertNotEqual(issuer, mockCredential.preferredIssuerDisplay)
+    XCTAssertNotEqual(issuer?.name, mockCredential.preferredIssuerDisplay?.name)
     XCTAssertEqual(issuer?.name, mockENIssuerName)
+    assertCredentialIssuerDisplayImage(from: issuer, preferredIssuerDisplay: mockCredential.preferredIssuerDisplay)
   }
 
   func testExecuteWithTrustStatement_ReturnsIssuerPreferredLanguage() {
@@ -59,7 +65,17 @@ final class GetCredentialIssuerDisplayUseCaseTests: XCTestCase {
     let issuer = useCase.execute(for: mockCredential, trustStatement: mockItalianTrustStatement)
 
     XCTAssertNotEqual(issuer, mockCredential.preferredIssuerDisplay)
+    XCTAssertNotEqual(issuer?.name, mockCredential.preferredIssuerDisplay?.name)
     XCTAssertEqual(issuer?.name, mockITIssuerName)
+    assertCredentialIssuerDisplayImage(from: issuer, preferredIssuerDisplay: mockCredential.preferredIssuerDisplay)
+  }
+
+  // MARK: Private
+
+  /// image is always taken from preferredIssuerDisplay (source is OID metadata). Never from Trust Statement
+  private func assertCredentialIssuerDisplayImage(from issuerDisplay: CredentialIssuerDisplay?, preferredIssuerDisplay: CredentialIssuerDisplay?) {
+    XCTAssertNotNil(issuerDisplay?.image)
+    XCTAssertEqual(issuerDisplay?.image, preferredIssuerDisplay?.image)
   }
 
 }

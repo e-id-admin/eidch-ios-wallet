@@ -16,21 +16,21 @@ protocol DidResolverHelperProtocol {
 
 enum DidResolverHelperError: String, Error {
   case invalidDidUrl
+  case didDocumentDeactivated
 }
 
 // MARK: - DidResolverHelper
 
 struct DidResolverHelper: DidResolverHelperProtocol {
 
-  private func resolve(didRaw: String) async throws -> DidDoc {
-    let did = Did(text: didRaw)
-    guard let url = try URL(string: did.getUrl()) else { throw DidResolverHelperError.invalidDidUrl }
-    let didLog = try await didResolverRepository.fetchDidLog(from: url)
-    return try did.resolve(didTdwLog: didLog)
-  }
+  // MARK: Internal
 
   func getJWKS(from did: String, keyIdentifier: String) async throws -> [PublicKeyInfo.JWK] {
     let didDocument = try await resolve(didRaw: did)
+
+    if didDocument.getDeactivated() {
+      throw DidResolverHelperError.didDocumentDeactivated
+    }
 
     return didDocument.getVerificationMethod()
       .filter({ $0.id == keyIdentifier })
@@ -38,7 +38,16 @@ struct DidResolverHelper: DidResolverHelperProtocol {
       .compactMap({ PublicKeyInfo.JWK(from: $0) })
   }
 
+  // MARK: Private
+
   @Injected(\.didResolverRepository) private var didResolverRepository: DidResolverRepositoryProtocol
+
+  private func resolve(didRaw: String) async throws -> DidDoc {
+    let did = try Did(didTdw: didRaw)
+    guard let url = try URL(string: did.getUrl()) else { throw DidResolverHelperError.invalidDidUrl }
+    let didLog = try await didResolverRepository.fetchDidLog(from: url)
+    return try did.resolve(didTdwLog: didLog)
+  }
 
 }
 

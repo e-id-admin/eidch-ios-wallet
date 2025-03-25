@@ -1,4 +1,5 @@
 import BITCore
+import Factory
 import Foundation
 import Spyable
 import XCTest
@@ -13,39 +14,39 @@ final class LoginPinCodeUseCaseTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    spyGetUniquePassphraseUseCase = GetUniquePassphraseUseCaseProtocolSpy()
-    spyIsBiometricInvalidatedUseCase = IsBiometricInvalidatedUseCaseProtocolSpy()
-    spyUniquePassphraseManager = UniquePassphraseManagerProtocolSpy()
-    contextManager = ContextManagerProtocolSpy()
-    spyContext = LAContextProtocolSpy()
+    getUniquePassphraseUseCase = GetUniquePassphraseUseCaseProtocolSpy()
+    isBiometricInvalidatedUseCase = IsBiometricInvalidatedUseCaseProtocolSpy()
+    uniquePassphraseManager = UniquePassphraseManagerProtocolSpy()
+    userSession = SessionSpy()
     dataStoreConfiguration = DataStoreConfigurationManagerProtocolSpy()
 
-    useCase = LoginPinCodeUseCase(
-      getUniquePassphraseUseCase: spyGetUniquePassphraseUseCase,
-      isBiometricInvalidatedUseCase: spyIsBiometricInvalidatedUseCase,
-      uniquePassphraseManager: spyUniquePassphraseManager,
-      contextManager: contextManager,
-      context: spyContext,
-      dataStoreConfigurationManager: dataStoreConfiguration)
+    Container.shared.getUniquePassphraseUseCase.register { self.getUniquePassphraseUseCase }
+    Container.shared.isBiometricInvalidatedUseCase.register { self.isBiometricInvalidatedUseCase }
+    Container.shared.uniquePassphraseManager.register { self.uniquePassphraseManager }
+    Container.shared.userSession.register { self.userSession }
+    Container.shared.dataStoreConfigurationManager.register { self.dataStoreConfiguration }
+
+    useCase = LoginPinCodeUseCase()
   }
 
   func testHappyPath_biometricsValid() throws {
     let mockPinCode = "123456"
-    spyGetUniquePassphraseUseCase.executeFromReturnValue = Data()
-    spyIsBiometricInvalidatedUseCase.executeReturnValue = false
+    userSession.startSessionPassphraseCredentialTypeReturnValue = LAContextProtocolSpy()
+    getUniquePassphraseUseCase.executeFromReturnValue = Data()
+    isBiometricInvalidatedUseCase.executeReturnValue = false
 
     let didLoginNotification = expectation(forNotification: .didLogin, object: nil)
 
     try useCase.execute(from: mockPinCode)
-    XCTAssertTrue(spyGetUniquePassphraseUseCase.executeFromCalled)
-    XCTAssertEqual(mockPinCode, spyGetUniquePassphraseUseCase.executeFromReceivedPinCode)
-    XCTAssertTrue(spyIsBiometricInvalidatedUseCase.executeCalled)
-    XCTAssertFalse(spyUniquePassphraseManager.saveUniquePassphraseForContextCalled)
+    XCTAssertTrue(getUniquePassphraseUseCase.executeFromCalled)
+    XCTAssertEqual(mockPinCode, getUniquePassphraseUseCase.executeFromReceivedPinCode)
+    XCTAssertTrue(isBiometricInvalidatedUseCase.executeCalled)
+    XCTAssertFalse(uniquePassphraseManager.saveUniquePassphraseForContextCalled)
 
     XCTAssertTrue(dataStoreConfiguration.setEncryptionKeyCalled)
     XCTAssertEqual(dataStoreConfiguration.setEncryptionKeyCallsCount, 1)
-    XCTAssertTrue(contextManager.setCredentialContextCalled)
-    XCTAssertEqual(contextManager.setCredentialContextCallsCount, 1)
+    XCTAssertTrue(userSession.startSessionPassphraseCredentialTypeCalled)
+    XCTAssertEqual(userSession.startSessionPassphraseCredentialTypeCallsCount, 1)
 
     wait(for: [didLoginNotification])
   }
@@ -53,30 +54,31 @@ final class LoginPinCodeUseCaseTests: XCTestCase {
   func testHappyPath_biometricsInValid() throws {
     let mockPinCode = "123456"
     let mockUniquePassphrase = Data()
-    spyGetUniquePassphraseUseCase.executeFromReturnValue = mockUniquePassphrase
-    spyIsBiometricInvalidatedUseCase.executeReturnValue = true
+    userSession.startSessionPassphraseCredentialTypeReturnValue = LAContextProtocolSpy()
+
+    getUniquePassphraseUseCase.executeFromReturnValue = mockUniquePassphrase
+    isBiometricInvalidatedUseCase.executeReturnValue = true
 
     try useCase.execute(from: mockPinCode)
-    XCTAssertTrue(spyGetUniquePassphraseUseCase.executeFromCalled)
-    XCTAssertEqual(mockPinCode, spyGetUniquePassphraseUseCase.executeFromReceivedPinCode)
-    XCTAssertTrue(spyIsBiometricInvalidatedUseCase.executeCalled)
-    XCTAssertTrue(spyUniquePassphraseManager.saveUniquePassphraseForContextCalled)
-    XCTAssertEqual(mockUniquePassphrase, spyUniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.uniquePassphrase)
-    XCTAssertEqual(AuthMethod.biometric, spyUniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.authMethod)
+    XCTAssertTrue(getUniquePassphraseUseCase.executeFromCalled)
+    XCTAssertEqual(mockPinCode, getUniquePassphraseUseCase.executeFromReceivedPinCode)
+    XCTAssertTrue(isBiometricInvalidatedUseCase.executeCalled)
+    XCTAssertTrue(uniquePassphraseManager.saveUniquePassphraseForContextCalled)
+    XCTAssertEqual(mockUniquePassphrase, uniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.uniquePassphrase)
+    XCTAssertEqual(AuthMethod.biometric, uniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.authMethod)
     XCTAssertTrue(dataStoreConfiguration.setEncryptionKeyCalled)
-    XCTAssertTrue(contextManager.setCredentialContextCalled)
-    XCTAssertEqual(contextManager.setCredentialContextCallsCount, 1)
+    XCTAssertTrue(userSession.startSessionPassphraseCredentialTypeCalled)
+    XCTAssertEqual(userSession.startSessionPassphraseCredentialTypeCallsCount, 1)
   }
 
   // MARK: Private
 
   // swiftlint:disable all
   private var useCase: LoginPinCodeUseCase!
-  private var spyGetUniquePassphraseUseCase: GetUniquePassphraseUseCaseProtocolSpy!
-  private var spyIsBiometricInvalidatedUseCase: IsBiometricInvalidatedUseCaseProtocolSpy!
-  private var spyUniquePassphraseManager: UniquePassphraseManagerProtocolSpy!
-  private var spyContext: LAContextProtocolSpy!
-  private var contextManager: ContextManagerProtocolSpy!
+  private var getUniquePassphraseUseCase: GetUniquePassphraseUseCaseProtocolSpy!
+  private var isBiometricInvalidatedUseCase: IsBiometricInvalidatedUseCaseProtocolSpy!
+  private var uniquePassphraseManager: UniquePassphraseManagerProtocolSpy!
+  private var userSession: SessionSpy!
   private var dataStoreConfiguration: DataStoreConfigurationManagerProtocolSpy!
   // swiftlint:enable all
 

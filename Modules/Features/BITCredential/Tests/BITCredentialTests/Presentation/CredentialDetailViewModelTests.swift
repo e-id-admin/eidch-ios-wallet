@@ -1,6 +1,6 @@
+import Factory
 import XCTest
 @testable import BITCredential
-@testable import BITCredentialMocks
 @testable import BITCredentialShared
 @testable import BITTestingCore
 
@@ -10,7 +10,10 @@ final class CredentialDetailViewModelTests: XCTestCase {
 
   @MainActor
   override func setUp() {
-    viewModel = CredentialDetailViewModel(credential, router: mockRouter, deleteCredentialUseCase: deleteCredentialUseCase, checkAndUpdateCredentialStatusUseCase: checkAndUpdateCredentialStatusUseCaseSpy)
+    Container.shared.deleteCredentialUseCase.register { self.deleteCredentialUseCase }
+    Container.shared.checkAndUpdateCredentialStatusUseCase.register { self.checkAndUpdateCredentialStatusUseCaseSpy }
+
+    viewModel = CredentialDetailViewModel(credential, router: mockRouter)
   }
 
   @MainActor

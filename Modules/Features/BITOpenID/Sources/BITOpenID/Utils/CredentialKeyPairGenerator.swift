@@ -9,22 +9,6 @@ import Foundation
 
 struct CredentialKeyPairGenerator: CredentialKeyPairGeneratorProtocol {
 
-  // MARK: Lifecycle
-
-  init(
-    keyManager: KeyManagerProtocol = Container.shared.keyManager(),
-    vaultAccessControlFlags: SecAccessControlCreateFlags = Container.shared.vaultAccessControlFlags(),
-    vaultProtection: CFString = Container.shared.vaultProtection(),
-    vaultOptions: VaultOption = Container.shared.vaultOptions(),
-    context: LAContextProtocol = Container.shared.authContext())
-  {
-    self.keyManager = keyManager
-    self.vaultAccessControlFlags = vaultAccessControlFlags
-    self.vaultProtection = vaultProtection
-    self.vaultOptions = vaultOptions
-    self.context = context
-  }
-
   // MARK: Internal
 
   enum CredentialKeyPairGeneratorError: Error {
@@ -32,6 +16,13 @@ struct CredentialKeyPairGenerator: CredentialKeyPairGeneratorProtocol {
   }
 
   func generate(identifier: UUID, algorithm: String) throws -> KeyPair {
+    guard
+      userSession.isLoggedIn,
+      let context = userSession.context
+    else {
+      throw UserSessionError.notLoggedIn
+    }
+
     let query = try QueryBuilder()
       .setAccessControlFlags(vaultAccessControlFlags)
       .setProtection(vaultProtection)
@@ -52,10 +43,10 @@ struct CredentialKeyPairGenerator: CredentialKeyPairGeneratorProtocol {
 
   // MARK: Private
 
-  private let keyManager: KeyManagerProtocol
-  private let vaultAccessControlFlags: SecAccessControlCreateFlags
-  private let vaultProtection: CFString
-  private let vaultOptions: VaultOption
-  private let context: LAContextProtocol
+  @Injected(\.keyManager) private var keyManager: KeyManagerProtocol
+  @Injected(\.vaultAccessControlFlags) private var vaultAccessControlFlags: SecAccessControlCreateFlags
+  @Injected(\.vaultProtection) private var vaultProtection: CFString
+  @Injected(\.vaultOptions) private var vaultOptions: VaultOption
+  @Injected(\.userSession) private var userSession: Session
 
 }

@@ -38,6 +38,13 @@ public struct PresentationRequestReviewView: View {
       }
   }
 
+  // MARK: Internal
+
+  enum AccessibilityIdentifier: String {
+    case acceptButton
+    case denyButton
+  }
+
   // MARK: Private
 
   private enum Focus: Hashable {
@@ -157,6 +164,7 @@ extension PresentationRequestReviewView {
         }
         .buttonStyle(.filledPrimary)
         .controlSize(.large)
+        .accessibilityIdentifier(AccessibilityIdentifier.denyButton.rawValue)
 
         Button { Task { await viewModel.submit() } } label: {
           Label(L10n.credentialOfferAcceptButton, systemImage: "checkmark")
@@ -170,6 +178,7 @@ extension PresentationRequestReviewView {
         }
         .buttonStyle(.filledSecondary)
         .controlSize(.large)
+        .accessibilityIdentifier(AccessibilityIdentifier.acceptButton.rawValue)
       }
     }
   }

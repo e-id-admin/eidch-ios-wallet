@@ -20,7 +20,7 @@ public struct ValidateCredentialOfferInvitationUrlUseCase: ValidateCredentialOff
   // MARK: Public
 
   public func execute(_ url: URL) throws -> CredentialOffer {
-    guard url.scheme == "openid-credential-offer" else { throw ValidateCredentialOfferInvitationUrlError.unexpectedScheme }
+    guard let scheme = url.scheme, InvitationType.credentialOffer.schemes.contains(scheme) else { throw ValidateCredentialOfferInvitationUrlError.unexpectedScheme }
     guard let parameters = url.queryParameters else { throw ValidateCredentialOfferInvitationUrlError.missingUrlParameters }
     if let credentialEncodedParameter = parameters["credential_offer"] {
       return try createCredentialOffer(from: credentialEncodedParameter)

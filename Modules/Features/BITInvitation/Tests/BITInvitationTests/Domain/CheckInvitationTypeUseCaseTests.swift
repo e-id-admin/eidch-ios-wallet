@@ -19,8 +19,20 @@ final class CheckInvitationTypeUseCaseTests: XCTestCase {
     XCTAssertEqual(expectedInvitationType, invitationType)
   }
 
-  func testCheckInvitationType_Credential_Success() async throws {
+  func testCheckInvitationType_OpenIDCredential_Success() async throws {
     let strURL = "openid-credential-offer://bit.com"
+    guard let validCredentialInvitationURL = URL(string: strURL) else {
+      fatalError("url generation")
+    }
+
+    let expectedInvitationType = InvitationType.credentialOffer
+    let invitationType = try await useCase.execute(url: validCredentialInvitationURL)
+
+    XCTAssertEqual(expectedInvitationType, invitationType)
+  }
+
+  func testCheckInvitationType_SwiyuCredential_Success() async throws {
+    let strURL = "swiyu://bit.com"
     guard let validCredentialInvitationURL = URL(string: strURL) else {
       fatalError("url generation")
     }

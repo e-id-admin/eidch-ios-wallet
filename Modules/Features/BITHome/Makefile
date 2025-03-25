@@ -1,22 +1,5 @@
-.DEFAULT_GOAL := generate
+# Include shared configuration
+ROOT_DIR := $(shell git rev-parse --show-toplevel)
+include $(ROOT_DIR)/Modules/module.mk
 
-SWIFTGEN := swiftgen
-SWIFTFORMAT := swiftformat
-
-swiftgen:
-	@if [ -f swiftgen.yml ]; then \
-		echo "=> Generating Swift code using swiftgen"; \
-		$(SWIFTGEN); \
-	else \
-		echo "=> No swiftgen config for this module"; \
-	fi
-
-swiftformat:
-	@echo "=> Formatting Swift code using swiftformat"
-	$(SWIFTFORMAT) .
-
-open: generate
-	@echo "=> Opening SPM"
-	open "Package.swift"
-
-generate: swiftgen swiftformat
+# Module-specific overrides can be added here

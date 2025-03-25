@@ -15,15 +15,20 @@ struct DataPrivacyView: View {
 
   var body: some View {
     InformationView(
-      primary: L10n.tkGetEidDataPrivacyTitle,
-      secondary: L10n.tkGetEidDataPrivacyBody,
-      tertiary: L10n.tkGetEidDataPrivacyLinkText,
-      tertiaryAction: viewModel.openHelp,
-      isTertiaryTapable: true,
       image: Assets.shield.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      primaryButtonLabel: L10n.tkGetEidDataPrivacyPrimaryButton,
-      primaryButtonAction: viewModel.openCheckCardIntroduction)
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.tkGetEidDataPrivacyTitle,
+          secondary: L10n.tkGetEidDataPrivacyBody,
+          tertiary: L10n.tkGetEidDataPrivacyLinkText,
+          tertiaryAction: viewModel.openHelp)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.tkGetEidDataPrivacyPrimaryButton,
+          primaryButtonAction: viewModel.openCheckCardIntroduction)
+      })
       .toolbar { toolbarContent() }
   }
 

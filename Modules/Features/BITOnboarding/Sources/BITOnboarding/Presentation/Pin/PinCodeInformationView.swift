@@ -7,20 +7,30 @@ import SwiftUI
 
 struct PinCodeInformationView: View {
 
+  // MARK: Lifecycle
+
   init(router: OnboardingInternalRoutes) {
     _viewModel = StateObject(wrappedValue: Container.shared.pinCodeInformationViewModel(router))
   }
+
+  // MARK: Internal
 
   @StateObject var viewModel: PinCodeInformationViewModel
 
   var body: some View {
     InformationView(
-      primary: viewModel.primaryText,
-      secondary: viewModel.secondaryText,
       image: viewModel.image,
       backgroundImage: viewModel.backgroundImage,
-      primaryButtonLabel: viewModel.buttonLabelText,
-      primaryButtonAction: viewModel.nextOnboardingStep)
+      content: {
+        DefaultInformationContentView(
+          primary: viewModel.primaryText,
+          secondary: viewModel.secondaryText)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: viewModel.buttonLabelText,
+          primaryButtonAction: viewModel.nextOnboardingStep)
+      })
       .onAppear {
         viewModel.onAppear()
       }

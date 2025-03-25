@@ -65,12 +65,12 @@ public struct JWTHelper: JWTHelperProtocol {
     return try JWSHeader(parameters: parameters)
   }
 
-  private func sign(_ payloadData: Data, with header: JWSHeader, using algorithm: SignatureAlgorithm, keyPair: KeyPair) throws -> JWS {
+  private func sign(_ payloadData: Data, with header: JWSHeader, using algorithm: SignatureAlgorithm, keyPair: KeyPair) throws -> JOSESwift.JWS {
     guard let signer = Signer(signingAlgorithm: algorithm, key: keyPair.privateKey) else {
       throw JWTHelperError.uninitializedSigner
     }
     let payload = Payload(payloadData)
-    return try JWS(header: header, payload: payload, signer: signer)
+    return try JOSESwift.JWS(header: header, payload: payload, signer: signer)
   }
 
 }

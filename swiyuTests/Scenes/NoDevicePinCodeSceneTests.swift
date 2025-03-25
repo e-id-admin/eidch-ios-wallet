@@ -68,7 +68,7 @@ final class MockNoDevicePinCodeViewModel: NoDevicePinCodeViewModel {
   // MARK: Lifecycle
 
   init() {
-    super.init(routes: MockNoDevicePinRoutes())
+    super.init(router: MockNoDevicePinRoutes())
   }
 
   // MARK: Internal

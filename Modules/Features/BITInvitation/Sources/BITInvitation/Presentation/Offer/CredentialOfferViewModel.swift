@@ -13,7 +13,7 @@ final class CredentialOfferViewModel: StateMachine<CredentialOfferViewModel.Stat
 
   // MARK: Lifecycle
 
-  init(credential: Credential, trustStatement: TrustStatement? = nil, state: CredentialOfferViewModel.State = .result, router: CredentialOfferRouter.Routes) {
+  init(credential: Credential, trustStatement: TrustStatement? = nil, state: CredentialOfferViewModel.State = .result, router: CredentialOfferInternalRoutes) {
     self.credential = credential
     self.trustStatement = trustStatement
     credentialBody = CredentialDetailBody(from: credential)
@@ -51,8 +51,6 @@ final class CredentialOfferViewModel: StateMachine<CredentialOfferViewModel.Stat
 
   let credential: Credential
   let credentialBody: CredentialDetailBody
-  let router: CredentialOfferRouter.Routes
-
   var issuerDisplay: CredentialIssuerDisplay? = nil
 
   var issuerTrustStatus: TrustStatus {
@@ -96,6 +94,7 @@ final class CredentialOfferViewModel: StateMachine<CredentialOfferViewModel.Stat
 
   // MARK: Private
 
+  private let router: CredentialOfferInternalRoutes
   private var trustStatement: TrustStatement? = nil
   @Injected(\.delayAfterAcceptingCredential) private var delayAfterAcceptingCredential: UInt64
   @Injected(\.deleteCredentialUseCase) private var deleteCredentialUseCase: DeleteCredentialUseCaseProtocol

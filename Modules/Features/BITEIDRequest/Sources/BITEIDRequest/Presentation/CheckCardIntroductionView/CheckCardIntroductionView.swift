@@ -15,12 +15,18 @@ struct CheckCardIntroductionView: View {
 
   var body: some View {
     InformationView(
-      primary: L10n.tkGetEidCheckIdTitle,
-      secondary: L10n.tkGetEidCheckIdBody,
       image: Assets.checkCard.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      primaryButtonLabel: L10n.tkGlobalContinue,
-      primaryButtonAction: viewModel.primaryAction)
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.tkGetEidCheckIdTitle,
+          secondary: L10n.tkGetEidCheckIdBody)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.tkGlobalContinue,
+          primaryButtonAction: viewModel.primaryAction)
+      })
       .toolbar { toolbarContent() }
   }
 

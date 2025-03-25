@@ -1,8 +1,10 @@
+import Factory
 import Foundation
 import Spyable
 import XCTest
 @testable import BITAppAuth
 @testable import BITCore
+@testable import BITLocalAuthentication
 @testable import BITOnboarding
 @testable import BITSettings
 
@@ -15,6 +17,7 @@ final class BiometricViewModelTests: XCTestCase {
     super.setUp()
 
     router = MockOnboardingInternalRoutes()
+
     getBiometricTypeUseCase = GetBiometricTypeUseCaseProtocolSpy()
     getBiometricTypeUseCase.executeReturnValue = .faceID
     hasBiometricAuthUseCase = HasBiometricAuthUseCaseProtocolSpy()
@@ -22,13 +25,15 @@ final class BiometricViewModelTests: XCTestCase {
     requestBiometricAuthUseCase = RequestBiometricAuthUseCaseProtocolSpy()
     allowBiometricUsageUseCase = AllowBiometricUsageUseCaseProtocolSpy()
     context = OnboardingContext()
+    internalLAContext = LAContextProtocolSpy()
 
-    viewModel = BiometricViewModel(
-      router: router,
-      getBiometricTypeUseCase: getBiometricTypeUseCase,
-      hasBiometricAuthUseCase: hasBiometricAuthUseCase,
-      requestBiometricAuthUseCase: requestBiometricAuthUseCase,
-      allowBiometricUsageUseCase: allowBiometricUsageUseCase)
+    Container.shared.getBiometricTypeUseCase.register { self.getBiometricTypeUseCase }
+    Container.shared.hasBiometricAuthUseCase.register { self.hasBiometricAuthUseCase }
+    Container.shared.requestBiometricAuthUseCase.register { self.requestBiometricAuthUseCase }
+    Container.shared.allowBiometricUsageUseCase.register { self.allowBiometricUsageUseCase }
+    Container.shared.internalLAContext.register { self.internalLAContext }
+
+    viewModel = BiometricViewModel(router: router)
   }
 
   @MainActor
@@ -82,6 +87,7 @@ final class BiometricViewModelTests: XCTestCase {
   // swiftlint:disable all
   private var viewModel: BiometricViewModel!
   private var context: OnboardingContext!
+  private var internalLAContext: LAContextProtocolSpy!
   private var router: MockOnboardingInternalRoutes!
   private var getBiometricTypeUseCase: GetBiometricTypeUseCaseProtocolSpy!
   private var hasBiometricAuthUseCase: HasBiometricAuthUseCaseProtocolSpy!

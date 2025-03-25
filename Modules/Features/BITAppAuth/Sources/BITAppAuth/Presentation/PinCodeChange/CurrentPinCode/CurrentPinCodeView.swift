@@ -16,6 +16,7 @@ struct CurrentPinCodeView: View {
       inputFieldState: viewModel.inputFieldState,
       inputFieldMessage: viewModel.inputFieldMessage,
       attempts: viewModel.attempts,
+      isSubmitEnabled: viewModel.isSubmitEnabled,
       onPressNext: viewModel.submit)
       .onAppear { viewModel.onAppear() }
       .navigationTitle(L10n.tkGlobalChangepassword)

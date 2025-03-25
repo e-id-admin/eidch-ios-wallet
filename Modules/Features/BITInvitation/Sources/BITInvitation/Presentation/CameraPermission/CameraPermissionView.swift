@@ -18,12 +18,18 @@ struct CameraPermissionView: View {
 
   var body: some View {
     InformationView(
-      primary: viewModel.primary,
-      secondary: viewModel.secondary,
       image: Assets.camera.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      primaryButtonLabel: viewModel.buttonText,
-      primaryButtonAction: viewModel.buttonAction)
+      content: {
+        DefaultInformationContentView(
+          primary: viewModel.primary,
+          secondary: viewModel.secondary)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: viewModel.buttonText,
+          primaryButtonAction: viewModel.buttonAction)
+      })
       .toolbar { toolbarContent() }
   }
 

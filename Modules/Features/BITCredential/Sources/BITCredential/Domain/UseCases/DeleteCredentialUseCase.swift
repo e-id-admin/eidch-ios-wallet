@@ -21,13 +21,11 @@ public struct DeleteCredentialUseCase: DeleteCredentialUseCaseProtocol {
     }
 
     try await databaseRepository.delete(credential.id)
-    hasDeletedCredentialRepository.setHasDeletedCredential()
   }
 
   // MARK: Private
 
   @Injected(\.databaseCredentialRepository) private var databaseRepository: CredentialRepositoryProtocol
   @Injected(\.keyManager) private var keyManager: KeyManagerProtocol
-  @Injected(\.hasDeletedCredentialRepository) private var hasDeletedCredentialRepository: HasDeletedCredentialRepositoryProtocol
 
 }

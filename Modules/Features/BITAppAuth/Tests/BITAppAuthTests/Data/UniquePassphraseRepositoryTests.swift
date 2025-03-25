@@ -1,5 +1,6 @@
 import BITCore
 import BITCrypto
+import Factory
 import Foundation
 import Spyable
 import XCTest
@@ -13,23 +14,20 @@ final class UniquePassphraseRepositoryTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    spyContext = LAContextProtocolSpy()
-    keyManagerProtocolSpy = KeyManagerProtocolSpy()
-    spySecretManager = SecretManagerProtocolSpy()
-
-    repository = SecretsRepository(keyManager: keyManagerProtocolSpy, secretManager: spySecretManager)
+    registerMocks()
+    repository = SecretsRepository()
   }
 
   func testSaveUniquePassphrase_appPin() throws {
     let mockData = Data()
     let appPinAuthMethod = AuthMethod.appPin
     let mockAccessControl = try createAccessControl(accessControlFlags: AuthMethod.appPin.accessControlFlags)
-    try repository.saveUniquePassphrase(mockData, forAuthMethod: appPinAuthMethod, inContext: spyContext)
-    XCTAssertTrue(spySecretManager.setForKeyQueryCalled)
-    XCTAssertEqual(mockData, spySecretManager.setForKeyQueryReceivedArguments?.value as? Data)
-    XCTAssertEqual(AuthMethod.appPin.identifierKey, spySecretManager.setForKeyQueryReceivedArguments?.key)
+    try repository.saveUniquePassphrase(mockData, forAuthMethod: appPinAuthMethod, inContext: contextSpy)
+    XCTAssertTrue(secretManagerSpy.setForKeyQueryCalled)
+    XCTAssertEqual(mockData, secretManagerSpy.setForKeyQueryReceivedArguments?.value as? Data)
+    XCTAssertEqual(AuthMethod.appPin.identifierKey, secretManagerSpy.setForKeyQueryReceivedArguments?.key)
     // swiftlint:disable force_cast
-    XCTAssertEqual(mockAccessControl, spySecretManager.setForKeyQueryReceivedArguments?.query?[kSecAttrAccessControl as String] as! SecAccessControl)
+    XCTAssertEqual(mockAccessControl, secretManagerSpy.setForKeyQueryReceivedArguments?.query?[kSecAttrAccessControl as String] as! SecAccessControl)
     // swiftlint:enable force_cast
   }
 
@@ -37,72 +35,72 @@ final class UniquePassphraseRepositoryTests: XCTestCase {
     let mockData = Data()
     let appPinAuthMethod = AuthMethod.biometric
     let mockAccessControl = try createAccessControl(accessControlFlags: AuthMethod.biometric.accessControlFlags)
-    try repository.saveUniquePassphrase(mockData, forAuthMethod: appPinAuthMethod, inContext: spyContext)
-    XCTAssertTrue(spySecretManager.setForKeyQueryCalled)
-    XCTAssertEqual(mockData, spySecretManager.setForKeyQueryReceivedArguments?.value as? Data)
-    XCTAssertEqual(AuthMethod.biometric.identifierKey, spySecretManager.setForKeyQueryReceivedArguments?.key)
+    try repository.saveUniquePassphrase(mockData, forAuthMethod: appPinAuthMethod, inContext: contextSpy)
+    XCTAssertTrue(secretManagerSpy.setForKeyQueryCalled)
+    XCTAssertEqual(mockData, secretManagerSpy.setForKeyQueryReceivedArguments?.value as? Data)
+    XCTAssertEqual(AuthMethod.biometric.identifierKey, secretManagerSpy.setForKeyQueryReceivedArguments?.key)
     // swiftlint:disable force_cast
-    XCTAssertEqual(mockAccessControl, spySecretManager.setForKeyQueryReceivedArguments?.query?[kSecAttrAccessControl as String] as! SecAccessControl)
+    XCTAssertEqual(mockAccessControl, secretManagerSpy.setForKeyQueryReceivedArguments?.query?[kSecAttrAccessControl as String] as! SecAccessControl)
     // swiftlint:enable force_cast
   }
 
   func testGetUniquePassphrase_appPin() throws {
     let mockData = Data()
     let appPinAuthMethod = AuthMethod.appPin
-    spySecretManager.dataForKeyQueryReturnValue = mockData
-    let data = try repository.getUniquePassphrase(forAuthMethod: appPinAuthMethod, inContext: spyContext)
+    secretManagerSpy.dataForKeyQueryReturnValue = mockData
+    let data = try repository.getUniquePassphrase(forAuthMethod: appPinAuthMethod, inContext: contextSpy)
     XCTAssertEqual(mockData, data)
-    XCTAssertTrue(spySecretManager.dataForKeyQueryCalled)
-    XCTAssertEqual(AuthMethod.appPin.identifierKey, spySecretManager.dataForKeyQueryReceivedArguments?.key)
+    XCTAssertTrue(secretManagerSpy.dataForKeyQueryCalled)
+    XCTAssertEqual(AuthMethod.appPin.identifierKey, secretManagerSpy.dataForKeyQueryReceivedArguments?.key)
   }
 
   func testGetUniquePassphrase_biometric() throws {
     let mockData = Data()
     let appPinAuthMethod = AuthMethod.biometric
-    spySecretManager.dataForKeyQueryReturnValue = mockData
-    let data = try repository.getUniquePassphrase(forAuthMethod: appPinAuthMethod, inContext: spyContext)
+    secretManagerSpy.dataForKeyQueryReturnValue = mockData
+    let data = try repository.getUniquePassphrase(forAuthMethod: appPinAuthMethod, inContext: contextSpy)
     XCTAssertEqual(mockData, data)
-    XCTAssertTrue(spySecretManager.dataForKeyQueryCalled)
-    XCTAssertEqual(AuthMethod.biometric.identifierKey, spySecretManager.dataForKeyQueryReceivedArguments?.key)
+    XCTAssertTrue(secretManagerSpy.dataForKeyQueryCalled)
+    XCTAssertEqual(AuthMethod.biometric.identifierKey, secretManagerSpy.dataForKeyQueryReceivedArguments?.key)
   }
 
   func testDeleteBiometricUniquePassphrase() throws {
     try repository.deleteBiometricUniquePassphrase()
 
-    XCTAssertTrue(spySecretManager.removeObjectForKeyQueryCalled)
-    XCTAssertEqual(AuthMethod.biometric.identifierKey, spySecretManager.removeObjectForKeyQueryReceivedArguments?.key)
+    XCTAssertTrue(secretManagerSpy.removeObjectForKeyQueryCalled)
+    XCTAssertEqual(AuthMethod.biometric.identifierKey, secretManagerSpy.removeObjectForKeyQueryReceivedArguments?.key)
   }
 
   func testHasUniquePassphrase_appPin() throws {
-    spySecretManager.existsKeyQueryReturnValue = true
+    secretManagerSpy.existsKeyQueryReturnValue = true
     let hasSecret = repository.hasUniquePassphraseSaved(forAuthMethod: .appPin)
     XCTAssertTrue(hasSecret)
-    XCTAssertTrue(spySecretManager.existsKeyQueryCalled)
-    XCTAssertEqual(AuthMethod.appPin.identifierKey, spySecretManager.existsKeyQueryReceivedArguments?.key)
+    XCTAssertTrue(secretManagerSpy.existsKeyQueryCalled)
+    XCTAssertEqual(AuthMethod.appPin.identifierKey, secretManagerSpy.existsKeyQueryReceivedArguments?.key)
   }
 
   func testHasUniquePassphrase_biometric() throws {
-    spySecretManager.existsKeyQueryReturnValue = true
+    secretManagerSpy.existsKeyQueryReturnValue = true
     let hasSecret = repository.hasUniquePassphraseSaved(forAuthMethod: .biometric)
     XCTAssertTrue(hasSecret)
-    XCTAssertTrue(spySecretManager.existsKeyQueryCalled)
-    XCTAssertEqual(AuthMethod.biometric.identifierKey, spySecretManager.existsKeyQueryReceivedArguments?.key)
+    XCTAssertTrue(secretManagerSpy.existsKeyQueryCalled)
+    XCTAssertEqual(AuthMethod.biometric.identifierKey, secretManagerSpy.existsKeyQueryReceivedArguments?.key)
   }
 
   func testHasNotUniquePassphrase_appPin() throws {
-    spySecretManager.existsKeyQueryReturnValue = false
+    secretManagerSpy.existsKeyQueryReturnValue = false
     let hasSecret = repository.hasUniquePassphraseSaved(forAuthMethod: .appPin)
     XCTAssertFalse(hasSecret)
-    XCTAssertTrue(spySecretManager.existsKeyQueryCalled)
-    XCTAssertEqual(AuthMethod.appPin.identifierKey, spySecretManager.existsKeyQueryReceivedArguments?.key)
+    XCTAssertTrue(secretManagerSpy.existsKeyQueryCalled)
+    XCTAssertEqual(AuthMethod.appPin.identifierKey, secretManagerSpy.existsKeyQueryReceivedArguments?.key)
   }
 
   func testHasNotUniquePassphrase_biometric() throws {
-    spySecretManager.existsKeyQueryReturnValue = false
+    secretManagerSpy.existsKeyQueryReturnValue = false
     let hasSecret = repository.hasUniquePassphraseSaved(forAuthMethod: .biometric)
     XCTAssertFalse(hasSecret)
-    XCTAssertTrue(spySecretManager.existsKeyQueryCalled)
-    XCTAssertEqual(AuthMethod.biometric.identifierKey, spySecretManager.existsKeyQueryReceivedArguments?.key)
+    XCTAssertTrue(secretManagerSpy.existsKeyQueryCalled)
+    XCTAssertEqual(AuthMethod.biometric.identifierKey, secretManagerSpy.existsKeyQueryReceivedArguments?.key)
   }
 
   // MARK: Private
@@ -110,12 +108,24 @@ final class UniquePassphraseRepositoryTests: XCTestCase {
   private let vaultAlgorithm = VaultAlgorithm.eciesEncryptionStandardVariableIVX963SHA256AESGCM
 
   // swiftlint:disable all
-  private var spyContext: LAContextProtocolSpy!
-  private var keyManagerProtocolSpy: KeyManagerProtocolSpy!
-  private var spySecretManager: SecretManagerProtocolSpy!
+  private var contextSpy: LAContextProtocolSpy!
+  private var secretManagerSpy: SecretManagerProtocolSpy!
+  private var keyManagerSpy: KeyManagerProtocolSpy!
+  private var processInfoServiceSpy: ProcessInfoServiceProtocolSpy!
   private var repository: UniquePassphraseRepositoryProtocol!
 
   // swiftlint:enable all
+
+  private func registerMocks() {
+    contextSpy = LAContextProtocolSpy()
+    secretManagerSpy = SecretManagerProtocolSpy()
+    keyManagerSpy = KeyManagerProtocolSpy()
+    processInfoServiceSpy = ProcessInfoServiceProtocolSpy()
+
+    Container.shared.secretManager.register { self.secretManagerSpy }
+    Container.shared.keyManager.register { self.keyManagerSpy }
+    Container.shared.processInfoService.register { self.processInfoServiceSpy }
+  }
 
   private func createAccessControl(
     accessControlFlags: SecAccessControlCreateFlags = [.privateKeyUsage, .applicationPassword],

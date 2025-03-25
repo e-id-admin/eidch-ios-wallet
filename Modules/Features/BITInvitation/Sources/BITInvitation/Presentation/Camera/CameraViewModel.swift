@@ -38,9 +38,7 @@ class CameraViewModel: ObservableObject, Vibrating {
   }
 
   deinit {
-    DispatchQueue.main.async { [weak self] in
-      self?.cameraManager.stop()
-    }
+    cameraManager.stop()
   }
 
   // MARK: Public
@@ -74,7 +72,7 @@ class CameraViewModel: ObservableObject, Vibrating {
     case invalidPresentationRequest
   }
 
-  @ObservedObject var cameraManager = CameraManager()
+  var cameraManager = CameraManager()
 
   var session = AVCaptureSession()
 
@@ -163,8 +161,6 @@ class CameraViewModel: ObservableObject, Vibrating {
 
   @Injected(\.scannerDelay) private var scannerDelay: UInt64
   @Injected(\.analytics) private var analytics: AnalyticsProtocol
-  @Injected(\.fetchMetadataUseCase) private var fetchMetadataUseCase: FetchMetadataUseCaseProtocol
-  @Injected(\.saveCredentialUseCase) private var saveCredentialUseCase: SaveCredentialUseCaseProtocol
   @Injected(\.fetchCredentialUseCase) private var fetchCredentialUseCase: FetchCredentialUseCaseProtocol
   @Injected(\.denyPresentationUseCase) private var denyPresentationUseCase: DenyPresentationUseCaseProtocol
   @Injected(\.fetchRequestObjectUseCase) private var fetchRequestObjectUseCase: FetchRequestObjectUseCaseProtocol
@@ -174,7 +170,6 @@ class CameraViewModel: ObservableObject, Vibrating {
   @Injected(\.checkInvitationTypeUseCase) private var checkInvitationTypeUseCase: CheckInvitationTypeUseCaseProtocol
   @Injected(\.validateRequestObjectUseCase) private var validateRequestObjectUseCase: ValidateRequestObjectUseCaseProtocol
   @Injected(\.getCompatibleCredentialsUseCase) private var getCompatibleCredentialsUseCase: GetCompatibleCredentialsUseCaseProtocol
-  @Injected(\.checkAndUpdateCredentialStatusUseCase) private var checkAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialStatusUseCaseProtocol
   @Injected(\.validateCredentialOfferInvitationUrlUseCase) private var validateCredentialOfferInvitationUrlUseCase: ValidateCredentialOfferInvitationUrlUseCaseProtocol
 
   private func configureBindings() {
@@ -212,7 +207,7 @@ class CameraViewModel: ObservableObject, Vibrating {
       default:
         qrScannerError = CameraError.invalidQRCode
       }
-    } else if let fetchError = error as? FetchCredentialError {
+    } else if let fetchError = error as? FetchAnyVerifiableCredentialError {
       resetTorchAndInvitation()
       switch fetchError {
       case .expiredInvitation:
@@ -231,6 +226,12 @@ class CameraViewModel: ObservableObject, Vibrating {
         qrScannerError = CameraError.emptyWallet
       case .compatibleCredentialNotFound:
         qrScannerError = CameraError.compatibleCredentialNotFound
+      }
+    } else if let fetchError = error as? FetchRequestObjectError {
+      resetTorchAndInvitation()
+      switch fetchError {
+      case .invalidPresentationInvitation:
+        qrScannerError = CameraError.invalidPresentationRequest
       }
     } else {
       invitationURL = nil // Keep the torch enabled
@@ -253,32 +254,10 @@ class CameraViewModel: ObservableObject, Vibrating {
 
 extension CameraViewModel {
 
-  private func fetchAndSaveCredential(from offer: CredentialOffer) async throws -> Credential {
-    guard let issuerUrl = URL(string: offer.issuer) else {
-      throw CameraError.validationFailed
-    }
-
-    guard let selectedCredentialId = offer.credentialConfigurationIds.first else {
-      throw CameraError.validationFailed
-    }
-
-    let metadata = try await fetchMetadataUseCase.execute(from: issuerUrl)
-    let metadataWrapper = CredentialMetadataWrapper(selectedCredentialSupportedId: selectedCredentialId, credentialMetadata: metadata)
-
-    let credentialWithKeyBinding = try await fetchCredentialUseCase.execute(from: issuerUrl, metadataWrapper: metadataWrapper, credentialOffer: offer, accessToken: nil)
-    let credential = try await saveCredentialUseCase.execute(credentialWithKeyBinding: credentialWithKeyBinding, metadataWrapper: metadataWrapper)
-
-    do {
-      return try await checkAndUpdateCredentialStatusUseCase.execute(for: credential)
-    } catch {
-      return credential
-    }
-  }
-
   private func processCredentialOffer(url: URL) async throws {
     processCredentialOffer = true
     let credentialOffer = try validateCredentialOfferInvitationUrlUseCase.execute(url)
-    credential = try await fetchAndSaveCredential(from: credentialOffer)
+    credential = try await fetchCredentialUseCase.execute(from: credentialOffer)
 
     isLoading = false
     cameraManager.flashlight.turnOff()
@@ -311,6 +290,7 @@ extension CameraViewModel {
     let context = PresentationRequestContext(requestObject: requestObject)
 
     guard await validateRequestObjectUseCase.execute(context.requestObject) else {
+      handleError(FetchRequestObjectError.invalidPresentationInvitation)
       return try await denyPresentationUseCase.execute(context: context, error: .invalidRequest)
     }
 
@@ -358,10 +338,10 @@ extension CameraViewModel.CameraError {
     case .noConnection: Assets.noWifi.swiftUIImage
     case .compatibleCredentialNotFound,
          .emptyWallet,
-         .expiredInvitation: Assets.credential.swiftUIImage
+         .expiredInvitation,
+         .validationFailed: Assets.credential.swiftUIImage
     case .invalidPresentationRequest,
-         .unknownIssuer,
-         .validationFailed: Assets.questionmarkSquare.swiftUIImage
+         .unknownIssuer: Assets.questionmarkSquare.swiftUIImage
     case .invalidQRCode: Assets.qrcode.swiftUIImage
     }
   }
@@ -371,10 +351,10 @@ extension CameraViewModel.CameraError {
     case .noConnection: L10n.tkErrorConnectionproblemTitle
     case .emptyWallet: L10n.tkErrorEmptywalletTitle
     case .compatibleCredentialNotFound: L10n.tkErrorNosuchcredentialTitle
-    case .expiredInvitation: L10n.tkErrorInvitationcredentialTitle
+    case .expiredInvitation: L10n.tkErrorNotusableTitle
     case .unknownIssuer: L10n.tkErrorNotregisteredTitle
-    case .validationFailed: L10n.tkErrorNotregisteredTitle
-    case .invalidQRCode: L10n.tkErrorNotusableTitle
+    case .validationFailed: L10n.tkErrorInvitationcredentialTitle
+    case .invalidQRCode: L10n.tkErrorInvitationcredentialTitle
     case .invalidPresentationRequest: L10n.tkErrorInvalidrequestTitle
     }
   }
@@ -384,10 +364,10 @@ extension CameraViewModel.CameraError {
     case .noConnection: L10n.tkErrorConnectionproblemBody
     case .emptyWallet: L10n.tkErrorEmptywalletBody
     case .compatibleCredentialNotFound: L10n.tkErrorNosuchcredentialBody
-    case .expiredInvitation: L10n.tkErrorInvitationcredentialBody
+    case .expiredInvitation: L10n.tkErrorNotusableBody
     case .unknownIssuer: L10n.tkErrorNotregisteredBody
-    case .validationFailed: L10n.tkErrorNotregisteredBody
-    case .invalidQRCode: L10n.tkErrorNotusableBody
+    case .validationFailed: L10n.tkErrorInvitationcredentialBody
+    case .invalidQRCode: L10n.tkErrorInvitationcredentialBody
     case .invalidPresentationRequest: L10n.tkErrorInvalidrequestBody
     }
   }

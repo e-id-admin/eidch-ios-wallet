@@ -19,4 +19,8 @@ extension Container {
     self { KeyManager() }
   }
 
+  public var secretManager: Factory<SecretManagerProtocol> {
+    self { SecretManager() }
+  }
+
 }

@@ -32,26 +32,12 @@ fileprivate enum SecretConfiguration {
 
 struct SecretsRepository {
 
-  // MARK: Lifecycle
-
-  init(
-    keyManager: KeyManagerProtocol = Container.shared.keyManager(),
-    secretManager: SecretManagerProtocol = Container.shared.secretManager(),
-    processInfoService: ProcessInfoServiceProtocol = Container.shared.processInfoService(),
-    vaultOptions: VaultOption = Container.shared.vaultOptions())
-  {
-    self.keyManager = keyManager
-    self.secretManager = secretManager
-    self.processInfoService = processInfoService
-    self.vaultOptions = vaultOptions
-  }
-
   // MARK: Private
 
-  private let secretManager: SecretManagerProtocol
-  private let keyManager: KeyManagerProtocol
-  private let processInfoService: ProcessInfoServiceProtocol
-  private let vaultOptions: VaultOption
+  @Injected(\.secretManager) private var secretManager: SecretManagerProtocol
+  @Injected(\.keyManager) private var keyManager: KeyManagerProtocol
+  @Injected(\.processInfoService) private var processInfoService: ProcessInfoServiceProtocol
+  @Injected(\.vaultOptions) private var vaultOptions: VaultOption
 
 }
 

@@ -2,7 +2,6 @@ import BITCore
 import BITL10n
 import Combine
 import Factory
-import Foundation
 import SwiftUI
 
 @MainActor
@@ -37,6 +36,10 @@ class BiometricChangeViewModel: ObservableObject, Vibrating {
 
   var title: String {
     isBiometricEnabled ? L10n.tkMenuDeactivatingBiometricsIosTitle(biometricType.text) : L10n.tkMenuActivatingBiometricsIosTitle(biometricType.text)
+  }
+
+  var isSubmitEnabled: Bool {
+    pinCode.count >= pinCodeMinimumSize
   }
 
   @Published var pinCode = "" {
@@ -90,6 +93,7 @@ class BiometricChangeViewModel: ObservableObject, Vibrating {
   @Injected(\.changeBiometricStatusUseCase) private var changeBiometricStatusUseCase: ChangeBiometricStatusUseCaseProtocol
   @Injected(\.isBiometricUsageAllowedUseCase) private var isBiometricUsageAllowedUseCase: IsBiometricUsageAllowedUseCaseProtocol
   @Injected(\.getBiometricTypeUseCase) private var getBiometricTypeUseCase: GetBiometricTypeUseCaseProtocol
+  @Injected(\.pinCodeMinimumSize) private var pinCodeMinimumSize: Int
 
   private var attemptLeft: Int { attemptsLimit - attempts }
 

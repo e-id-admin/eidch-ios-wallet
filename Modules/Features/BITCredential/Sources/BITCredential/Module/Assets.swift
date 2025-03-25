@@ -32,6 +32,7 @@ enum Assets {
   static let noActivities = ImageAsset(name: "NoActivities")
   static let notTrustedBadge = ImageAsset(name: "NotTrustedBadge")
   static let statusInvalid = ImageAsset(name: "StatusInvalid")
+  static let statusNotYetValid = ImageAsset(name: "StatusNotYetValid")
   static let statusSuspended = ImageAsset(name: "StatusSuspended")
   static let statusUnknown = ImageAsset(name: "StatusUnknown")
   static let statusValid = ImageAsset(name: "StatusValid")

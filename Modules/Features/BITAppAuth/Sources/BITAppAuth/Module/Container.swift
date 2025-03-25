@@ -61,7 +61,7 @@ extension Container {
   }
 
   var noDevicePinCodeViewModel: ParameterFactory<NoDevicePinCodeRouterRoutes, NoDevicePinCodeViewModel> {
-    self { NoDevicePinCodeViewModel(routes: $0) }
+    self { NoDevicePinCodeViewModel(router: $0) }
   }
 
 }
@@ -115,23 +115,20 @@ extension Container {
     self { UniquePassphraseManager() }
   }
 
-  public var contextManager: Factory<ContextManagerProtocol> {
-    self { ContextManager() }
-  }
-
-  public var authManager: Factory<AuthManagerProtocol> {
-    self { AuthManager(loginRequiredAfterIntervalThreshold: self.loginRequiredIntervalThreshold()) }
-  }
-
   public var localAuthenticationPolicyValidator: Factory<LocalAuthenticationPolicyValidatorProtocol> {
     self { LocalAuthenticationPolicyValidator() }
   }
 
-  public var authContext: Factory<LAContextProtocol> {
-    self { LAContext() }.singleton
+  public var userSession: Factory<Session> {
+    self { UserSession() }.singleton
   }
 
   // MARK: Internal
+
+  var internalContext: Factory<LAContextProtocol> {
+    // LAContext should be a singleton since having too many of them, can lead to an error
+    self { LAContext() }.singleton
+  }
 
   var authCredentialType: Factory<LACredentialType> {
     self { .applicationPassword }
@@ -162,14 +159,6 @@ extension Container {
 
   var pepperKeyDerivationAlgorithm: Factory<SecKeyAlgorithm> {
     self { .ecdhKeyExchangeStandardX963SHA256 }
-  }
-
-  var secretManager: Factory<SecretManagerProtocol> {
-    self { SecretManager() }
-  }
-
-  var keyManager: Factory<KeyManagerProtocol> {
-    self { KeyManager() }
   }
 
 }
@@ -226,6 +215,10 @@ extension Container {
     }
   }
 
+  public var isUserLoggedInUseCase: Factory<IsUserLoggedInUseCaseProtocol> {
+    self { IsUserLoggedInUseCase() }
+  }
+
   public var hasBiometricAuthUseCase: Factory<HasBiometricAuthUseCaseProtocol> {
     self { HasBiometricAuthUseCase() }
   }
@@ -256,10 +249,6 @@ extension Container {
 
   public var getUniquePassphraseUseCase: Factory<GetUniquePassphraseUseCaseProtocol> {
     self { GetUniquePassphraseUseCase() }
-  }
-
-  public var isUserLoggedInUseCase: Factory<IsUserLoggedInUseCaseProtocol> {
-    self { IsUserLoggedInUseCase() }
   }
 
   public var validatePinCodeRuleUseCase: Factory<ValidatePinCodeRuleUseCaseProtocol> {
@@ -293,11 +282,11 @@ extension Container {
     self { UnlockWalletUseCase() }
   }
 
-  // MARK: Internal
-
-  var loginPinCodeUseCase: Factory<LoginPinCodeUseCaseProtocol> {
+  public var loginPinCodeUseCase: Factory<LoginPinCodeUseCaseProtocol> {
     self { LoginPinCodeUseCase() }
   }
+
+  // MARK: Internal
 
   var loginBiometricUseCase: Factory<LoginBiometricUseCaseProtocol> {
     self { LoginBiometricUseCase() }

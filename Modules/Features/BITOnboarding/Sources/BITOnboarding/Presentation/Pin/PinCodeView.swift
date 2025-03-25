@@ -22,14 +22,13 @@ struct PinCodeView: View {
 
   var body: some View {
     content()
-      .navigationTitle(L10n.tkGlobalEnterpassword)
+      .navigationTitle(L10n.tkOnboardingPasswordTitle)
       .foregroundStyle(ThemingAssets.Grays.white.swiftUIColor)
       .background(
         ThemingAssets.Gradient.gradient4.swiftUIImage
           .resizable()
           .ignoresSafeArea()
           .accessibilityHidden(true))
-      .colorScheme(.light)
       .task {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
           focus = .input
@@ -121,7 +120,12 @@ struct PinCodeView: View {
 
   @ViewBuilder
   private func secureField() -> some View {
-    SecureTextField(text: $viewModel.pinCode, prompt: L10n.tkOnboardingCharactersNote) {
+    SecureTextField(
+      text: $viewModel.pinCode,
+      prompt: L10n.tkOnboardingPasswordInputPlaceholder,
+      textColor: ThemingAssets.Label.primary.light,
+      tintColor: ThemingAssets.Label.tertiary.light)
+    {
       viewModel.validate()
     }
     .submitLabel(.done)
@@ -137,7 +141,7 @@ struct PinCodeView: View {
         inputFocused = true
       }
     }
-    .accessibilityLabel(L10n.tkLoginPasswordAlt)
+    .accessibilityLabel(L10n.tkOnboardingPasswordInputAlt)
     .accessibilitySortPriority(800)
     .accessibilityFocused($focus, equals: .input)
   }
@@ -149,6 +153,7 @@ struct PinCodeView: View {
     } label: {
       Text(L10n.tkGlobalContinue)
     }
+    .environment(\.colorScheme, .light)
     .buttonStyle(.filledPrimary)
     .controlSize(.large)
     .accessibilityFocused($focus, equals: .loginButton)

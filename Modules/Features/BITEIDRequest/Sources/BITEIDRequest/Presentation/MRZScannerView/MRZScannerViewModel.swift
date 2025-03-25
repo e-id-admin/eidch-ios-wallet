@@ -13,11 +13,13 @@ class MRZScannerViewModel: ObservableObject {
 
   // MARK: Internal
 
+  @Published var hasLegalRepresentant = false
   @Published var isErrorPresented = false
   @Published var errorDescription: String? = nil
 
   func submit(_ payload: EIDRequestPayload) async {
     do {
+      let payload = EIDRequestPayload(mrz: payload.mrz, hasLegalRepresentant: hasLegalRepresentant)
       let eIDRequestCase = try await submitEIDRequestUseCase.execute(payload)
 
       guard

@@ -1,24 +1,8 @@
 import BITCore
-import BITVault
 import Factory
 import Foundation
-import Spyable
-
-// MARK: - GetLockedWalletTimeLeftUseCase
 
 struct GetLockedWalletTimeLeftUseCase: GetLockedWalletTimeLeftUseCaseProtocol {
-
-  // MARK: Lifecycle
-
-  init(
-    lockDelay: TimeInterval = Container.shared.lockDelay(),
-    repository: LockWalletRepositoryProtocol = Container.shared.lockWalletRepository(),
-    processInfoService: ProcessInfoServiceProtocol = Container.shared.processInfoService())
-  {
-    self.lockDelay = lockDelay
-    self.repository = repository
-    self.processInfoService = processInfoService
-  }
 
   // MARK: Internal
 
@@ -31,7 +15,7 @@ struct GetLockedWalletTimeLeftUseCase: GetLockedWalletTimeLeftUseCaseProtocol {
 
   // MARK: Private
 
-  private let repository: LockWalletRepositoryProtocol
-  private let processInfoService: ProcessInfoServiceProtocol
-  private let lockDelay: TimeInterval
+  @Injected(\.lockWalletRepository) private var repository: LockWalletRepositoryProtocol
+  @Injected(\.processInfoService) private var processInfoService: ProcessInfoServiceProtocol
+  @Injected(\.lockDelay) private var lockDelay: TimeInterval
 }

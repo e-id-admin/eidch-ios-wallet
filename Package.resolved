@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/nerdishbynature/octokit.swift",
         "state": {
           "branch": null,
-          "revision": "44192458beb89180c3a3a1245d904aacac8be0ae",
-          "version": "0.13.0"
+          "revision": "cd108b387782d8509e64e298cf4800dc47fc40ae",
+          "version": "0.14.0"
         }
       },
       {
@@ -35,15 +35,6 @@
           "branch": null,
           "revision": "7e8c7bb1381bbd6eed47a0c7d20275fedc8645aa",
           "version": "3.20.0"
-        }
-      },
-      {
-        "package": "SwiftFormat",
-        "repositoryURL": "https://github.com/nicklockwood/SwiftFormat",
-        "state": {
-          "branch": null,
-          "revision": "86ed20990585f478c0daf309af645c2a528b59d8",
-          "version": "0.54.6"
         }
       },
       {

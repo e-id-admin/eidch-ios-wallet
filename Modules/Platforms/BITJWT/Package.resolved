@@ -30,10 +30,10 @@
     {
       "identity" : "didresolver-swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/e-id-admin/didresolver-swift.git",
+      "location" : "https://github.com/swiyu-admin-ch/didresolver-swift.git",
       "state" : {
-        "revision" : "4e6b4368743aa697afdb12c0d638e051b192cbc4",
-        "version" : "1.0.1"
+        "revision" : "2c324e97849523392be341282b666fe56856d0dd",
+        "version" : "2.0.0"
       }
     },
     {
@@ -95,13 +95,14 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Matejkob/swift-spyable",
       "state" : {
-        "revision" : "8f78f36989bde9f06cc5a5254a6748c23c16b045"
+        "revision" : "f6b90c803e1f4c989ede0a75e8e456fd41dcf27f",
+        "version" : "0.8.0"
       }
     },
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax",
       "state" : {
         "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
         "version" : "509.1.1"

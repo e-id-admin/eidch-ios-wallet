@@ -102,12 +102,11 @@ extension DeeplinkLoadingView {
       Button(L10n.tkGlobalClose, action: viewModel.close)
         .padding(.bottom, .x6)
         .controlSize(.large)
-        .buttonStyle(.bezeled)
+        .buttonStyle(.filledPrimary)
         .accessibilitySortPriority(AccessibilityPriority.x3.rawValue)
     }
     .padding(.horizontal, .x6)
     .frame(maxWidth: .infinity)
     .background(ThemingAssets.Background.secondary.swiftUIColor)
   }
-
 }

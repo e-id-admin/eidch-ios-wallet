@@ -3,13 +3,21 @@ import Foundation
 
 extension EIDRequestCaseEntity {
 
-  convenience init(_ eIDRequestCase: EIDRequestCase) {
+  // MARK: Lifecycle
+
+  convenience init(_ eIDRequestCase: EIDRequestCase) throws {
     self.init()
     id = eIDRequestCase.id
+    try setValues(from: eIDRequestCase)
+  }
+
+  // MARK: Internal
+
+  func setValues(from eIDRequestCase: EIDRequestCase) throws {
     rawMRZ = eIDRequestCase.rawMRZ
 
     if let eIDRequestCaseState = eIDRequestCase.state {
-      state = EIDRequestStateEntity(eIDRequestCaseState)
+      state = try EIDRequestStateEntity(eIDRequestCaseState)
     }
 
     documentNumber = eIDRequestCase.documentNumber

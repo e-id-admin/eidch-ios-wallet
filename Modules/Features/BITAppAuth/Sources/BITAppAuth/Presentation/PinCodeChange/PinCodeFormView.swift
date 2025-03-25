@@ -1,7 +1,5 @@
 import BITL10n
 import BITTheming
-import Factory
-import Foundation
 import SwiftUI
 
 // MARK: - InputFieldState
@@ -17,12 +15,21 @@ struct PinCodeFormView: View {
 
   // MARK: Lifecycle
 
-  init(pinCode: Binding<String>, fieldTitle: String = "", inputFieldState: InputFieldState = .normal, inputFieldMessage: String? = nil, attempts: Int = 0, onPressNext: @escaping () -> Void) {
+  init(
+    pinCode: Binding<String>,
+    fieldTitle: String = "",
+    inputFieldState: InputFieldState = .normal,
+    inputFieldMessage: String? = nil,
+    attempts: Int = 0,
+    isSubmitEnabled: Bool = true,
+    onPressNext: @escaping () -> Void)
+  {
     _pinCode = pinCode
     self.fieldTitle = fieldTitle
     self.inputFieldState = inputFieldState
     self.attempts = attempts
     self.inputFieldMessage = inputFieldMessage
+    self.isSubmitEnabled = isSubmitEnabled
     self.onPressNext = onPressNext
   }
 
@@ -55,6 +62,7 @@ struct PinCodeFormView: View {
   private var inputFieldState: InputFieldState
   private var inputFieldMessage: String?
   private var onPressNext: () -> Void
+  private var isSubmitEnabled: Bool
 
   @Orientation private var orientation
 
@@ -131,7 +139,7 @@ struct PinCodeFormView: View {
       Text(fieldTitle)
         .font(.footnote)
         .foregroundStyle(ThemingAssets.Label.secondary.swiftUIColor)
-      SecureField(text: $pinCode, prompt: L10n.tkLoginPasswordNote, onSubmit: onPressNext)
+      SecureField(text: $pinCode, prompt: L10n.tkLoginPasswordNote, onSubmit: onPressNext, tintColor: ThemingAssets.Label.tertiary.color)
         .overlay(
           RoundedRectangle(cornerRadius: .x2)
             .inset(by: 1)
@@ -160,6 +168,7 @@ struct PinCodeFormView: View {
     .buttonStyle(.filledPrimary)
     .controlSize(.large)
     .accessibilityFocused($focus, equals: .loginButton)
+    .disabled(!isSubmitEnabled)
   }
 
   @ViewBuilder

@@ -200,13 +200,13 @@
       }
     },
     {
-       "parallelizable" : true,
-       "target" : {
-         "containerPath" : "container:Modules\/Features\/BITEIDRequest",
-         "identifier" : "BITEIDRequestTests",
-         "name" : "BITEIDRequestTests"
-       }
-     }
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Modules\/Features\/BITEIDRequest",
+        "identifier" : "BITEIDRequestTests",
+        "name" : "BITEIDRequestTests"
+      }
+    }
   ],
   "version" : 1
 }

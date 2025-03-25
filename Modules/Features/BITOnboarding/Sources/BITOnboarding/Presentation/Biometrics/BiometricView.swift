@@ -151,12 +151,11 @@ extension BiometricView {
       }
       .buttonStyle(.bezeledLight)
       .controlSize(.large)
-      .accessibilityLabel(L10n.biometricSetupDismissButton)
       .accessibilityIdentifier(AccessibilityIdentifier.skipButton.rawValue)
 
       if viewModel.hasBiometricAuth {
         Button(action: { Task { await viewModel.registerBiometrics() } }) {
-          Text(L10n.tkOnboardingBiometricios1Primarybutton)
+          Text(L10n.tkOnboardingBiometricsPermissionButtonPrimary)
             .multilineTextAlignment(.center)
             .lineLimit(1)
             .frame(maxWidth: .infinity)
@@ -165,14 +164,13 @@ extension BiometricView {
         .controlSize(.large)
       } else {
         Button(action: { Task { viewModel.openSettings() } }) {
-          Text(L10n.tkGlobalTothesettings)
+          Text(L10n.tkOnboardingBiometricsPermissionDisabledButtonPrimary)
             .multilineTextAlignment(.center)
             .lineLimit(1)
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.filledPrimary)
         .controlSize(.large)
-        .accessibilityLabel(L10n.biometricSetupNoClass3ToSettingsButton)
         .accessibilityIdentifier(AccessibilityIdentifier.settingsButton.rawValue)
       }
     }

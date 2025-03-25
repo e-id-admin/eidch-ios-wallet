@@ -30,7 +30,7 @@ extension Container {
   }
 
   @MainActor
-  var credentialDetailViewModel: ParameterFactory<(Credential, CredentialDetailRouterRoutes), CredentialDetailViewModel> {
+  var credentialDetailViewModel: ParameterFactory<(Credential, CredentialDetailInternalRoutes), CredentialDetailViewModel> {
     self { CredentialDetailViewModel($0, router: $1) }
   }
 
@@ -39,24 +39,10 @@ extension Container {
     self { CredentialDetailModule(credential: $0) }
   }
 
-}
-
-// MARK: - Credential wrong data
-
-extension Container {
-
-  @MainActor
-  var credentialWrongDataModule: Factory<CredentialWrongDataModule> {
-    self { CredentialWrongDataModule() }
+  var credentiaDetaillWrongDataViewModel: ParameterFactory<CredentialDetailInternalRoutes, CredentialDetailWrongDataViewModel> {
+    self { CredentialDetailWrongDataViewModel(router: $0) }
   }
 
-  var credentialWrongDataViewModel: ParameterFactory<CredentialWrongDataRouterRoutes, CredentialWrongDataViewModel> {
-    self { CredentialWrongDataViewModel(router: $0) }
-  }
-
-  var credentialWrongDataRouter: Factory<CredentialWrongDataRouter> {
-    self { CredentialWrongDataRouter() }
-  }
 }
 
 // MARK: - Use cases
@@ -78,6 +64,10 @@ extension Container {
   public var deleteCredentialUseCase: Factory<DeleteCredentialUseCaseProtocol> {
     self { DeleteCredentialUseCase() }
   }
+
+  public var fetchCredentialUseCase: Factory<FetchCredentialUseCaseProtocol> {
+    self { FetchCredentialUseCase() }
+  }
 }
 
 // MARK: - Repositories
@@ -86,9 +76,5 @@ extension Container {
 
   public var databaseCredentialRepository: Factory<CredentialRepositoryProtocol> {
     self { RealmCredentialRepository() }
-  }
-
-  public var hasDeletedCredentialRepository: Factory<HasDeletedCredentialRepositoryProtocol> {
-    self { UserDefaultHasDeletedCredentialRepository() }
   }
 }

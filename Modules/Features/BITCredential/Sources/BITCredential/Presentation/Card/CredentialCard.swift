@@ -29,7 +29,6 @@ public struct CredentialCard<Header: View>: View {
       .overlay {
         if credential.environment == .demo {
           (controlSize < .regular ? Assets.credentialDemoPatternSmall.swiftUIImage : Assets.credentialDemoPattern.swiftUIImage)
-            .colorScheme(colorScheme)
             .aspectRatio(contentMode: .fill)
             .opacity(0.5)
             .clipped()
@@ -43,7 +42,8 @@ public struct CredentialCard<Header: View>: View {
     })
     .background(backgroundColor)
     .clipShape(.rect(cornerRadius: cornerRadius))
-    .foregroundStyle(colorScheme.standardColor())
+    .colorScheme(cardColorScheme)
+    .foregroundStyle(cardColorScheme.standardColor())
   }
 
   // MARK: Private
@@ -58,7 +58,7 @@ public struct CredentialCard<Header: View>: View {
   private let secondaryTextOpacity = 0.7
   private let defaultText = "n/a"
 
-  private var colorScheme: ColorScheme {
+  private var cardColorScheme: ColorScheme {
     backgroundColor?.suggestedColorScheme() ?? .dark
   }
 
@@ -74,7 +74,7 @@ public struct CredentialCard<Header: View>: View {
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(maxWidth: imageMaxWidth, maxHeight: imageMaxHeight, alignment: controlSize > .small ? .topTrailing : .center)
-        .colorMultiply(colorScheme.standardColor())
+        .colorMultiply(cardColorScheme.standardColor())
     }
   }
 
@@ -124,6 +124,7 @@ public struct CredentialCard<Header: View>: View {
     VStack(alignment: .leading, spacing: .x6) {
       header
         .padding(.bottom, .x6)
+        .colorScheme(cardColorScheme == .dark ? .light : .dark)
 
       HStack(alignment: .top) {
         VStack(alignment: .leading) {
@@ -196,12 +197,11 @@ public struct CredentialCard<Header: View>: View {
         Text(L10n.tkGlobalCredentialStatusDemo)
       }
       .badgeStyle(.bezeledGray)
-      .colorScheme(.light)
+      .colorScheme(cardColorScheme == .dark ? .light : .dark)
       .accessibilityLabel(L10n.tkGlobalCredentialStatusDemoAlt)
     }
 
-    CredentialStatusBadge(status: credential.status)
-      .colorScheme(colorScheme)
+    CredentialStatusBadge(credential: credential)
   }
 
 }

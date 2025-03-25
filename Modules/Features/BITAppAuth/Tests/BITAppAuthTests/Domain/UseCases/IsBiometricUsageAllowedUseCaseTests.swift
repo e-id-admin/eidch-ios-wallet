@@ -1,3 +1,4 @@
+import Factory
 import Foundation
 import XCTest
 @testable import BITAppAuth
@@ -9,7 +10,8 @@ final class IsBiometricUsageAllowedUseCaseTests: XCTestCase {
   override func setUp() {
     super.setUp()
     mockBiometricRepository = BiometricRepositoryProtocolSpy()
-    useCase = IsBiometricUsageAllowedUseCase(repository: mockBiometricRepository)
+    Container.shared.biometricRepository.register { self.mockBiometricRepository }
+    useCase = IsBiometricUsageAllowedUseCase()
   }
 
   func testHappyPath() {

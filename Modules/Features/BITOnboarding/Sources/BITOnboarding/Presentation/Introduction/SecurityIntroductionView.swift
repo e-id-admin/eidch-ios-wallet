@@ -18,15 +18,20 @@ struct SecurityIntroductionView: View {
 
   var body: some View {
     InformationView(
-      primary: L10n.tkOnboardingYourdataTitle,
-      secondary: L10n.tkOnboardingYourdataBody,
-      tertiary: L10n.tkOnboardingYourdataLinkText,
-      tertiaryAction: viewModel.secondaryAction,
-      isTertiaryTapable: true,
       image: Assets.shieldPerson.swiftUIImage,
       backgroundImage: ThemingAssets.Gradient.gradient7.swiftUIImage,
-      primaryButtonLabel: L10n.tkGlobalContinue,
-      primaryButtonAction: viewModel.primaryAction)
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.tkOnboardingIntroductionStepYourDataPrimary,
+          secondary: L10n.tkOnboardingIntroductionStepYourDataSecondary,
+          tertiary: L10n.tkOnboardingIntroductionStepYourDataTertiaryLinkText,
+          tertiaryAction: viewModel.secondaryAction)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.tkGlobalContinue,
+          primaryButtonAction: viewModel.primaryAction)
+      })
   }
 
   // MARK: Private
@@ -50,7 +55,7 @@ class SecurityIntroductionViewModel {
   let router: OnboardingInternalRoutes
 
   func secondaryAction() {
-    guard let url = URL(string: L10n.tkOnboardingYourdataLinkValue) else { return }
+    guard let url = URL(string: L10n.tkOnboardingIntroductionStepYourDataTertiaryLinkValue) else { return }
     router.openExternalLink(url: url)
   }
 

@@ -6,12 +6,6 @@ import Foundation
 
 struct LockWalletUseCase: LockWalletUseCaseProtocol {
 
-  // MARK: Lifecycle
-
-  init(repository: LockWalletRepositoryProtocol = Container.shared.lockWalletRepository()) {
-    self.repository = repository
-  }
-
   // MARK: Public
 
   func execute() throws {
@@ -20,7 +14,7 @@ struct LockWalletUseCase: LockWalletUseCaseProtocol {
 
   // MARK: Private
 
-  private let repository: LockWalletRepositoryProtocol
+  @Injected(\.lockWalletRepository) private var repository: LockWalletRepositoryProtocol
 }
 
 // MARK: - MockLockWalletUseCase

@@ -21,7 +21,7 @@ class PrivacyPermissionViewModel: ObservableObject {
   }
 
   func openPrivacyPolicy() {
-    guard let url = URL(string: L10n.tkOnboardingImprovementLinkValue) else { return }
+    guard let url = URL(string: L10n.tkOnboardingAnalyticsTertiaryLinkValue) else { return }
     router.openExternalLink(url: url)
   }
 

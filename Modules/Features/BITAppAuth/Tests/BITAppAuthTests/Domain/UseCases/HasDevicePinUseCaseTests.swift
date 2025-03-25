@@ -1,3 +1,4 @@
+import Factory
 import Foundation
 import Spyable
 import XCTest
@@ -11,35 +12,56 @@ final class HasDevicePinUseCaseTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    spyContext = LAContextProtocolSpy()
-    spyPolicyValidator = LocalAuthenticationPolicyValidatorProtocolSpy()
-    useCase = HasDevicePinUseCase(localAuthenticationPolicyValidator: spyPolicyValidator, context: spyContext)
+    registerMocks()
+    useCase = HasDevicePinUseCase()
   }
 
-  func testBiometricPolicyValidated() {
-    spyPolicyValidator.validatePolicyContextClosure = { _, _ in }
+  func testExecute_argumentsArePassed() {
+    policyValidatorSpy.validatePolicyContextReturnValue = true
+
+    let _ = useCase.execute()
+
+    XCTAssertEqual(policyValidatorSpy.validatePolicyContextReceivedArguments?.policy, .deviceOwnerAuthentication)
+  }
+
+  func testExecute_policyIsValid_returnsTrue() {
+    policyValidatorSpy.validatePolicyContextReturnValue = true
 
     let result = useCase.execute()
+
     XCTAssertTrue(result)
-    XCTAssertTrue(spyPolicyValidator.validatePolicyContextCalled)
-    XCTAssertEqual(spyPolicyValidator.validatePolicyContextReceivedArguments?.policy, .deviceOwnerAuthentication)
   }
 
-  func testBiometricPolicyError() {
-    spyPolicyValidator.validatePolicyContextThrowableError = TestingError.error
+  func testExecute_policyIsNotValid_returnsFalse() {
+    policyValidatorSpy.validatePolicyContextReturnValue = false
 
     let result = useCase.execute()
+
     XCTAssertFalse(result)
-    XCTAssertTrue(spyPolicyValidator.validatePolicyContextCalled)
-    XCTAssertEqual(spyPolicyValidator.validatePolicyContextReceivedArguments?.policy, .deviceOwnerAuthentication)
+  }
+
+  func testExecute_policyThrowsError_returnsFalse() {
+    policyValidatorSpy.validatePolicyContextThrowableError = TestingError.error
+
+    let result = useCase.execute()
+
+    XCTAssertFalse(result)
   }
 
   // MARK: Private
 
   // swiftlint:disable all
-  private var spyPolicyValidator: LocalAuthenticationPolicyValidatorProtocolSpy!
-  private var spyContext: LAContextProtocolSpy!
+  private var policyValidatorSpy: LocalAuthenticationPolicyValidatorProtocolSpy!
+  private var contextSpy: LAContextProtocolSpy!
   private var useCase: HasDevicePinUseCase!
+
   // swiftlint:enable all
+
+  private func registerMocks() {
+    policyValidatorSpy = LocalAuthenticationPolicyValidatorProtocolSpy()
+    contextSpy = LAContextProtocolSpy()
+    Container.shared.localAuthenticationPolicyValidator.register { self.policyValidatorSpy }
+    Container.shared.internalContext.register { self.contextSpy }
+  }
 
 }

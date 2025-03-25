@@ -43,6 +43,7 @@ struct BiometricChangeView: View {
       inputFieldState: viewModel.inputFieldState,
       inputFieldMessage: viewModel.inputFieldMessage,
       attempts: viewModel.attempts,
+      isSubmitEnabled: viewModel.isSubmitEnabled,
       onPressNext: {
         Task {
           await viewModel.submit()
@@ -53,13 +54,17 @@ struct BiometricChangeView: View {
   @ViewBuilder
   private func disabledBiometricsView() -> some View {
     InformationView(
-      primary: L10n.biometricSetupTitle(viewModel.biometricType.text),
-      secondary: L10n.biometricSetupContent(viewModel.biometricType.text),
       image: viewModel.biometricType.image,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      primaryButtonLabel: L10n.biometricSetupNoClass3ToSettingsButton,
-      primaryButtonAction: {
-        viewModel.openSettings()
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.biometricSetupTitle(viewModel.biometricType.text),
+          secondary: L10n.biometricSetupContent(viewModel.biometricType.text))
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.biometricSetupNoClass3ToSettingsButton,
+          primaryButtonAction: viewModel.openSettings)
       })
   }
 

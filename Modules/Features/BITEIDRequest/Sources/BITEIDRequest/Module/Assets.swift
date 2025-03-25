@@ -26,8 +26,10 @@ enum Assets {
   static let card = ImageAsset(name: "Card")
   static let checkCard = ImageAsset(name: "CheckCard")
   static let close = ImageAsset(name: "Close")
+  static let eidRequestCaseIcon = ImageAsset(name: "EIDRequestCaseIcon")
   static let shield = ImageAsset(name: "Shield")
   static let timer = ImageAsset(name: "Timer")
+  static let walletPairing = ImageAsset(name: "WalletPairing")
 }
 
 // MARK: - ImageAsset

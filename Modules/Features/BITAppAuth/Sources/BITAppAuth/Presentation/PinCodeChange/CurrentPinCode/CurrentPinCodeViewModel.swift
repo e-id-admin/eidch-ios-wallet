@@ -2,7 +2,6 @@ import BITCore
 import BITL10n
 import Combine
 import Factory
-import Foundation
 import SwiftUI
 
 @MainActor
@@ -31,6 +30,10 @@ class CurrentPinCodeViewModel: ObservableObject, Vibrating {
     }
   }
 
+  var isSubmitEnabled: Bool {
+    pinCode.count >= pinCodeMinimumSize
+  }
+
   func submit() {
     do {
       userDidRequestValidation = true
@@ -57,6 +60,7 @@ class CurrentPinCodeViewModel: ObservableObject, Vibrating {
   @Injected(\.getLoginAttemptCounterUseCase) private var getLoginAttemptCounterUseCase: GetLoginAttemptCounterUseCaseProtocol
   @Injected(\.resetLoginAttemptCounterUseCase) private var resetLoginAttemptCounterUseCase: ResetLoginAttemptCounterUseCaseProtocol
   @Injected(\.attemptsLimit) private var attemptsLimit: Int
+  @Injected(\.pinCodeMinimumSize) private var pinCodeMinimumSize: Int
 
   private var attemptLeft: Int { attemptsLimit - attempts }
 

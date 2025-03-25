@@ -14,13 +14,31 @@ struct DatabaseEIDRequestRepository: LocalEIDRequestRepositoryProtocol {
   // MARK: Internal
 
   func create(eIDRequestCase: EIDRequestCase) async throws -> EIDRequestCase {
-    let entity = EIDRequestCaseEntity(eIDRequestCase)
+    let entity = try EIDRequestCaseEntity(eIDRequestCase)
     try database.save(entity)
     return try EIDRequestCase(entity)
   }
 
   func get(id: String) async throws -> EIDRequestCase {
     let entity = try await getEntity(id)
+    return try EIDRequestCase(entity)
+  }
+
+  func getAll() throws -> [EIDRequestCase] {
+    let results = try database.get(EIDRequestCaseEntity.self)
+      .sorted { $0.createdAt > $1.createdAt }
+      .map(EIDRequestCase.init)
+
+    return results
+  }
+
+  func update(_ eIDRequestCase: EIDRequestCase) async throws -> EIDRequestCase {
+    let entity = try await getEntity(eIDRequestCase.id)
+
+    try database.write({
+      try entity.setValues(from: eIDRequestCase)
+    })
+
     return try EIDRequestCase(entity)
   }
 

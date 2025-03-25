@@ -1,3 +1,4 @@
+import BITLocalAuthentication
 import Foundation
 import Spyable
 

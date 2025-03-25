@@ -8,12 +8,12 @@ public enum InvitationType {
 }
 
 extension InvitationType {
-  var scheme: String {
+  var schemes: [String] {
     switch self {
     case .credentialOffer:
-      "openid-credential-offer"
+      ["openid-credential-offer", "swiyu"]
     case .presentation:
-      "https"
+      ["https"]
     }
   }
 }

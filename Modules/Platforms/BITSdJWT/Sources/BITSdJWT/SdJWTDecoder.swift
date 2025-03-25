@@ -13,7 +13,7 @@ public struct SdJWTDecoder: SdJWTDecoderProtocol {
   // MARK: Public
 
   public func decodeDigests(from rawString: String) throws -> [SdJwtDigest] {
-    let jws: JWS = try getJws(from: rawString)
+    let jws: JOSESwift.JWS = try getJws(from: rawString)
     return try findSelectiveDisclosures(in: jws.payload.data())
   }
 
@@ -58,11 +58,11 @@ public struct SdJWTDecoder: SdJWTDecoderProtocol {
 
 extension SdJWTDecoder {
 
-  private func getJws(from rawCredential: String) throws -> JWS {
+  private func getJws(from rawCredential: String) throws -> JOSESwift.JWS {
     guard
       let rawJwt = rawCredential.separatedByDisclosures.map(String.init).first
     else { throw SdJWTDecoderError.invalidRawSdJwt }
-    return try JWS(compactSerialization: rawJwt)
+    return try JOSESwift.JWS(compactSerialization: rawJwt)
   }
 
   private func findSelectiveDisclosures(in jwtPayloadData: Data) throws -> [SdJwtDigest] {

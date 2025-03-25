@@ -8,8 +8,8 @@ import Moya
 
 enum PresentationError: Error {
   case presentationFailed
-  case presentationCancelled
-  case credentialInvalid
+  case processClosed
+  case invalidCredential
 }
 
 // MARK: - PresentationRepository
@@ -44,7 +44,7 @@ struct PresentationRepository: PresentationRepositoryProtocol {
     case .badRequest:
       try handleBadRequest(err)
     case .invalidGrant:
-      throw PresentationError.credentialInvalid
+      throw PresentationError.invalidCredential
     default: throw error
     }
   }
@@ -52,9 +52,17 @@ struct PresentationRepository: PresentationRepositoryProtocol {
   private func handleBadRequest(_ error: NetworkError) throws {
     guard
       let errorData = error.response?.data,
-      let errorBody = try? decoder.decode(PresentationErrorRequestBody.self, from: errorData),
-      errorBody.error == .presentationCancelled
-    else { throw PresentationError.credentialInvalid }
-    throw PresentationError.presentationCancelled
+      let errorBody = try? decoder.decode(PresentationErrorRequestBody.self, from: errorData)
+    else { throw PresentationError.presentationFailed }
+
+    switch errorBody.error {
+    case .presentationProcessClosed:
+      throw PresentationError.processClosed
+    case .invalidRequest:
+      throw PresentationError.presentationFailed
+    case .invalidCredential:
+      throw PresentationError.invalidCredential
+    default: throw PresentationError.presentationFailed
+    }
   }
 }

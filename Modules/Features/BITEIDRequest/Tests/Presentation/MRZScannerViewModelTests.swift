@@ -20,6 +20,7 @@ class MRZScannerViewModelTests: XCTestCase {
   func testInitialState() {
     XCTAssertFalse(viewModel.isErrorPresented)
     XCTAssertNil(viewModel.errorDescription)
+    XCTAssertFalse(viewModel.hasLegalRepresentant)
   }
 
   func testSubmit_InQueueState_success() async throws {

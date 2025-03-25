@@ -5,12 +5,6 @@ import Foundation
 
 public struct ResetLoginAttemptCounterUseCase: ResetLoginAttemptCounterUseCaseProtocol {
 
-  let repository: LoginRepositoryProtocol
-
-  init(repository: LoginRepositoryProtocol = Container.shared.loginRepository()) {
-    self.repository = repository
-  }
-
   public func execute() throws {
     for kind in AuthMethod.allCases {
       try repository.resetAttempts(kind: kind)
@@ -20,4 +14,6 @@ public struct ResetLoginAttemptCounterUseCase: ResetLoginAttemptCounterUseCasePr
   public func execute(kind: AuthMethod) throws {
     try repository.resetAttempts(kind: kind)
   }
+
+  @Injected(\.loginRepository) private var repository: LoginRepositoryProtocol
 }

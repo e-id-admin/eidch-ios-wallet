@@ -13,12 +13,13 @@ public struct CheckInvitationTypeUseCase: CheckInvitationTypeUseCaseProtocol {
   public init() {}
 
   public func execute(url: URL) async throws -> InvitationType {
-    let scheme = url.scheme
-
-    switch scheme {
-    case InvitationType.credentialOffer.scheme: return .credentialOffer
-    case InvitationType.presentation.scheme: return .presentation
-    default: throw CheckCameraError.wrongScheme
+    guard let scheme = url.scheme else { throw CheckCameraError.wrongScheme }
+    return if InvitationType.credentialOffer.schemes.contains(scheme) {
+      .credentialOffer
+    } else if InvitationType.presentation.schemes.contains(scheme) {
+      .presentation
+    } else {
+      throw CheckCameraError.wrongScheme
     }
   }
 }

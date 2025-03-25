@@ -6,27 +6,20 @@ import Foundation
 
 public struct HasDevicePinUseCase: HasDevicePinUseCaseProtocol {
 
-  // MARK: Lifecycle
-
-  public init(
-    localAuthenticationPolicyValidator: LocalAuthenticationPolicyValidatorProtocol = Container.shared.localAuthenticationPolicyValidator(),
-    context: LAContextProtocol = Container.shared.authContext())
-  {
-    self.localAuthenticationPolicyValidator = localAuthenticationPolicyValidator
-    self.context = context
-  }
-
   // MARK: Public
 
   public func execute() -> Bool {
-    (try? localAuthenticationPolicyValidator.validatePolicy(.deviceOwnerAuthentication, context: context)) != nil
+    do {
+      return try validator.validatePolicy(.deviceOwnerAuthentication, context: context)
+    } catch {
+      return false
+    }
   }
 
   // MARK: Private
 
-  private var context: LAContextProtocol
-  private var localAuthenticationPolicyValidator: LocalAuthenticationPolicyValidatorProtocol
-
+  @Injected(\.internalContext) private var context: LAContextProtocol
+  @Injected(\.localAuthenticationPolicyValidator) private var validator: LocalAuthenticationPolicyValidatorProtocol
 }
 
 // MARK: - MockHasDevicePinUseCase

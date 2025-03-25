@@ -12,7 +12,7 @@ public struct PublicKeyInfo: Decodable, Equatable {
 
   // MARK: Public
 
-  public struct JWK: Decodable, Equatable {
+  public struct JWK: Codable, Equatable {
     private let kty: String
     public let kid: String?
     public let crv: String

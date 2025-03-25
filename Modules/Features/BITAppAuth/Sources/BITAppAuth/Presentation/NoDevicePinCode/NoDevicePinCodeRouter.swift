@@ -4,7 +4,7 @@ import UIKit
 
 // MARK: - NoDevicePinCodeRouterRoutes
 
-public protocol NoDevicePinCodeRouterRoutes: ClosableRoutes {}
+public protocol NoDevicePinCodeRouterRoutes: ClosableRoutes, ExternalRoutes {}
 
 // MARK: - NoDevicePinCodeRouter
 

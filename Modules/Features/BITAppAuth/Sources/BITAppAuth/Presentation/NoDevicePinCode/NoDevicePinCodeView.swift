@@ -1,60 +1,103 @@
-import BITCore
 import BITL10n
 import BITTheming
 import Factory
 import SwiftUI
 
-public struct NoDevicePinCodeView: View {
+// MARK: - NoDevicePinCodeView
+
+struct NoDevicePinCodeView: View {
 
   // MARK: Lifecycle
 
-  public init(viewModel: NoDevicePinCodeViewModel) {
+  init(viewModel: NoDevicePinCodeViewModel) {
     self.viewModel = viewModel
-  }
-
-  // MARK: Public
-
-  public var body: some View {
-    ZStack(alignment: .bottom) {
-      ScrollView {
-        VStack(alignment: .leading, spacing: .x6) {
-          Assets.noDevicePin.swiftUIImage
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(maxHeight: 300)
-          Text(L10n.globalErrorNoDevicePinTitle)
-            .font(.custom.title)
-          Text(L10n.globalErrorNoDevicePinMessage)
-          Spacer()
-        }
-      }
-
-      VStack {
-        Button {
-          openSettings()
-        } label: {
-          Label(L10n.globalErrorNoDevicePinButton, systemImage: "arrow.up.forward")
-            .frame(maxWidth: .infinity)
-            .labelStyle(.titleAndIconReversed)
-        }
-        .buttonStyle(.filledPrimary)
-      }
-      .background(ThemingAssets.background.swiftUIColor)
-    }
-    .padding()
-    .navigationBarHidden(true)
   }
 
   // MARK: Internal
 
-  @Environment(\.scenePhase) var scenePhase
+  var body: some View {
+    ZStack {
+      background()
+      content()
+    }
+    .environment(\.colorScheme, .light)
+  }
 
   // MARK: Private
 
+  private let overlayDimming = 0.21
   private var viewModel: NoDevicePinCodeViewModel
 
-  private func openSettings() {
-    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+  @ViewBuilder
+  private func content() -> some View {
+    VStack {
+      Spacer()
+      mainContent()
+      Spacer()
+    }
+    .applyScrollViewIfNeeded()
+    .safeAreaInset(edge: .bottom) {
+      footer()
+        .padding(.bottom, .x4)
+    }
   }
 }
+
+extension NoDevicePinCodeView {
+
+  @ViewBuilder
+  private func background() -> some View {
+    Rectangle()
+      .overlay(
+        ThemingAssets.Gradient.gradient4.swiftUIImage
+          .resizable()
+          .scaledToFill()
+          .clipped()
+          .overlay(.black.opacity(overlayDimming))
+      )
+      .clipped()
+      .ignoresSafeArea()
+      .accessibilityHidden(true)
+  }
+
+  @ViewBuilder
+  private func mainContent() -> some View {
+    VStack(alignment: .center, spacing: .x6) {
+      Assets.shield.swiftUIImage
+        .accessibilityHidden(true)
+
+      VStack(alignment: .center, spacing: .x2) {
+        Text(L10n.tkUnsafedeviceUnsafeTitle)
+          .font(.custom.title)
+          .foregroundColor(ThemingAssets.Grays.white.swiftUIColor)
+          .multilineTextAlignment(.center)
+
+        Text(L10n.tkUnsafedeviceUnsafeBody)
+          .font(.custom.body)
+          .foregroundColor(.white)
+          .multilineTextAlignment(.center)
+      }
+
+      Text(L10n.tkUnsafedeviceUnsafeSmallbody)
+        .font(.custom.body)
+        .foregroundColor(.white)
+        .multilineTextAlignment(.center)
+    }
+    .padding(.horizontal, .x6)
+  }
+
+  @ViewBuilder
+  private func footer() -> some View {
+    Button(action: viewModel.openSettings) {
+      Text(L10n.tkUnsafedeviceUnsafePrimaryButton)
+    }
+    .controlSize(.large)
+    .buttonStyle(.filledPrimary)
+  }
+}
+
+#if DEBUG
+#Preview {
+  NoDevicePinCodeView(viewModel: NoDevicePinCodeViewModel(router: NoDevicePinCodeRouter()))
+}
+#endif

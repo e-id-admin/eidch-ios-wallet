@@ -15,10 +15,6 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
   }
 
   func testFetchJwtRequestObject_Success() async throws {
-    guard let mockUrl = URL(string: strURL) else {
-      fatalError("url generation")
-    }
-
     repository.fetchRequestObjectFromReturnValue = JWTRequestObject.Mock.jwtSampleData
 
     let requestObject = try await useCase.execute(mockUrl)
@@ -30,10 +26,6 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
   }
 
   func testFetchJsonRequestObject_Success() async throws {
-    guard let mockUrl = URL(string: strURL) else {
-      fatalError("url generation")
-    }
-
     repository.fetchRequestObjectFromReturnValue = RequestObject.Mock.VcSdJwt.jsonSampleData
 
     let requestObject = try await useCase.execute(mockUrl)
@@ -43,29 +35,33 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
     XCTAssertEqual(repository.fetchRequestObjectFromReceivedUrl, mockUrl)
   }
 
-  func testFetchRequestObject_InvalidUrl_Failure() async throws {
-    guard let mockUrl = URL(string: strURL) else {
-      fatalError("url generation")
-    }
-
-    repository.fetchRequestObjectFromThrowableError = NetworkError(status: .hostnameNotFound)
+  func testFetchRequestObject_DecodingError_Failure() async throws {
+    repository.fetchRequestObjectFromReturnValue = "invalid".data(using: .utf8)
 
     do {
       _ = try await useCase.execute(mockUrl)
       XCTFail("Should have thrown an exception")
-    } catch is NetworkError {
+    } catch FetchRequestObjectError.invalidPresentationInvitation {
       XCTAssertTrue(repository.fetchRequestObjectFromCalled)
-      XCTAssertEqual(1, repository.fetchRequestObjectFromCallsCount)
+    } catch {
+      XCTFail("Not the error expected")
+    }
+  }
+
+  func testFetchRequestObject_PresentationProcessClosed_Failure() async throws {
+    repository.fetchRequestObjectFromThrowableError = OpenIdRepositoryError.presentationProcessClosed
+
+    do {
+      _ = try await useCase.execute(mockUrl)
+      XCTFail("Should have thrown an exception")
+    } catch FetchRequestObjectError.invalidPresentationInvitation {
+      XCTAssertTrue(repository.fetchRequestObjectFromCalled)
     } catch {
       XCTFail("No the expected execution")
     }
   }
 
   func testFetchRequestObject_Failure() async throws {
-    guard let mockUrl = URL(string: strURL) else {
-      fatalError("url generation")
-    }
-
     repository.fetchRequestObjectFromThrowableError = TestingError.error
 
     do {
@@ -73,7 +69,6 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
       XCTFail("Should have thrown an exception")
     } catch TestingError.error {
       XCTAssertTrue(repository.fetchRequestObjectFromCalled)
-      XCTAssertEqual(1, repository.fetchRequestObjectFromCallsCount)
     } catch {
       XCTFail("Not the error expected")
     }
@@ -81,7 +76,9 @@ final class FetchRequestObjectUseCaseTests: XCTestCase {
 
   // MARK: Private
 
-  private let strURL = "some://url"
+  // swiftlint: disable all
+  private let mockUrl = URL(string: "some://url")!
+  // swiftlint: enable all
   private let mockNonce = "nonce"
   private var useCase = FetchRequestObjectUseCase()
   private var repository = OpenIDRepositoryProtocolSpy()

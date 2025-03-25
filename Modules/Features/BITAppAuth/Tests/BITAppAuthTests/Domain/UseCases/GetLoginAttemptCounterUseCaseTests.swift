@@ -1,4 +1,5 @@
 import BITCore
+import Factory
 import Foundation
 import Spyable
 import XCTest
@@ -11,14 +12,17 @@ final class GetLoginAttemptCounterUseCaseTests: XCTestCase {
   override func setUp() {
     super.setUp()
     repository = LoginRepositoryProtocolSpy()
-    useCase = GetLoginAttemptCounterUseCase(repository: repository)
+
+    Container.shared.loginRepository.register { self.repository }
+
+    useCase = GetLoginAttemptCounterUseCase()
   }
 
   func testHappyPath_biometric() throws {
     let biometricAttempt = 1
     repository.getAttemptsKindReturnValue = biometricAttempt
 
-    let result = try useCase.repository.getAttempts(kind: .biometric)
+    let result = try useCase.execute(kind: .biometric)
 
     XCTAssertTrue(repository.getAttemptsKindCalled)
     XCTAssertEqual(repository.getAttemptsKindCallsCount, 1)
@@ -30,7 +34,7 @@ final class GetLoginAttemptCounterUseCaseTests: XCTestCase {
     let pinAttempt = 1
     repository.getAttemptsKindReturnValue = pinAttempt
 
-    let result = try useCase.repository.getAttempts(kind: .appPin)
+    let result = try useCase.execute(kind: .appPin)
 
     XCTAssertTrue(repository.getAttemptsKindCalled)
     XCTAssertEqual(repository.getAttemptsKindCallsCount, 1)

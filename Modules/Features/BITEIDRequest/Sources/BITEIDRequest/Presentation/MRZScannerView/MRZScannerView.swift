@@ -14,17 +14,24 @@ struct MRZScannerView: View {
 
   var body: some View {
     ZStack(alignment: .center) {
-      List(MRZData.Mock.array) { mrzData in
-        Button(mrzData.displayName) {
-          Task {
-            await viewModel.submit(mrzData.payload)
-          }
+      List {
+        Section {
+          Toggle("Haben Sie einen Beistand?", isOn: $viewModel.hasLegalRepresentant)
+            .listSectionSeparator(.hidden, edges: .top)
         }
-        .buttonStyle(.filledPrimary)
-        .controlSize(.large)
-        .frame(maxWidth: .infinity, alignment: .center)
-        .listRowSeparator(.hidden)
-        .listStyle(.plain)
+
+        ForEach(MRZData.Mock.array) { mrzData in
+          Button(mrzData.displayName) {
+            Task {
+              await viewModel.submit(mrzData.payload)
+            }
+          }
+          .buttonStyle(.filledPrimary)
+          .controlSize(.large)
+          .frame(maxWidth: .infinity, alignment: .center)
+          .listRowSeparator(.hidden)
+          .listStyle(.plain)
+        }
       }
       .listStyle(.plain)
       .padding(.bottom, .x12)

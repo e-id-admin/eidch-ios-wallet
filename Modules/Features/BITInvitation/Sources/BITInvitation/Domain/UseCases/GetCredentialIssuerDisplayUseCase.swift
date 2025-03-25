@@ -4,30 +4,29 @@ import BITOpenID
 import Factory
 import Foundation
 
-/// Get `CredentialIssuerDisplay` from credential or from `TrustStatement` if present
-/// If we cannot decode the `TrustStatement`, we return the preferred issuer display from the credential
+/// Get `CredentialIssuerDisplay` from `Credential` and `TrustStatement` if present
+/// If cannot decode the `TrustStatement`, return credential's `preferredIssuerDisplay`
+///
+/// Note: Issuer's `image` is always taken from the credential,the trust statement is considered only for the `name`
 struct GetCredentialIssuerDisplayUseCase: GetCredentialIssuerDisplayUseCaseProtocol {
 
   // MARK: Internal
 
   func execute(for credential: Credential, trustStatement: TrustStatement) -> CredentialIssuerDisplay? {
+    let preferredImage = credential.preferredIssuerDisplay?.image
     guard
       let orgName = try? trustStatement.disclosableClaims.first(where: { $0.key == Self.orgNameKey })?.anyValue() as? [String: Any],
-      let name = getDisplayForClaim(orgName, with: Self.orgNameKey, in: trustStatement),
-      let logoUri = try? trustStatement.disclosableClaims.first(where: { $0.key == Self.logoUriKey })?.anyValue() as? [String: Any],
-      let logo = getDisplayForClaim(logoUri, with: Self.logoUriKey, in: trustStatement),
-      let decodedURI = CredentialDisplayLogoURIDecoder.decode(logo)
+      let name = getDisplayForClaim(orgName, with: Self.orgNameKey, in: trustStatement)
     else {
       return credential.preferredIssuerDisplay
     }
 
-    return CredentialIssuerDisplay(name: name, credentialId: credential.id, image: Data(base64Encoded: decodedURI))
+    return CredentialIssuerDisplay(name: name, credentialId: credential.id, image: preferredImage)
   }
 
   // MARK: Private
 
   private static let orgNameKey = "orgName"
-  private static let logoUriKey = "logoUri"
   private static let prefLangKey = "prefLang"
 
   @Injected(\.preferredUserLanguageCodes) private var preferredUserLanguageCodes: [UserLanguageCode]

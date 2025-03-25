@@ -8,13 +8,19 @@ struct CompletionView: View {
 
   var body: some View {
     InformationView(
-      primary: L10n.tkOnboardingAllsetTitle,
-      secondary: L10n.tkOnboardingAllsetBody,
       image: Assets.checkmarkCircle.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      primaryButtonLabel: L10n.tkGlobalContinue,
-      primaryButtonAction: {
-        router.context.onboardingDelegate?.didCompleteOnboarding()
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.tkOnboardingDonePrimary,
+          secondary: L10n.tkOnboardingDoneSecondary)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.tkGlobalContinue,
+          primaryButtonAction: {
+            router.context.onboardingDelegate?.didCompleteOnboarding()
+          })
       })
       .navigationBarBackButtonHidden(true)
   }

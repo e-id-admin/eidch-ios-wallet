@@ -20,11 +20,7 @@ public class PresentationRequestResultStateViewModel: ObservableObject {
     self.state = state
     self.router = router
 
-    guard let trustStatement = context.trustStatement else {
-      verifierDisplay = VerifierDisplay(verifier: context.requestObject.clientMetadata, trustStatus: .unverified)
-      return
-    }
-    verifierDisplay = getVerifierDisplayUseCase.execute(for: context.requestObject.clientMetadata, trustStatement: trustStatement)
+    verifierDisplay = getVerifierDisplayUseCase.execute(for: context.requestObject.clientMetadata, trustStatement: context.trustStatement)
   }
 
   // MARK: Internal

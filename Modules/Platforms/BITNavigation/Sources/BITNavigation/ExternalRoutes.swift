@@ -6,6 +6,7 @@ import UIKit
 public protocol ExternalRoutes {
   func settings()
   func openExternalLink(url: URL)
+  func openExternalLink(url: URL, onComplete: (() -> Void)?)
 }
 
 extension ExternalRoutes {
@@ -14,7 +15,13 @@ extension ExternalRoutes {
     UIApplication.shared.open(url, options: [:], completionHandler: nil)
   }
 
+  public func openExternalLink(url: URL, onComplete: (() -> Void)?) {
+    UIApplication.shared.open(url) { _ in
+      onComplete?()
+    }
+  }
+
   public func openExternalLink(url: URL) {
-    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    UIApplication.shared.open(url)
   }
 }

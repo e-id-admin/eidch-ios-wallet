@@ -1,13 +1,9 @@
+import BITCore
 import BITEntities
 import Foundation
 
 
-enum EIDRequestCaseError: Error {
-  case invalidState
-}
-
-
-struct EIDRequestCase: Decodable {
+public struct EIDRequestCase: Decodable, Identifiable {
 
   // MARK: Lifecycle
 
@@ -22,11 +18,9 @@ struct EIDRequestCase: Decodable {
   }
 
   init(_ entity: EIDRequestCaseEntity) throws {
-    let mrz = entity.rawMRZ.split(separator: Self.mrzSeparator).map(String.init)
-
-    guard let stateEntity = entity.state else {
-      throw EIDRequestCaseError.invalidState
-    }
+    let mrz = entity.rawMRZ
+      .split(separator: Self.mrzSeparator)
+      .map(String.init)
 
     try self.init(
       id: entity.id,
@@ -35,10 +29,10 @@ struct EIDRequestCase: Decodable {
       documentNumber: entity.documentNumber,
       lastName: entity.lastName,
       firstName: entity.firstName,
-      state: EIDRequestState(stateEntity))
+      state: entity.state.map(EIDRequestState.init))
   }
 
-  init(from decoder: any Decoder) throws {
+  public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     id = try container.decode(String.self, forKey: .id)
     rawMRZ = try container.decode(String.self, forKey: .rawMRZ)
@@ -48,6 +42,11 @@ struct EIDRequestCase: Decodable {
     createdAt = try container.decode(Date.self, forKey: .createdAt)
     state = try container.decodeIfPresent(EIDRequestState.self, forKey: .state)
   }
+
+  // MARK: Public
+
+  public let id: String
+  public var state: EIDRequestState?
 
   // MARK: Internal
 
@@ -61,13 +60,11 @@ struct EIDRequestCase: Decodable {
     case state
   }
 
-  let id: String
   let rawMRZ: String
   let documentNumber: String
   let lastName: String
   let firstName: String
   let createdAt: Date
-  var state: EIDRequestState?
 
   // MARK: Private
 
@@ -78,7 +75,7 @@ struct EIDRequestCase: Decodable {
 // MARK: Equatable
 
 extension EIDRequestCase: Equatable {
-  static func == (lhs: EIDRequestCase, rhs: EIDRequestCase) -> Bool {
+  public static func == (lhs: EIDRequestCase, rhs: EIDRequestCase) -> Bool {
     lhs.id == rhs.id &&
       lhs.rawMRZ == rhs.rawMRZ &&
       lhs.lastName == rhs.lastName &&

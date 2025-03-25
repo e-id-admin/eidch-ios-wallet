@@ -20,9 +20,39 @@ final class DatabaseEIDRequestRepositoryTests: XCTestCase {
     XCTAssertEqual(eIDRequestCase, savedRequestCase)
   }
 
+  func testGetAllEIDRequestCaseSuccess() async throws {
+    _ = try await repository.create(eIDRequestCase: .Mock.sampleInQueue)
+    _ = try await repository.create(eIDRequestCase: .Mock.sampleAVReady)
+    _ = try await repository.create(eIDRequestCase: .Mock.sampleInQueueNoOnlineSessionStart)
+    _ = try await repository.create(eIDRequestCase: .Mock.sampleExpired)
+
+    let eIDRequestCases = try await repository.getAll()
+
+    let sortedArray: [EIDRequestCase] = [
+      .Mock.sampleInQueueNoOnlineSessionStart,
+      .Mock.sampleExpired,
+      .Mock.sampleAVReady,
+      .Mock.sampleInQueue,
+    ]
+
+    XCTAssertEqual(eIDRequestCases, sortedArray)
+  }
+
+  func testUpdateEIDRequestCaseSuccess() async throws {
+    var eIDRequestCase = try await repository.create(eIDRequestCase: .Mock.sampleAVReady)
+    eIDRequestCase.state = mockEIDRequestState
+
+    let updatedRequestCase = try await repository.update(eIDRequestCase)
+    let savedRequestCase = try await repository.get(id: eIDRequestCase.id)
+
+    XCTAssertEqual(updatedRequestCase, savedRequestCase)
+    XCTAssertEqual(eIDRequestCase, savedRequestCase)
+  }
+
   // MARK: Private
 
   // swiftlint:disable implicitly_unwrapped_optional
   private var repository: LocalEIDRequestRepositoryProtocol!
+  private let mockEIDRequestState = EIDRequestState.Mock.sample
   // swiftlint:enable implicitly_unwrapped_optional
 }

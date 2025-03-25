@@ -22,6 +22,7 @@ final class NewPinCodeViewModelTests: XCTestCase {
 
     validatePinCodeRuleUseCase = ValidatePinCodeRuleUseCaseProtocolSpy()
 
+    Container.shared.pinCodeMinimumSize.register { 6 }
     Container.shared.validatePinCodeRuleUseCase.register { self.validatePinCodeRuleUseCase }
   }
 
@@ -40,6 +41,7 @@ final class NewPinCodeViewModelTests: XCTestCase {
     XCTAssertNotNil(viewModel.router.context.uniquePassphrase)
     XCTAssertNotNil(viewModel.router.context.newPinCodeDelegate)
     XCTAssertNil(viewModel.router.context.newPinCode)
+    XCTAssertFalse(viewModel.isSubmitEnabled)
   }
 
   @MainActor

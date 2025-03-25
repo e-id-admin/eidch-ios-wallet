@@ -7,13 +7,16 @@ import XCTest
 
 final class GetVerifierDisplayUseCaseTests: XCTestCase {
 
+  // MARK: Internal
+
   // swiftlint:disable all
   var useCase: GetVerifierDisplayUseCase!
   var mockRequestObject = RequestObject.Mock.VcSdJwt.sample
   var preferredUserLanguageCodes: [UserLanguageCode] = []
 
-  var mockITIssuerName = "IT issuer"
-  var mockENIssuerName = "EN issuer"
+  var mockRequestObjectNameEN = "EN Verifier"
+  var mockTrustedNameEN = "EN trusted issuer"
+  var mockTrustedNameIT = "IT trusted issuer"
 
   // swiftlint:enable all
 
@@ -27,6 +30,8 @@ final class GetVerifierDisplayUseCaseTests: XCTestCase {
     let verifierDisplay = useCase.execute(for: mockRequestObject.clientMetadata, trustStatement: nil)
 
     XCTAssertEqual(verifierDisplay?.trustStatus, .unverified)
+    XCTAssertEqual(verifierDisplay?.name, mockRequestObjectNameEN)
+    assertVerifierDisplayLogo(verifierDisplay, logoUriDisplay: mockRequestObject.clientMetadata?.logoUri)
   }
 
   func testExecuteWithTrustStatement_ReturnsPreferredLanguages() {
@@ -38,7 +43,9 @@ final class GetVerifierDisplayUseCaseTests: XCTestCase {
 
     let verifierDisplay = useCase.execute(for: mockRequestObject.clientMetadata, trustStatement: mockTrustStatement)
 
-    XCTAssertEqual(verifierDisplay?.name, mockENIssuerName)
+    XCTAssertEqual(verifierDisplay?.trustStatus, .verified)
+    XCTAssertEqual(verifierDisplay?.name, mockTrustedNameEN)
+    assertVerifierDisplayLogo(verifierDisplay, logoUriDisplay: mockRequestObject.clientMetadata?.logoUri)
   }
 
   func testExecuteWithTrustStatement_ReturnsDefaultLanguage() {
@@ -50,7 +57,9 @@ final class GetVerifierDisplayUseCaseTests: XCTestCase {
 
     let verifierDisplay = useCase.execute(for: mockRequestObject.clientMetadata, trustStatement: mockTrustStatement)
 
-    XCTAssertEqual(verifierDisplay?.name, mockENIssuerName)
+    XCTAssertEqual(verifierDisplay?.trustStatus, .verified)
+    XCTAssertEqual(verifierDisplay?.name, mockTrustedNameEN)
+    assertVerifierDisplayLogo(verifierDisplay, logoUriDisplay: mockRequestObject.clientMetadata?.logoUri)
   }
 
   func testExecuteWithTrustStatement_ReturnsIssuerPreferredLanguage() {
@@ -62,7 +71,28 @@ final class GetVerifierDisplayUseCaseTests: XCTestCase {
 
     let verifierDisplay = useCase.execute(for: mockRequestObject.clientMetadata, trustStatement: mockItalianTrustStatement)
 
-    XCTAssertEqual(verifierDisplay?.name, mockITIssuerName)
+    XCTAssertEqual(verifierDisplay?.trustStatus, .verified)
+    XCTAssertEqual(verifierDisplay?.name, mockTrustedNameIT)
+    assertVerifierDisplayLogo(verifierDisplay, logoUriDisplay: mockRequestObject.clientMetadata?.logoUri)
+  }
+
+  // MARK: Private
+
+  /// logo is always taken from request-object. Never from Trust Statement
+  private func assertVerifierDisplayLogo(_ verifierDisplay: VerifierDisplay?, logoUriDisplay: Verifier.LocalizedDisplay?) {
+    XCTAssertNotNil(verifierDisplay?.logo)
+    guard
+      let logoUri = Verifier.LocalizedDisplay.getPreferredDisplay(
+        from: logoUriDisplay, considering: preferredUserLanguageCodes),
+      let decodedURI = CredentialDisplayLogoURIDecoder.decode(logoUri),
+      let decodedLogo = Data(base64Encoded: decodedURI)
+    else
+    {
+      XCTFail("Unexpected logoURI from verifierDisplay (ClientMetadata)")
+      return
+    }
+
+    XCTAssertEqual(verifierDisplay?.logo, decodedLogo)
   }
 
 }

@@ -11,7 +11,7 @@ struct CredentialDetailView: View {
 
   // MARK: Lifecycle
 
-  init(credential: Credential, router: CredentialDetailRouterRoutes) {
+  init(credential: Credential, router: CredentialDetailInternalRoutes) {
     _viewModel = StateObject(wrappedValue: Container.shared.credentialDetailViewModel((credential, router)))
   }
 
@@ -207,11 +207,10 @@ extension CredentialDetailView {
 
         Button(action: viewModel.close, label: {
           ThemingAssets.xmark.swiftUIImage
-            .foregroundColor(.white)
+            .colorMultiply(ThemingAssets.Brand.Core.black.swiftUIColor)
             .frame(width: 32, height: 32)
             .background(.ultraThickMaterial.opacity(0.70))
             .clipShape(.circle)
-            .preferredColorScheme(.dark)
         })
         .accessibilityLabel(L10n.tkGlobalCloseelfaAlt)
         .accessibilitySortPriority(50)
@@ -239,11 +238,10 @@ extension CredentialDetailView {
       .accessibilityLabel(L10n.tkDisplaydeleteCredentialmenuPrimarybutton)
     } label: {
       ThemingAssets.elipsis.swiftUIImage
-        .foregroundColor(.white)
+        .colorMultiply(ThemingAssets.Brand.Core.black.swiftUIColor)
         .frame(width: 32, height: 32)
         .background(.ultraThickMaterial.opacity(0.70))
         .clipShape(.circle)
-        .preferredColorScheme(.dark)
     }
     .accessibilitySortPriority(75)
     .accessibilityLabel(L10n.tkGlobalMoreoptionsAlt)

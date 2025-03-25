@@ -101,22 +101,26 @@ schemes:
 
   swiyu UITests:
     build:
-      <<: *targets
-    run:
-      config: Dev (debug)
-    test:
-      config: Dev (debug)
       targets:
-        - swiyuUITests
+        swiyuUITests-App: all
+    run:
+      config: Test (debug)
+    test:
+      config: Test (debug)
+      targets:
+        swiyuUITests-App: all
+      testPlans:
+        - path: ../TestPlans/UITestPlan.xctestplan
       commandLineArguments: 
-        <<: *launch_arguments
         -disable-secure-enclave: true
         -disable-device-pin: true
     profile:
-      config: Dev (release)
+      config: Test (release)
     analyze:
-      config: Dev (debug)
+      config: Test (debug)
     archive:
-      config: Dev (release)
+      config: Test (release)
+      targets:
+        swiyuUITests-App: all
       customArchiveName: swiyu-Runner
       revealArchiveInOrganizer: true

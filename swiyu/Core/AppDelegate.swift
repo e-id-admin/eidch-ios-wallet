@@ -44,6 +44,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate {
+  func setupAdditionalConfigurationsIfNeeded() {
+    #if DEBUG
+    if ProcessInfo().arguments.contains("-disable-onboarding") {
+      try? Container.shared.registerPinCodeUseCase().execute(pinCode: "000000")
+      UserDefaults.standard.set(false, forKey: "rootOnboardingIsEnabled")
+    }
+    #else
+    // nothing
+    #endif
+  }
+}
+
+extension AppDelegate {
 
   private func configureKeychain() {
     guard UserDefaults.standard.bool(forKey: "rootOnboardingIsEnabled") else { return }
@@ -55,7 +68,6 @@ extension AppDelegate {
     UserDefaults.standard.register(defaults: [
       "rootOnboardingIsEnabled": true,
       "isBiometricUsageAllowed": false,
-      "hasDeletedCredential": false,
       "eIDRequestAfterOnboardingEnabled": true,
     ])
   }

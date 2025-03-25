@@ -42,6 +42,7 @@ extension SwiftUI.Font {
     public static var bodyItalic: SwiftUI.Font = FontFamily.ABCDiatype.regularItalic.swiftUIFont(size: 17, relativeTo: .body)
     public static var bodyEmphasized: SwiftUI.Font = FontFamily.ABCDiatype.medium.swiftUIFont(size: 17, relativeTo: .body)
     public static var bodyItalicEmphasized: SwiftUI.Font = FontFamily.ABCDiatype.mediumItalic.swiftUIFont(size: 17, relativeTo: .body)
+    public static var bodyBold: SwiftUI.Font = FontFamily.ABCDiatype.bold.swiftUIFont(size: 17, relativeTo: .body)
 
     public static var callout: SwiftUI.Font = FontFamily.ABCDiatype.regular.swiftUIFont(size: 16, relativeTo: .callout)
     public static var calloutItalic: SwiftUI.Font = FontFamily.ABCDiatype.regularItalic.swiftUIFont(size: 16, relativeTo: .callout)

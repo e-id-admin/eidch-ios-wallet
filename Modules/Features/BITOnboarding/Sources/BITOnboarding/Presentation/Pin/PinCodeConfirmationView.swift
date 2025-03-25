@@ -22,14 +22,13 @@ struct PinCodeConfirmationView: View {
 
   var body: some View {
     content()
-      .navigationTitle(L10n.tkGlobalConfirmpassword)
+      .navigationTitle(L10n.tkOnboardingPasswordConfirmationTitle)
       .foregroundStyle(ThemingAssets.Grays.white.swiftUIColor)
       .background(
         ThemingAssets.Gradient.gradient4.swiftUIImage
           .resizable()
           .ignoresSafeArea()
           .accessibilityHidden(true))
-      .colorScheme(.light)
       .task {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
           focus = .input
@@ -120,7 +119,12 @@ struct PinCodeConfirmationView: View {
 
   @ViewBuilder
   private func secureField() -> some View {
-    SecureTextField(text: $viewModel.pinCode, prompt: L10n.tkOnboardingCharactersNote) {
+    SecureTextField(
+      text: $viewModel.pinCode,
+      prompt: L10n.tkOnboardingPasswordConfirmationInputPlaceholder,
+      textColor: ThemingAssets.Label.primary.light,
+      tintColor: ThemingAssets.Label.tertiary.light)
+    {
       viewModel.validate()
     }
     .submitLabel(.done)
@@ -136,7 +140,7 @@ struct PinCodeConfirmationView: View {
         inputFocused = true
       }
     }
-    .accessibilityLabel(L10n.tkLoginPasswordAlt)
+    .accessibilityLabel(L10n.tkOnboardingPasswordConfirmationInputAlt)
     .accessibilitySortPriority(800)
     .accessibilityFocused($focus, equals: .input)
   }
@@ -148,6 +152,7 @@ struct PinCodeConfirmationView: View {
     } label: {
       Text(L10n.tkGlobalContinue)
     }
+    .environment(\.colorScheme, .light)
     .buttonStyle(.filledPrimary)
     .controlSize(.large)
     .accessibilityFocused($focus, equals: .loginButton)

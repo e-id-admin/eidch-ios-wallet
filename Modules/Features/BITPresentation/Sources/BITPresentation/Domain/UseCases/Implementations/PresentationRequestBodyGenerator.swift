@@ -1,5 +1,6 @@
 import BITAnalytics
 import BITAnyCredentialFormat
+import BITAppAuth
 import BITCredentialShared
 import BITCrypto
 import BITLocalAuthentication
@@ -30,16 +31,23 @@ public struct PresentationRequestBodyGenerator: PresentationRequestBodyGenerator
   // MARK: Private
 
   @Injected(\.keyManager) private var keyManager: KeyManagerProtocol
-  @Injected(\.authContext) private var authContext: LAContextProtocol
+  @Injected(\.userSession) private var userSession: Session
   @Injected(\.anyVpTokenGenerator) private var anyVpTokenGenerator: AnyVpTokenGeneratorProtocol
   @Injected(\.createAnyCredentialUseCase) private var createAnyCredentialUseCase: CreateAnyCredentialUseCaseProtocol
   @Injected(\.anyDescriptorMapGenerator) private var anyDescriptorMapGenerator: AnyDescriptorMapGeneratorProtocol
   @Injected(\.analytics) private var analytics: AnalyticsProtocol
 
   private func createVpToken(credential: Credential, requestObject: RequestObject, fields: [String]) throws -> VpToken {
+    guard
+      userSession.isLoggedIn,
+      let context = userSession.context
+    else {
+      throw UserSessionError.notLoggedIn
+    }
+
     let anyCredential = try createAnyCredentialUseCase.execute(from: credential.payload, format: credential.format)
     let query = try QueryBuilder()
-      .setContext(authContext)
+      .setContext(context)
       .build()
     var keyPair: KeyPair? = nil
     if let identifier = credential.keyBindingIdentifier, let algorithm = credential.keyBindingAlgorithm, let vaultAlgorithm = VaultAlgorithm(rawValue: algorithm) {
@@ -51,6 +59,7 @@ public struct PresentationRequestBodyGenerator: PresentationRequestBodyGenerator
         throw error
       }
     }
+
     return try anyVpTokenGenerator.generate(requestObject: requestObject, credential: anyCredential, keyPair: keyPair, fields: fields)
   }
 

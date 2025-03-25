@@ -18,7 +18,9 @@ class BetaIdViewModel: ObservableObject {
       return
     }
 
-    router.openExternalLink(url: url)
+    router.openExternalLink(url: url) {
+      self.router.close()
+    }
   }
 
   // MARK: Private

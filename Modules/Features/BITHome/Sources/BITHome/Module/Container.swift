@@ -5,11 +5,15 @@ import SwiftUI
 @MainActor
 extension Container {
 
+  // MARK: Public
+
   public var homeModule: Factory<HomeModule> {
     self { HomeModule() }
   }
 
-  public var homeViewModel: ParameterFactory<HomeRouterRoutes, HomeViewModel> {
+  // MARK: Internal
+
+  var homeViewModel: ParameterFactory<HomeRouterRoutes, HomeViewModel> {
     self { HomeViewModel(router: $0) }
   }
 

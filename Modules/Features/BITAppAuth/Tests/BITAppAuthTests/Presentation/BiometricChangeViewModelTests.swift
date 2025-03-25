@@ -37,6 +37,7 @@ final class BiometricChangeViewModelTests: XCTestCase {
     Container.shared.resetLoginAttemptCounterUseCase.register { self.resetLoginAttemptCounterUseCase }
     Container.shared.isBiometricUsageAllowedUseCase.register { self.isBiometricUsageAllowedUseCase }
     Container.shared.getBiometricTypeUseCase.register { self.getBiometricTypeUseCase }
+    Container.shared.pinCodeMinimumSize.register { self.pinCodeSize }
   }
 
   override func tearDown() {
@@ -54,6 +55,7 @@ final class BiometricChangeViewModelTests: XCTestCase {
     XCTAssertEqual(viewModel.biometricType, .faceID)
     XCTAssertTrue(viewModel.isBiometricEnabled)
     XCTAssertTrue(viewModel.pinCode.isEmpty)
+    XCTAssertFalse(viewModel.isSubmitEnabled)
   }
 
   @MainActor
@@ -79,6 +81,7 @@ final class BiometricChangeViewModelTests: XCTestCase {
     viewModel.pinCode = pinCode
     await viewModel.submit()
 
+    XCTAssertTrue(viewModel.isSubmitEnabled)
     XCTAssertFalse(viewModel.pinCode.isEmpty)
     XCTAssertEqual(getUniquePassphraseUseCase.executeFromReceivedPinCode, pinCode)
     XCTAssertTrue(hasBiometricAuthUseCase.executeCalled)

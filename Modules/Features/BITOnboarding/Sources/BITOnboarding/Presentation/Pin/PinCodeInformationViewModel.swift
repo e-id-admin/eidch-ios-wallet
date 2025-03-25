@@ -15,11 +15,11 @@ class PinCodeInformationViewModel: ObservableObject {
 
   // MARK: Internal
 
-  @Published var primaryText: String = L10n.tkOnboardingSecurewithcodeTitle
-  @Published var secondaryText: String = L10n.tkOnboardingSecurewithcodeBody
+  @Published var primaryText: String = L10n.tkOnboardingPasswordIntroductionPrimary
+  @Published var secondaryText: String = L10n.tkOnboardingPasswordIntroductionSecondary
   let image: Image = Assets.lock.swiftUIImage
   let backgroundImage: Image = ThemingAssets.Gradient.gradient8.swiftUIImage
-  let buttonLabelText: String = L10n.tkOnboardingSecurewithcodePrimarybutton
+  let buttonLabelText: String = L10n.tkOnboardingPasswordIntroductionButtonPrimary
 
   func nextOnboardingStep() {
     router.context.pinCodeDelegate = self
@@ -41,7 +41,7 @@ class PinCodeInformationViewModel: ObservableObject {
   private let router: OnboardingInternalRoutes
 
   private func resetTexts() {
-    secondaryText = L10n.tkOnboardingSecurewithcodeBody
+    secondaryText = L10n.tkOnboardingPasswordIntroductionSecondary
   }
 
 }
@@ -50,7 +50,7 @@ class PinCodeInformationViewModel: ObservableObject {
 
 extension PinCodeInformationViewModel: PinCodeDelegate {
   func didTryTooManyAttempts() {
-    secondaryText = L10n.tkOnboardingPassworderrorBody
+    secondaryText = L10n.tkOnboardingPasswordIntroductionErrorTooManyAttempts
     hasTooManyAttemptsBeingTried = true
   }
 }

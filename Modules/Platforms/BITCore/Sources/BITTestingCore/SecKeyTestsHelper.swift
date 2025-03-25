@@ -3,10 +3,10 @@ import Foundation
 
 struct SecKeyTestsHelper {
 
-  static func createPrivateKey() -> SecKey {
+  static func createPrivateKey(type: String = kSecAttrKeyTypeECSECPrimeRandom as String, size: Int = 521) -> SecKey {
     let attributes: [String: Any] = [
-      kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
-      kSecAttrKeySizeInBits as String: 521,
+      kSecAttrKeyType as String: type,
+      kSecAttrKeySizeInBits as String: size,
       kSecPrivateKeyAttrs as String: [
         kSecAttrIsPermanent as String: false,
         kSecAttrApplicationTag as String: UUID().uuidString,

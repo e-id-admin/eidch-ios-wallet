@@ -6,17 +6,15 @@ import BITPresentation
 import Foundation
 @testable import BITNavigationTestCore
 
-class InvitationRouterMock: ClosableRoutesMock, InvitationRouterRoutes {
+class InvitationRouterMock: ClosableRoutesMock, InvitationRouterRoutes, ExternalRoutes {
 
   var didCallCredentialOffer = false
   var didCallDeeplink = false
   var didCallInvitation = false
   var didCallCamera = false
   var didCallSettings = false
-  var didCallExternalLink = false
-  var didCallPresentationRequest = false
+  var didCallExternalLinkComplete = false
   var didCallCompatibleCredentials = false
-  var didCallNextCompatibleCredentials = false
   var didCallPresentationReview = false
   var didCallPresentationResultState = false
   var didCallWrongData = false
@@ -36,10 +34,6 @@ class InvitationRouterMock: ClosableRoutesMock, InvitationRouterRoutes {
 
   func settings() {
     didCallSettings = true
-  }
-
-  func openExternalLink(url: URL) {
-    didCallExternalLink = true
   }
 
   func camera(openingStyle: any OpeningStyle) {
@@ -65,6 +59,11 @@ class InvitationRouterMock: ClosableRoutesMock, InvitationRouterRoutes {
 
   func betaId() {
     didCallBetaId = true
+  }
+
+  func openExternalLink(url: URL, onComplete: (() -> Void)?) {
+    didCallExternalLinkComplete = true
+    onComplete?()
   }
 
 }

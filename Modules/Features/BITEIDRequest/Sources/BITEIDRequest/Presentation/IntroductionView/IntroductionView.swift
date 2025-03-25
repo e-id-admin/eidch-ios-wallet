@@ -15,15 +15,21 @@ struct IntroductionView: View {
 
   var body: some View {
     InformationView(
-      primary: L10n.tkGetEidIntroTitle,
-      secondary: L10n.tkGetEidIntroBody,
-      tertiary: L10n.tkGetEidIntroSmallBody,
       image: Assets.card.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      primaryButtonLabel: L10n.tkGetEidIntroPrimaryButton,
-      primaryButtonAction: viewModel.openDataPrivacy,
-      secondaryButtonLabel: L10n.tkGetEidIntroSecondaryButton,
-      secondaryButtonAction: viewModel.close)
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.tkGetEidIntroTitle,
+          secondary: L10n.tkGetEidIntroBody,
+          tertiary: L10n.tkGetEidIntroSmallBody)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.tkGetEidIntroPrimaryButton,
+          primaryButtonAction: viewModel.openDataPrivacy,
+          secondaryButtonLabel: L10n.tkGetEidIntroSecondaryButton,
+          secondaryButtonAction: viewModel.close)
+      })
   }
 
   // MARK: Private

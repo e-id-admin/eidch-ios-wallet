@@ -14,8 +14,8 @@ struct SetupView: View {
     _viewModel = StateObject(wrappedValue: Container.shared.setupViewModel(router))
 
     backgroundColor = ThemingAssets.Background.secondary.swiftUIColor
-    primary = L10n.tkOnboardingApplysettingsTitle
-    secondary = L10n.tkOnboardingApplysettingsBody
+    primary = L10n.tkOnboardingSetupPrimary
+    secondary = L10n.tkOnboardingSetupSecondary
   }
 
   // MARK: Internal

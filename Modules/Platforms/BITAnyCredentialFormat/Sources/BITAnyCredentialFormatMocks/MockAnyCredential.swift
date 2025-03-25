@@ -31,6 +31,10 @@ public struct MockAnyCredential: AnyCredential {
     nil
   }
 
+  public var validFrom: Date? {
+    nil
+  }
+
   public var validUntil: Date? {
     nil
   }

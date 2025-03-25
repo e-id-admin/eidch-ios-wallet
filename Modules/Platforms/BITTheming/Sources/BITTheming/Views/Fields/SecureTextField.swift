@@ -9,10 +9,12 @@ public struct SecureTextField: UIViewRepresentable {
 
   // MARK: Lifecycle
 
-  public init(text: Binding<String>, prompt: String? = nil, onSubmit: @escaping () -> Void = {}) {
+  public init(text: Binding<String>, prompt: String? = nil, textColor: UIColor? = nil, tintColor: UIColor, onSubmit: @escaping () -> Void = {}) {
     _text = text
     self.prompt = prompt
     self.onSubmit = onSubmit
+    self.textColor = textColor
+    self.tintColor = tintColor
   }
 
   // MARK: Public
@@ -118,18 +120,22 @@ public struct SecureTextField: UIViewRepresentable {
 
   @Binding var text: String
 
-  var prompt: String? = nil
-  var onSubmit: () -> Void
-
   // MARK: Private
 
   @Environment(\.secureTextFieldAccessibilityIdentifier) private var accessibilityIdentifier: String?
 
+  private var prompt: String? = nil
+  private var onSubmit: () -> Void
+  private let tintColor: UIColor
+  private var textColor: UIColor? = nil
+
   private func textField(context: Context) -> UITextField {
     let textField = UITextField()
     if let prompt {
-      textField.placeholder = prompt
+      textField.attributedPlaceholder = NSAttributedString(string: prompt, attributes: [.foregroundColor: tintColor])
     }
+
+    textField.textColor = textColor
     textField.isSecureTextEntry = true
     textField.autocapitalizationType = .none
     textField.autocorrectionType = .no
@@ -152,8 +158,7 @@ public struct SecureTextField: UIViewRepresentable {
 
   private func toggleButton(context: Context) -> UIButton {
     let toggleButton = UIButton(type: .custom)
-    toggleButton.setImage(UIImage(systemName: "eye.slash"), for: .normal)
-    toggleButton.tintColor = ThemingAssets.Label.tertiary.color
+    toggleButton.setImage(UIImage(systemName: "eye.slash")?.withTintColor(tintColor, renderingMode: .alwaysOriginal), for: .normal)
     toggleButton.addTarget(context.coordinator, action: #selector(Coordinator.togglePasswordVisibility), for: .touchUpInside)
 
     return toggleButton

@@ -14,7 +14,7 @@ struct CredentialOfferView: View {
 
   // MARK: Lifecycle
 
-  init(credential: Credential, trustStatement: TrustStatement?, state: CredentialOfferViewModel.State = .result, router: CredentialOfferRouter.Routes) {
+  init(credential: Credential, trustStatement: TrustStatement?, state: CredentialOfferViewModel.State = .result, router: CredentialOfferInternalRoutes) {
     _viewModel = StateObject(wrappedValue: Container.shared.credentialOfferViewModel((credential, trustStatement, state, router)))
   }
 

@@ -20,23 +20,21 @@ class PresentationRequestResultStateViewModelTests: XCTestCase {
 
   @MainActor
   func testInitialStateWithoutVerifierDisplay_withoutTrustStatement() {
+    getVerifierDisplayUseCase.executeForTrustStatementReturnValue = mockUnTrustedVerifierDisplay
     viewModel = PresentationRequestResultStateViewModel(state: .error, context: context, router: router)
-
-    XCTAssertEqual(viewModel.verifierDisplay?.trustStatus, .unverified)
-    XCTAssertEqual(viewModel.verifierDisplay?.name, "EN Verifier")
+    XCTAssertEqual(viewModel.verifierDisplay, mockUnTrustedVerifierDisplay)
+    XCTAssertEqual(getVerifierDisplayUseCase.executeForTrustStatementReceivedArguments?.trustStatement, context.trustStatement)
+    XCTAssertEqual(getVerifierDisplayUseCase.executeForTrustStatementReceivedArguments?.verifier, context.requestObject.clientMetadata)
   }
 
   @MainActor
   func testInitialStateWithoutVerifierDisplay_withTrustStatement() {
-    let mockContext = PresentationRequestContext.Mock.vcSdJwtJwtSample
-    getVerifierDisplayUseCase.executeForTrustStatementReturnValue = .Mock.sample
+    getVerifierDisplayUseCase.executeForTrustStatementReturnValue = mockTrustedVerifierDisplay
+    viewModel = PresentationRequestResultStateViewModel(state: .error, context: context, router: router)
 
-    viewModel = PresentationRequestResultStateViewModel(state: .error, context: mockContext, router: router)
-
-    XCTAssertEqual(viewModel.verifierDisplay?.trustStatus, .verified)
-    XCTAssertEqual(viewModel.verifierDisplay?.name, "Verifier")
-    XCTAssertEqual(getVerifierDisplayUseCase.executeForTrustStatementReceivedArguments?.trustStatement, mockContext.trustStatement)
-    XCTAssertEqual(getVerifierDisplayUseCase.executeForTrustStatementReceivedArguments?.verifier, mockContext.requestObject.clientMetadata)
+    XCTAssertEqual(viewModel.verifierDisplay, mockTrustedVerifierDisplay)
+    XCTAssertEqual(getVerifierDisplayUseCase.executeForTrustStatementReceivedArguments?.trustStatement, context.trustStatement)
+    XCTAssertEqual(getVerifierDisplayUseCase.executeForTrustStatementReceivedArguments?.verifier, context.requestObject.clientMetadata)
   }
 
   @MainActor
@@ -60,5 +58,7 @@ class PresentationRequestResultStateViewModelTests: XCTestCase {
   private var context: PresentationRequestContext!
   private var getVerifierDisplayUseCase = GetVerifierDisplayUseCaseProtocolSpy()
   private var router = MockPresentationRouter()
+  private var mockTrustedVerifierDisplay = VerifierDisplay(name: "name", logo: Data(), trustStatus: .verified)
+  private var mockUnTrustedVerifierDisplay = VerifierDisplay(name: "name", logo: Data(), trustStatus: .unverified)
   // swiftlint:enable all
 }

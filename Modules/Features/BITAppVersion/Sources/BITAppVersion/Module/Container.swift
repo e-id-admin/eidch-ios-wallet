@@ -3,8 +3,6 @@ import Foundation
 
 extension Container {
 
-  // MARK: Public
-
   public var getAppVersionUseCase: Factory<GetAppVersionUseCaseProtocol> {
     self { GetAppVersionUseCase() }
   }
@@ -38,9 +36,7 @@ extension Container {
     }
   }
 
-  // MARK: Internal
-
-  var versionEnforcementRepository: Factory<VersionEnforcementRepositoryProtocol> {
+  public var versionEnforcementRepository: Factory<VersionEnforcementRepositoryProtocol> {
     self { VersionEnforcementRepository() }
   }
 

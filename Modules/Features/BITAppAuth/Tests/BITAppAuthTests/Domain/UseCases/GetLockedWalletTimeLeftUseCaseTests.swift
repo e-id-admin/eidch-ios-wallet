@@ -1,9 +1,10 @@
+import Factory
 import Foundation
 import Spyable
 import XCTest
 @testable import BITAppAuth
 @testable import BITCore
-@testable import BITVault
+@testable import BITTestingCore
 
 // MARK: - GetLockedWalletTimeLeftUseCaseTests
 
@@ -13,34 +14,76 @@ final class GetLockedWalletTimeLeftUseCaseTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    processInfoService = ProcessInfoServiceProtocolSpy()
-    secretManagerProtocolSpy = SecretManagerProtocolSpy()
-    keyManagerProtocolSpy = KeyManagerProtocolSpy()
-    let repository = SecretsRepository(keyManager: keyManagerProtocolSpy, secretManager: secretManagerProtocolSpy, processInfoService: processInfoService)
-    useCase = GetLockedWalletTimeLeftUseCase(lockDelay: delay, repository: repository, processInfoService: processInfoService)
+    registerMocks()
+    useCase = GetLockedWalletTimeLeftUseCase()
+    success()
   }
 
-  func testGetTimeLeft() throws {
-    processInfoService.systemUptime = timeInterval
-    secretManagerProtocolSpy.doubleForKeyQueryReturnValue = timeInterval
-    let time = useCase.execute()
+  func testExecute_systemUptimeEqualsLockTime_returnsDelay() throws {
+    processInfoServiceSpy.systemUptime = lockTime
 
-    // result should be the delay as the vault and the processInfo returns 1000.
-    XCTAssertEqual(time, delay)
-    XCTAssertTrue(secretManagerProtocolSpy.doubleForKeyQueryCalled)
-    XCTAssertEqual(secretManagerProtocolSpy.doubleForKeyQueryCallsCount, 1)
+    let result = useCase.execute()
+
+    XCTAssertEqual(result, delay)
+  }
+
+  func testExecute_systemUptimeInsideLockDelay_returnsDifferenceToDelay() throws {
+    let difference = 2.0
+    processInfoServiceSpy.systemUptime = lockTime + delay - difference
+
+    let result = useCase.execute()
+
+    XCTAssertEqual(result, difference)
+  }
+
+  func testExecute_systemUptimeRightOnLockDelay_returnsZero() throws {
+    processInfoServiceSpy.systemUptime = lockTime + delay
+
+    let result = useCase.execute()
+
+    XCTAssertEqual(result, 0)
+  }
+
+  func testExecute_systemUptimeAfterLockDelay_returnsNegativeNumber() throws {
+    processInfoServiceSpy.systemUptime = lockTime + 2 * delay
+
+    let result = useCase.execute()
+
+    XCTAssertEqual(result, -delay)
+  }
+
+  func testExecute_lockTimeNil_returnsNil() throws {
+    lockWalletRepositorySpy.getLockedWalletTimeIntervalReturnValue = nil
+
+    let result = useCase.execute()
+
+    XCTAssertNil(result)
   }
 
   // MARK: Private
 
-  private let timeInterval: TimeInterval = 1000
+  private let lockTime: TimeInterval = 1000
   private let delay: TimeInterval = 5
 
   // swiftlint:disable all
   private var useCase: GetLockedWalletTimeLeftUseCase!
-  private var processInfoService: ProcessInfoServiceProtocolSpy!
-  private var secretManagerProtocolSpy: SecretManagerProtocolSpy!
-  private var keyManagerProtocolSpy: KeyManagerProtocolSpy!
+  private var lockWalletRepositorySpy: LockWalletRepositoryProtocolSpy!
+  private var processInfoServiceSpy: ProcessInfoServiceProtocolSpy!
+
   // swiftlint:enable all
+
+  private func registerMocks() {
+    lockWalletRepositorySpy = LockWalletRepositoryProtocolSpy()
+    processInfoServiceSpy = ProcessInfoServiceProtocolSpy()
+
+    Container.shared.lockWalletRepository.register { self.lockWalletRepositorySpy }
+    Container.shared.processInfoService.register { self.processInfoServiceSpy }
+    Container.shared.lockDelay.register { self.delay }
+  }
+
+  private func success() {
+    lockWalletRepositorySpy.getLockedWalletTimeIntervalReturnValue = lockTime
+    processInfoServiceSpy.systemUptime = lockTime
+  }
 
 }

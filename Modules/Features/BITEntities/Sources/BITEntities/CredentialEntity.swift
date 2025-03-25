@@ -12,6 +12,7 @@ public class CredentialEntity: Object {
   @Persisted public var payload: Data
   @Persisted public var format: String
   @Persisted public var issuer: String
+  @Persisted public var validFrom: Date?
 
   @Persisted public var createdAt = Date()
   @Persisted public var updatedAt: Date?

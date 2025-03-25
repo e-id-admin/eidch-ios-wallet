@@ -16,7 +16,11 @@ extension Container {
   }
 
   public var realmDataStoreConfiguration: Factory<Realm.Configuration> {
-    self { Realm.Configuration() }.singleton
+    self {
+      let config = Realm.Configuration(schemaVersion: 1)
+      Realm.Configuration.defaultConfiguration = config
+      return config
+    }.singleton
   }
 
 }

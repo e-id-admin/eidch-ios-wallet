@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 @testable import BITOnboarding
-@testable import swiyu
+@testable import swiyuUITests_App
 
 // MARK: - OnboardingTests
 

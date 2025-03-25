@@ -1,6 +1,8 @@
+import BITLocalAuthentication
 import BITNavigation
 import BITSettings
 import Factory
+import LocalAuthentication
 
 @MainActor
 extension Container {
@@ -47,6 +49,10 @@ extension Container {
 
   var welcomeIntroductionViewModel: ParameterFactory<OnboardingInternalRoutes, WelcomeIntroductionViewModel> {
     self { WelcomeIntroductionViewModel(router: $0) }
+  }
+
+  var internalLAContext: Factory<LAContextProtocol> {
+    self { LAContext() }
   }
 }
 

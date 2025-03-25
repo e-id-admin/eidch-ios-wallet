@@ -8,7 +8,7 @@ class SecurityIntroductionScreen: InformationScreen {
 
   override init(app: XCUIApplication) {
     backButton = app.buttons["Back"]
-    tertiaryText = app.staticTexts[InformationView.AccessibilityIdentifier.tertiaryText.rawValue]
+    tertiaryText = app.staticTexts[DefaultInformationContentView.AccessibilityIdentifier.tertiaryText.rawValue]
     super.init(app: app)
   }
 

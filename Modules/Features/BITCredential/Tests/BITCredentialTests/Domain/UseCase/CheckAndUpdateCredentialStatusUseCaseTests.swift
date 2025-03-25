@@ -15,109 +15,173 @@ final class CheckAndUpdateCredentialStatusUseCaseTests: XCTestCase {
   // MARK: Internal
 
   override func setUp() {
+    anyCredentialSpy = AnyCredentialSpy()
+    createAnyCredentialSpy = CreateAnyCredentialUseCaseProtocolSpy()
     localRepositorySpy = CredentialRepositoryProtocolSpy()
-    validator = AnyStatusCheckValidatorProtocolSpy()
+    validatorSpy = AnyStatusCheckValidatorProtocolSpy()
 
-    useCase = CheckAndUpdateCredentialStatusUseCase(localRepository: localRepositorySpy, validators: [AnyStatusType.tokenStatusList: validator])
+    Container.shared.createAnyCredentialUseCase.register { self.createAnyCredentialSpy }
+    Container.shared.databaseCredentialRepository.register { self.localRepositorySpy }
+    Container.shared.statusValidators.register { [AnyStatusType.tokenStatusList: self.validatorSpy] }
+    Container.shared.dateBuffer.register { Self.buffer }
+
+    useCase = CheckAndUpdateCredentialStatusUseCase()
 
     success()
   }
 
   func testCheckCredentialStatus_valid() async throws {
-    var currentCredential = mockCredential
-    currentCredential.status = .unknown
+    mockCredential.status = .unknown
+    success(status: .valid)
 
-    let credential = try await useCase.execute(for: currentCredential)
+    let credential = try await useCase.execute(for: mockCredential)
 
     XCTAssertEqual(credential.status, .valid)
-    currentCredential.status = .valid
-    XCTAssertEqual(localRepositorySpy.updateReceivedCredential, currentCredential)
+    mockCredential.status = .valid
+    XCTAssertEqual(credential, mockCredential)
   }
 
   func testCheckCredentialStatus_expired() async throws {
-    var mockCredential = Credential(payload: CredentialPayload.Mock.expired, format: "vc+sd-jwt", issuer: "")
     mockCredential.status = .valid
+    anyCredentialSpy.validUntil = Date().advanced(by: -10)
+    mockUpdate(expectedStatus: .expired)
 
     let credential = try await useCase.execute(for: mockCredential)
 
     XCTAssertEqual(credential.status, .expired)
     mockCredential.status = .expired
-    XCTAssertFalse(validator.validateIssuerCalled)
-    XCTAssertEqual(localRepositorySpy.updateReceivedCredential, mockCredential)
+    XCTAssertEqual(credential, mockCredential)
+    XCTAssertFalse(validatorSpy.validateIssuerCalled)
+  }
+
+  func testCheckCredentialStatus_validInFutureInsideBuffer() async throws {
+    mockCredential.status = .unknown
+    anyCredentialSpy.validFrom = Date().advanced(by: Self.buffer - 1)
+
+    let credential = try await useCase.execute(for: mockCredential)
+
+    XCTAssertEqual(credential.status, .valid)
+    mockCredential.status = .valid
+    XCTAssertEqual(credential, mockCredential)
+  }
+
+  func testCheckCredentialStatus_validInFuture() async throws {
+    mockCredential.status = .valid
+    anyCredentialSpy.validFrom = Date().advanced(by: Self.buffer + 1)
+    mockUpdate(expectedStatus: .notYetValid)
+
+    let credential = try await useCase.execute(for: mockCredential)
+
+    XCTAssertEqual(credential.status, .notYetValid)
+    mockCredential.status = .notYetValid
+    XCTAssertEqual(credential, mockCredential)
+    XCTAssertFalse(validatorSpy.validateIssuerCalled)
   }
 
   func testCheckCredentialStatus_suspended() async throws {
-    var currentCredential = mockCredential
-    currentCredential.status = .valid
+    mockCredential.status = .valid
+    success(status: .suspended)
 
-    validator.validateIssuerReturnValue = .suspended
-
-    let credential = try await useCase.execute(for: currentCredential)
+    let credential = try await useCase.execute(for: mockCredential)
 
     XCTAssertEqual(credential.status, .suspended)
-    currentCredential.status = .suspended
-    XCTAssertEqual(localRepositorySpy.updateReceivedCredential, currentCredential)
+    mockCredential.status = .suspended
+    XCTAssertEqual(credential, mockCredential)
   }
 
   func testCheckCredentialStatus_revoked() async throws {
-    var currentCredential = mockCredential
-    currentCredential.status = .suspended
+    mockCredential.status = .suspended
+    success(status: .revoked)
 
-    validator.validateIssuerReturnValue = .revoked
-
-    let credential = try await useCase.execute(for: currentCredential)
+    let credential = try await useCase.execute(for: mockCredential)
 
     XCTAssertEqual(credential.status, .revoked)
-    currentCredential.status = .revoked
-    XCTAssertEqual(localRepositorySpy.updateReceivedCredential, currentCredential)
+    mockCredential.status = .revoked
+    XCTAssertEqual(credential, mockCredential)
   }
 
   func testCheckCredentialStatus_unknownIsNotSavedInRepository() async throws {
-    var currentCredential = mockCredential
-    currentCredential.status = .valid
+    mockCredential.status = .valid
+    success(status: .unknown)
 
-    validator.validateIssuerReturnValue = .unknown
-
-    let credential = try await useCase.execute(for: currentCredential)
+    let credential = try await useCase.execute(for: mockCredential)
 
     XCTAssertEqual(credential.status, .valid)
+    XCTAssertEqual(credential, mockCredential)
     XCTAssertFalse(localRepositorySpy.updateCalled)
   }
 
   func testCheckCredentialStatus_noStatus_returnsUnknown() async throws {
-    var currentCredential = Credential(payload: VcSdJwt.Mock.sampleNoStatusData, format: "vc+sd-jwt", issuer: "")
-    currentCredential.status = .unknown
+    anyCredentialSpy.status = nil
+    mockCredential.status = .unknown
 
-    let credential = try await useCase.execute(for: currentCredential)
+    let credential = try await useCase.execute(for: mockCredential)
 
     XCTAssertEqual(credential.status, .unknown)
+    XCTAssertEqual(credential, mockCredential)
     XCTAssertFalse(localRepositorySpy.updateCalled)
   }
 
   func testCheckCredentialStatus_noValidator_returnsUnknown() async throws {
-    useCase = CheckAndUpdateCredentialStatusUseCase(localRepository: localRepositorySpy, validators: [:])
-    var currentCredential = mockCredential
-    currentCredential.status = .unknown
+    Container.shared.statusValidators.register { [:] }
+    useCase = CheckAndUpdateCredentialStatusUseCase()
+    mockCredential.status = .unknown
 
-    let credential = try await useCase.execute(for: currentCredential)
+    let credential = try await useCase.execute(for: mockCredential)
 
     XCTAssertEqual(credential.status, .unknown)
+    XCTAssertEqual(credential, mockCredential)
     XCTAssertFalse(localRepositorySpy.updateCalled)
   }
 
   // MARK: Private
 
   // swiftlint:disable all
-  private let mockCredential = Credential(payload: CredentialPayload.Mock.default, format: "vc+sd-jwt", issuer: "")
+  private static let issuer = "issuer"
+  private static let buffer = 5.0
+
+  private var mockCredential: Credential!
+  private var anyCredentialSpy: AnyCredentialSpy!
+
+  private var createAnyCredentialSpy: CreateAnyCredentialUseCaseProtocolSpy!
+  private var validatorSpy: AnyStatusCheckValidatorProtocolSpy!
+  private var localRepositorySpy: CredentialRepositoryProtocolSpy!
+
   private var useCase = CheckAndUpdateCredentialStatusUseCase()
-  private var localRepositorySpy = CredentialRepositoryProtocolSpy()
-  private var validator = AnyStatusCheckValidatorProtocolSpy()
 
   // swiftlint:enable all
 
-  private func success() {
-    localRepositorySpy.updateClosure = { credential in credential }
-    validator.validateIssuerReturnValue = .valid
+  private func success(status: VcStatus = .valid) {
+    mockCredential = Credential(payload: CredentialPayload.Mock.default, format: "vc+sd-jwt", issuer: Self.issuer)
+    let anyStatusSpy = AnyStatusSpy()
+    anyStatusSpy.type = .tokenStatusList
+    anyCredentialSpy.status = anyStatusSpy
+    anyCredentialSpy.issuer = Self.issuer
+    anyCredentialSpy.validFrom = nil
+    anyCredentialSpy.validUntil = nil
+
+    createAnyCredentialSpy.executeFromFormatClosure = { payload, format in
+      guard payload == self.mockCredential.payload, format == self.mockCredential.format else { fatalError("Received wrong arguments") }
+      return self.anyCredentialSpy
+    }
+    mockValidator(status: status)
+    mockUpdate(expectedStatus: status)
+  }
+
+  private func mockValidator(status: VcStatus) {
+    validatorSpy.validateIssuerClosure = { anyStatus, issuer in
+      guard anyStatus.type == self.anyCredentialSpy.status?.type, issuer == Self.issuer else { fatalError("Received wrong arguments") }
+      return status
+    }
+  }
+
+  private func mockUpdate(expectedStatus: VcStatus) {
+    localRepositorySpy.updateClosure = { credential in
+      var credentialCopy: Credential = self.mockCredential
+      credentialCopy.status = expectedStatus
+      guard credential == credentialCopy else { fatalError("Received wrong arguments") }
+      return credential
+    }
   }
 
 }

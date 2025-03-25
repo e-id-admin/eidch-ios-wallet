@@ -1,0 +1,9 @@
+{
+  "state": "READY_FOR_ONLINE_SESSION",
+  "queueInformation": null,
+  "legalRepresentant": {
+    "verified": false,
+    "verificationLink": "https://test.ch"
+  },
+  "onlineSessionStartTimeout": "2024-03-27T00:00:00Z"
+}

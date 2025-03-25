@@ -1,3 +1,4 @@
+import Factory
 import LocalAuthentication
 import XCTest
 @testable import BITAppAuth
@@ -13,20 +14,23 @@ final class ChangeBiometricStatusUseCaseTests: XCTestCase {
     allowBiometricUsageUseCaseSpy = AllowBiometricUsageUseCaseProtocolSpy()
     hasBiometricAuthUseCaseSpy = HasBiometricAuthUseCaseProtocolSpy()
     isBiometricUsageAllowedUseCaseSpy = IsBiometricUsageAllowedUseCaseProtocolSpy()
-    contextSpy = LAContextProtocolSpy()
+    userSession = SessionSpy()
 
-    useCase = ChangeBiometricStatusUseCase(
-      requestBiometricAuthUseCase: requestBiometricAuthUseCaseSpy,
-      uniquePassphraseManager: uniquePassphraseManagerSpy,
-      allowBiometricUsageUseCase: allowBiometricUsageUseCaseSpy,
-      hasBiometricAuthUseCase: hasBiometricAuthUseCaseSpy,
-      isBiometricUsageAllowedUseCase: isBiometricUsageAllowedUseCaseSpy,
-      context: contextSpy)
+    Container.shared.requestBiometricAuthUseCase.register { self.requestBiometricAuthUseCaseSpy }
+    Container.shared.uniquePassphraseManager.register { self.uniquePassphraseManagerSpy }
+    Container.shared.allowBiometricUsageUseCase.register { self.allowBiometricUsageUseCaseSpy }
+    Container.shared.hasBiometricAuthUseCase.register { self.hasBiometricAuthUseCaseSpy }
+    Container.shared.isBiometricUsageAllowedUseCase.register { self.isBiometricUsageAllowedUseCaseSpy }
+    Container.shared.userSession.register { self.userSession }
+
+    useCase = ChangeBiometricStatusUseCase()
   }
 
   func testHappyPath_disable() async throws {
     let mockData = Data()
 
+    userSession.isLoggedIn = true
+    userSession.context = LAContextProtocolSpy()
     isBiometricUsageAllowedUseCaseSpy.executeReturnValue = true
     hasBiometricAuthUseCaseSpy.executeReturnValue = true
 
@@ -40,6 +44,8 @@ final class ChangeBiometricStatusUseCaseTests: XCTestCase {
   func testHappyPath_enable() async throws {
     let mockData = Data()
 
+    userSession.isLoggedIn = true
+    userSession.context = LAContextProtocolSpy()
     isBiometricUsageAllowedUseCaseSpy.executeReturnValue = false
     hasBiometricAuthUseCaseSpy.executeReturnValue = true
 
@@ -55,6 +61,9 @@ final class ChangeBiometricStatusUseCaseTests: XCTestCase {
 
   func testEnableWithBiometricCancelError() async throws {
     let mockData = Data()
+
+    userSession.isLoggedIn = true
+    userSession.context = LAContextProtocolSpy()
 
     isBiometricUsageAllowedUseCaseSpy.executeReturnValue = false
     hasBiometricAuthUseCaseSpy.executeReturnValue = true
@@ -80,7 +89,7 @@ final class ChangeBiometricStatusUseCaseTests: XCTestCase {
   private var allowBiometricUsageUseCaseSpy: AllowBiometricUsageUseCaseProtocolSpy!
   private var hasBiometricAuthUseCaseSpy: HasBiometricAuthUseCaseProtocolSpy!
   private var isBiometricUsageAllowedUseCaseSpy: IsBiometricUsageAllowedUseCaseProtocolSpy!
-  private var contextSpy: LAContextProtocolSpy!
+  private var userSession: SessionSpy!
   private var useCase: ChangeBiometricStatusUseCase!
   // swiftlint:enable all
 

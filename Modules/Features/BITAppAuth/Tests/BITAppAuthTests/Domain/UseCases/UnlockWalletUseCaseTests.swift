@@ -1,9 +1,8 @@
+import Factory
 import Foundation
-import Spyable
 import XCTest
 @testable import BITAppAuth
-@testable import BITCore
-@testable import BITVault
+@testable import BITTestingCore
 
 // MARK: - UnlockWalletUseCaseTests
 
@@ -13,31 +12,35 @@ final class UnlockWalletUseCaseTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    processInfoService = ProcessInfoServiceProtocolSpy()
-    keyManagerProtocolSpy = KeyManagerProtocolSpy()
-    secretManagerProtocolSpy = SecretManagerProtocolSpy()
-    let repository = SecretsRepository(keyManager: keyManagerProtocolSpy, secretManager: secretManagerProtocolSpy, processInfoService: processInfoService)
-    useCase = UnlockWalletUseCase(repository: repository)
+    registerMocks()
+    useCase = UnlockWalletUseCase()
   }
 
-  func testUnlockWallet() throws {
+  func testExecute_success() throws {
     try useCase.execute()
 
-    secretManagerProtocolSpy.setForKeyQueryClosure = { value, _, _ in
-      XCTAssertNil(value)
-    }
+    XCTAssertTrue(lockWalletRepositorySpy.unlockWalletCalled)
+  }
 
-    XCTAssertTrue(secretManagerProtocolSpy.removeObjectForKeyQueryCalled)
-    XCTAssertEqual(secretManagerProtocolSpy.removeObjectForKeyQueryCallsCount, 1)
+  func testExecute_repositoryThrowsError_throwsError() throws {
+    lockWalletRepositorySpy.unlockWalletThrowableError = TestingError.error
+
+    XCTAssertThrowsError(try useCase.execute()) { error in
+      XCTAssertEqual(error as? TestingError, .error)
+    }
   }
 
   // MARK: Private
 
   // swiftlint:disable all
+  private var lockWalletRepositorySpy: LockWalletRepositoryProtocolSpy!
   private var useCase: UnlockWalletUseCase!
-  private var keyManagerProtocolSpy: KeyManagerProtocolSpy!
-  private var processInfoService: ProcessInfoServiceProtocolSpy!
-  private var secretManagerProtocolSpy: SecretManagerProtocolSpy!
+
   // swiftlint:enable all
+
+  private func registerMocks() {
+    lockWalletRepositorySpy = LockWalletRepositoryProtocolSpy()
+    Container.shared.lockWalletRepository.register { self.lockWalletRepositorySpy }
+  }
 
 }

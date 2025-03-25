@@ -1,3 +1,4 @@
+import Factory
 import Foundation
 import Spyable
 import XCTest
@@ -14,24 +15,25 @@ final class RegisterPinCodeUseCaseTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    spyPinCodeManager = PinCodeManagerProtocolSpy()
-    spySaltService = SaltServiceProtocolSpy()
-    spyPepperService = PepperServiceProtocolSpy()
-    spyUniquePassphraseManager = UniquePassphraseManagerProtocolSpy()
-    spyContextManager = ContextManagerProtocolSpy()
-    spyContext = LAContextProtocolSpy()
+    pinCodeManager = PinCodeManagerProtocolSpy()
+    saltService = SaltServiceProtocolSpy()
+    pepperService = PepperServiceProtocolSpy()
+    uniquePassphraseManager = UniquePassphraseManagerProtocolSpy()
+    internalContext = LAContextProtocolSpy()
     isBiometricUsageAllowedUseCase = IsBiometricUsageAllowedUseCaseProtocolSpy()
     dataStoreConfiguration = DataStoreConfigurationManagerProtocolSpy()
+    userSession = SessionSpy()
 
-    useCase = RegisterPinCodeUseCase(
-      pinCodeManager: spyPinCodeManager,
-      saltService: spySaltService,
-      pepperService: spyPepperService,
-      uniquePassphraseManager: spyUniquePassphraseManager,
-      isBiometricUsageAllowedUseCase: isBiometricUsageAllowedUseCase,
-      contextManager: spyContextManager,
-      context: spyContext,
-      dataStoreConfigurationManager: dataStoreConfiguration)
+    Container.shared.pinCodeManager.register { self.pinCodeManager }
+    Container.shared.saltService.register { self.saltService }
+    Container.shared.pepperService.register { self.pepperService }
+    Container.shared.uniquePassphraseManager.register { self.uniquePassphraseManager }
+    Container.shared.userSession.register { self.userSession }
+    Container.shared.internalContext.register { self.internalContext }
+    Container.shared.isBiometricUsageAllowedUseCase.register { self.isBiometricUsageAllowedUseCase }
+    Container.shared.dataStoreConfigurationManager.register { self.dataStoreConfiguration }
+
+    useCase = RegisterPinCodeUseCase()
   }
 
   func testStandardPinCode() throws {
@@ -48,19 +50,20 @@ final class RegisterPinCodeUseCaseTests: XCTestCase {
 
   func testValidationError() throws {
     let pinCode: PinCode = "1"
-    spySaltService.generateSaltReturnValue = pinCode.data(using: .utf8)
-    spyPepperService.generatePepperReturnValue = SecKeyTestsHelper.createPrivateKey()
-    spyPinCodeManager.encryptThrowableError = PinCodeError.tooShort
+    saltService.generateSaltReturnValue = pinCode.data(using: .utf8)
+    pepperService.generatePepperReturnValue = SecKeyTestsHelper.createPrivateKey()
+    pinCodeManager.encryptThrowableError = PinCodeError.tooShort
+    internalContext.setCredentialTypeReturnValue = true
     do {
       try useCase.execute(pinCode: pinCode)
       XCTFail("Should fail instead...")
     } catch PinCodeError.tooShort {
-      XCTAssertTrue(spyPinCodeManager.encryptCalled)
-      XCTAssertTrue(spySaltService.generateSaltCalled)
-      XCTAssertTrue(spyPepperService.generatePepperCalled)
-      XCTAssertFalse(spyContextManager.setCredentialContextCalled)
-      XCTAssertFalse(spyUniquePassphraseManager.generateCalled)
-      XCTAssertFalse(spyUniquePassphraseManager.saveUniquePassphraseForContextCalled)
+      XCTAssertTrue(pinCodeManager.encryptCalled)
+      XCTAssertTrue(saltService.generateSaltCalled)
+      XCTAssertTrue(pepperService.generatePepperCalled)
+      XCTAssertFalse(userSession.startSessionPassphraseCredentialTypeCalled)
+      XCTAssertFalse(uniquePassphraseManager.generateCalled)
+      XCTAssertFalse(uniquePassphraseManager.saveUniquePassphraseForContextCalled)
       XCTAssertFalse(isBiometricUsageAllowedUseCase.executeCalled)
       XCTAssertFalse(dataStoreConfiguration.setEncryptionKeyCalled)
     } catch {
@@ -71,15 +74,15 @@ final class RegisterPinCodeUseCaseTests: XCTestCase {
   // MARK: Private
 
   // swiftlint:disable all
-  private var spyPinCodeManager: PinCodeManagerProtocolSpy!
-  private var spySaltService: SaltServiceProtocolSpy!
-  private var spyPepperService: PepperServiceProtocolSpy!
-  private var spyUniquePassphraseManager: UniquePassphraseManagerProtocolSpy!
-  private var spyContextManager: ContextManagerProtocolSpy!
-  private var spyContext: LAContextProtocolSpy!
+  private var pinCodeManager: PinCodeManagerProtocolSpy!
+  private var saltService: SaltServiceProtocolSpy!
+  private var pepperService: PepperServiceProtocolSpy!
+  private var uniquePassphraseManager: UniquePassphraseManagerProtocolSpy!
   private var useCase: RegisterPinCodeUseCase!
   private var isBiometricUsageAllowedUseCase: IsBiometricUsageAllowedUseCaseProtocolSpy!
   private var dataStoreConfiguration: DataStoreConfigurationManagerProtocolSpy!
+  private var userSession: SessionSpy!
+  private var internalContext: LAContextProtocolSpy!
   // swiftlint:enable all
 
 }
@@ -91,6 +94,8 @@ extension RegisterPinCodeUseCaseTests {
     let mockUniquePassphraseData = Data()
     let mockSalt = Data()
     let mockPepperKey: SecKey = SecKeyTestsHelper.createPrivateKey()
+    internalContext.setCredentialTypeReturnValue = true
+    userSession.startSessionPassphraseCredentialTypeReturnValue = LAContextProtocolSpy()
     isBiometricUsageAllowedUseCase.executeReturnValue = true
     configureSpy(pinCodeEncrypted: mockPinCodeEncrypted, uniquePassphrase: mockUniquePassphraseData, salt: mockSalt, pepperKey: mockPepperKey)
 
@@ -99,25 +104,24 @@ extension RegisterPinCodeUseCaseTests {
   }
 
   private func configureSpy(pinCodeEncrypted: Data, uniquePassphrase: Data, salt: Data, pepperKey: SecKey) {
-    spyPinCodeManager.encryptReturnValue = pinCodeEncrypted
-    spyUniquePassphraseManager.generateReturnValue = uniquePassphrase
-    spySaltService.generateSaltReturnValue = salt
-    spyPepperService.generatePepperReturnValue = pepperKey
+    pinCodeManager.encryptReturnValue = pinCodeEncrypted
+    uniquePassphraseManager.generateReturnValue = uniquePassphrase
+    saltService.generateSaltReturnValue = salt
+    pepperService.generatePepperReturnValue = pepperKey
   }
 
   private func assertResult(pinCode: PinCode, pinCodeEncrypted: Data, uniquePassphrase: Data) {
-    XCTAssertTrue(spyPinCodeManager.encryptCalled)
-    XCTAssertTrue(spySaltService.generateSaltCalled)
-    XCTAssertTrue(spyPepperService.generatePepperCalled)
-    XCTAssertTrue(spyContextManager.setCredentialContextCalled)
-    XCTAssertTrue(spyUniquePassphraseManager.generateCalled)
-    XCTAssertTrue(spyUniquePassphraseManager.saveUniquePassphraseForContextCalled)
-    XCTAssertEqual(pinCode, spyPinCodeManager.encryptReceivedPinCode)
-    XCTAssertEqual(2, spyContextManager.setCredentialContextCallsCount)
-    XCTAssertEqual(pinCodeEncrypted, spyContextManager.setCredentialContextReceivedInvocations[0].data)
-    XCTAssertEqual(uniquePassphrase, spyContextManager.setCredentialContextReceivedInvocations[1].data)
-    XCTAssertEqual(uniquePassphrase, spyUniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.uniquePassphrase)
-    XCTAssertEqual(AuthMethod.biometric, spyUniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.authMethod)
+    XCTAssertTrue(pinCodeManager.encryptCalled)
+    XCTAssertTrue(saltService.generateSaltCalled)
+    XCTAssertTrue(pepperService.generatePepperCalled)
+    XCTAssertTrue(userSession.startSessionPassphraseCredentialTypeCalled)
+    XCTAssertTrue(uniquePassphraseManager.generateCalled)
+    XCTAssertTrue(uniquePassphraseManager.saveUniquePassphraseForContextCalled)
+    XCTAssertEqual(pinCodeManager.encryptReceivedPinCode, pinCode)
+    XCTAssertEqual(userSession.startSessionPassphraseCredentialTypeCallsCount, 1)
+    XCTAssertEqual(pinCodeEncrypted, userSession.startSessionPassphraseCredentialTypeReceivedInvocations[0].passphrase)
+    XCTAssertEqual(uniquePassphrase, uniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.uniquePassphrase)
+    XCTAssertEqual(AuthMethod.biometric, uniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.authMethod)
     XCTAssertTrue(isBiometricUsageAllowedUseCase.executeCalled)
 
     XCTAssertTrue(dataStoreConfiguration.setEncryptionKeyCalled)

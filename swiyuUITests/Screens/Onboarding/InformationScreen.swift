@@ -8,11 +8,17 @@ class InformationScreen: Screen {
 
   init(app: XCUIApplication) {
     self.app = app
-    primaryButton = app.buttons[InformationView.AccessibilityIdentifier.primaryButton.rawValue]
-    secondaryButton = app.buttons[InformationView.AccessibilityIdentifier.secondaryButton.rawValue]
-    image = app.images[InformationView.AccessibilityIdentifier.image.rawValue]
-    primaryText = app.staticTexts[InformationView.AccessibilityIdentifier.primaryText.rawValue]
-    secondaryText = app.staticTexts[InformationView.AccessibilityIdentifier.secondaryText.rawValue]
+    primaryButton = app.buttons[InformationView<DefaultInformationContentView, DefaultInformationFooterView>.AccessibilityIdentifier.footer.rawValue]
+    secondaryButton = app.buttons[DefaultInformationFooterView.AccessibilityIdentifier.secondaryButton.rawValue]
+    image = app.images[InformationView<DefaultInformationContentView, DefaultInformationFooterView>.AccessibilityIdentifier.image.rawValue]
+    if XCUIDevice.shared.orientation.isLandscape {
+      primaryText = app.staticTexts[InformationView<DefaultInformationContentView, DefaultInformationFooterView>.AccessibilityIdentifier.content.rawValue]
+      secondaryText = app.staticTexts[InformationView<DefaultInformationContentView, DefaultInformationFooterView>.AccessibilityIdentifier.content.rawValue]
+    }
+    else {
+      primaryText = app.staticTexts[DefaultInformationContentView.AccessibilityIdentifier.primaryText.rawValue]
+      secondaryText = app.staticTexts[DefaultInformationContentView.AccessibilityIdentifier.secondaryText.rawValue]
+    }
   }
 
   // MARK: Internal
@@ -25,7 +31,7 @@ class InformationScreen: Screen {
   let secondaryText: XCUIElement
 
   func getImagelabel() -> String {
-    app.descendants(matching: .image).matching(identifier: InformationView.AccessibilityIdentifier.image.rawValue).allElementsBoundByIndex[1].label
+    app.descendants(matching: .image).matching(identifier: InformationView<DefaultInformationContentView, DefaultInformationFooterView>.AccessibilityIdentifier.image.rawValue).allElementsBoundByIndex[1].label
   }
 
   func assertDisplayed() {

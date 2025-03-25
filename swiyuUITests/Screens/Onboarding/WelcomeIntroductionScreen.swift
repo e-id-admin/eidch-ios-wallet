@@ -7,7 +7,7 @@ class WelcomeIntroductionScreen: InformationScreen {
   // MARK: Lifecycle
 
   override init(app: XCUIApplication) {
-    tertiaryText = app.staticTexts[InformationView.AccessibilityIdentifier.tertiaryText.rawValue]
+    tertiaryText = app.staticTexts[DefaultInformationContentView.AccessibilityIdentifier.tertiaryText.rawValue]
     super.init(app: app)
 
   }

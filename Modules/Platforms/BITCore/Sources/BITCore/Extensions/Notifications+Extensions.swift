@@ -9,6 +9,7 @@ extension Notification.Name {
   public static let didLoginClose = Notification.Name("DidLoginClose")
   public static let loginRequired = Notification.Name("LoginRequired")
   public static let willEnterForeground = Notification.Name("willEnterForeground")
+  public static let didEnterBackground = Notification.Name("didEnterBackground")
   public static let userInactivityTimeout = Notification.Name("userInactivityTimeout")
 
   public static let permissionAlertPresented = Notification.Name("permissionAlertPresented")

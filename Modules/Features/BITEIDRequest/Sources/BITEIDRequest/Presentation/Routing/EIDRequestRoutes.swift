@@ -5,6 +5,7 @@ import SwiftUI
 
 public protocol EIDRequestRoutes {
   func eIDRequest()
+  func autoVerification()
 }
 
 
@@ -49,6 +50,15 @@ extension EIDRequestRoutes where Self: RouterProtocol {
 
   public func eIDRequest() {
     let module = IntroductionModule()
+    let viewController = module.viewController
+    let style = ModalOpeningStyle(animatedWhenPresenting: true, modalPresentationStyle: .fullScreen)
+
+    module.router.current = style
+    open(viewController, on: self.viewController, as: style)
+  }
+
+  public func autoVerification() {
+    let module = AutoVerificationModule()
     let viewController = module.viewController
     let style = ModalOpeningStyle(animatedWhenPresenting: true, modalPresentationStyle: .fullScreen)
 

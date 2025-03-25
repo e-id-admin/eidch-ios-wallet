@@ -7,7 +7,7 @@ enum EIDRequestStateError: Error {
 }
 
 
-struct EIDRequestState: Decodable {
+public struct EIDRequestState: Decodable {
 
   // MARK: Lifecycle
 
@@ -28,9 +28,7 @@ struct EIDRequestState: Decodable {
   }
 
   init(_ entity: EIDRequestStateEntity) throws {
-    guard let state = EIDRequestStatus.State(rawValue: entity.state) else {
-      throw EIDRequestStateError.invalidState
-    }
+    let state = EIDRequestStatus.State(entity.state)
 
     self.init(
       id: entity.id,
@@ -40,7 +38,7 @@ struct EIDRequestState: Decodable {
       onlineSessionStartTimeoutAt: entity.onlineSessionStartTimeoutAt)
   }
 
-  init(from decoder: any Decoder) throws {
+  public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     let rawState = try container.decode(String.self, forKey: .state)
 
@@ -55,6 +53,10 @@ struct EIDRequestState: Decodable {
     onlineSessionStartTimeoutAt = try container.decodeIfPresent(Date.self, forKey: .onlineSessionStartTimeoutAt)
   }
 
+  // MARK: Public
+
+  public let state: EIDRequestStatus.State
+
   // MARK: Internal
 
   enum CodingKeys: CodingKey {
@@ -66,7 +68,6 @@ struct EIDRequestState: Decodable {
   }
 
   let id: UUID
-  let state: EIDRequestStatus.State
   let lastPolledAt: Date
   let onlineSessionStartOpenAt: Date?
   let onlineSessionStartTimeoutAt: Date?
@@ -75,7 +76,7 @@ struct EIDRequestState: Decodable {
 // MARK: Equatable
 
 extension EIDRequestState: Equatable {
-  static func == (lhs: EIDRequestState, rhs: EIDRequestState) -> Bool {
+  public static func == (lhs: EIDRequestState, rhs: EIDRequestState) -> Bool {
     lhs.id == rhs.id &&
       lhs.state == rhs.state &&
       lhs.lastPolledAt == rhs.lastPolledAt &&

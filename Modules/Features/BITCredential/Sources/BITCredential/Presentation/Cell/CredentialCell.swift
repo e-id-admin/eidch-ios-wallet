@@ -1,4 +1,3 @@
-import BITCredential
 import BITCredentialShared
 import BITL10n
 import BITOpenID
@@ -49,11 +48,11 @@ public struct CredentialCell: View {
               }
 
               HStack(spacing: .x1) {
-                credential.status.image
+                credential.statusImage
                   .aspectRatio(contentMode: .fit)
-                Text(credential.status.text)
+                Text(credential.statusText)
               }
-              .foregroundStyle(credential.status.color)
+              .foregroundStyle(credential.statusColor)
             }
             .font(.custom.caption1)
             .foregroundStyle(ThemingAssets.Label.secondary.swiftUIColor)

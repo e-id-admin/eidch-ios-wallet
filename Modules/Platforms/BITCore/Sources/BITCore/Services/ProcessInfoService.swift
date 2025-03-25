@@ -12,6 +12,9 @@ public protocol ProcessInfoServiceProtocol {
 
 struct ProcessInfoService: ProcessInfoServiceProtocol {
   var systemUptime: TimeInterval {
-    ProcessInfo().systemUptime
+    // use clock monotonic as it ticks even when phone is in sleep state
+    var timeSpec = timespec()
+    clock_gettime(CLOCK_MONOTONIC, &timeSpec)
+    return TimeInterval(timeSpec.tv_sec)
   }
 }

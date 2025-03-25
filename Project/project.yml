@@ -8,6 +8,8 @@ options:
 configs:
   Dev (debug): debug
   Dev (release): release
+  Test (debug): debug
+  Test (release): release
   Ref (debug): debug
   Ref (release): release
   Abn (debug): debug

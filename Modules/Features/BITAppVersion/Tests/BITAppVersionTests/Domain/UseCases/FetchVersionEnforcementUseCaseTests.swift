@@ -6,6 +6,8 @@ final class FetchVersionEnforcementUseCaseTests: XCTestCase {
   // MARK: Internal
 
   override func setUp() {
+    super.setUp()
+
     repository = VersionEnforcementRepositoryProtocolSpy()
     appVersionUseCase = GetAppVersionUseCaseProtocolSpy()
 

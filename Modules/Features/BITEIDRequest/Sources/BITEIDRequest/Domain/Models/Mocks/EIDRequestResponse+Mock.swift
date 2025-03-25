@@ -1,5 +1,4 @@
 #if DEBUG
-import BITCore
 import Foundation
 @testable import BITTestingCore
 

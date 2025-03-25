@@ -12,11 +12,12 @@ public struct LocalAuthenticationPolicyValidator: LocalAuthenticationPolicyValid
 
   public init() {}
 
-  public func validatePolicy(_ policy: LocalAuthenticationPolicy, context: LAContextProtocol) throws {
+  public func validatePolicy(_ policy: LocalAuthenticationPolicy, context: LAContextProtocol) throws -> Bool {
     var error: NSError?
-    guard context.canEvaluatePolicy(policy, error: &error) else {
-      throw error ?? LocalAuthenticationPolicyError.invalidPolicy
+    let result = context.canEvaluatePolicy(policy, error: &error)
+    if let err = error {
+      throw err
     }
+    return result
   }
-
 }

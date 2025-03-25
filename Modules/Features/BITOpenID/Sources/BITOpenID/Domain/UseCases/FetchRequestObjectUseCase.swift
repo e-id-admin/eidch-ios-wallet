@@ -21,6 +21,8 @@ public struct FetchRequestObjectUseCase: FetchRequestObjectUseCaseProtocol {
       return try createRequestObject(from: requestObjectData)
     } catch is DecodingError {
       throw FetchRequestObjectError.invalidPresentationInvitation
+    } catch OpenIdRepositoryError.presentationProcessClosed {
+      throw FetchRequestObjectError.invalidPresentationInvitation
     } catch {
       throw error
     }

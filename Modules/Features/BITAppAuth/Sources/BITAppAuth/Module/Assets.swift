@@ -22,7 +22,7 @@ typealias AssetImageTypeAlias = ImageAsset.Image
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 enum Assets {
-  static let noDevicePin = ImageAsset(name: "NoDevicePin")
+  static let shield = ImageAsset(name: "Shield")
   static let biometric = ImageAsset(name: "biometric")
   static let lock = ImageAsset(name: "lock")
   static let login = ImageAsset(name: "login")

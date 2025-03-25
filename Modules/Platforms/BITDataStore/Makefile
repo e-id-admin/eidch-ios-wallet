@@ -1,14 +1,5 @@
-.DEFAULT_GOAL := generate
+# Include shared configuration
+ROOT_DIR := $(shell git rev-parse --show-toplevel)
+include $(ROOT_DIR)/Modules/module.mk
 
-SWIFTFORMAT := swiftformat
-
-swiftformat:
-	@echo "=> Formatting Swift code using swiftformat"
-	$(SWIFTFORMAT) .
-
-open: generate
-	@echo "=> Opening SPM"
-	open "Package.swift"
-
-generate: swiftformat
-
+# Module-specific overrides can be added here

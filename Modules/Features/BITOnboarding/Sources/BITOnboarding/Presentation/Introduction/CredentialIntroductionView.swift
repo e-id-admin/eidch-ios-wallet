@@ -8,21 +8,34 @@ import SwiftUI
 
 struct CredentialIntroductionView: View {
 
+  // MARK: Lifecycle
+
   init(router: OnboardingInternalRoutes) {
     viewModel = Container.shared.credentialIntroductionViewModel(router)
   }
 
-  private let viewModel: CredentialIntroductionViewModel
+  // MARK: Internal
 
   var body: some View {
     InformationView(
-      primary: L10n.tkOnboardingNeverforgetTitle,
-      secondary: L10n.tkOnboardingNeverforgetBody,
       image: Assets.eId.swiftUIImage,
       backgroundImage: ThemingAssets.Gradient.gradient5.swiftUIImage,
-      primaryButtonLabel: L10n.tkGlobalContinue,
-      primaryButtonAction: viewModel.primaryAction)
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.tkOnboardingIntroductionStepNeverForgetPrimary,
+          secondary: L10n.tkOnboardingIntroductionStepNeverForgetSecondary)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.tkGlobalContinue,
+          primaryButtonAction: viewModel.primaryAction)
+      })
   }
+
+  // MARK: Private
+
+  private let viewModel: CredentialIntroductionViewModel
+
 }
 
 // MARK: - CredentialIntroductionViewModel

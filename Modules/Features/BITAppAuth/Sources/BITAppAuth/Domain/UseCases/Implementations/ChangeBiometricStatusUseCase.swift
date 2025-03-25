@@ -19,24 +19,6 @@ enum ChangeBiometricStatusError: String, Error, CustomStringConvertible {
 
 struct ChangeBiometricStatusUseCase: ChangeBiometricStatusUseCaseProtocol {
 
-  // MARK: Lifecycle
-
-  init(
-    requestBiometricAuthUseCase: RequestBiometricAuthUseCaseProtocol = Container.shared.requestBiometricAuthUseCase(),
-    uniquePassphraseManager: UniquePassphraseManagerProtocol = Container.shared.uniquePassphraseManager(),
-    allowBiometricUsageUseCase: AllowBiometricUsageUseCaseProtocol = Container.shared.allowBiometricUsageUseCase(),
-    hasBiometricAuthUseCase: HasBiometricAuthUseCaseProtocol = Container.shared.hasBiometricAuthUseCase(),
-    isBiometricUsageAllowedUseCase: IsBiometricUsageAllowedUseCaseProtocol = Container.shared.isBiometricUsageAllowedUseCase(),
-    context: LAContextProtocol = Container.shared.authContext())
-  {
-    self.requestBiometricAuthUseCase = requestBiometricAuthUseCase
-    self.uniquePassphraseManager = uniquePassphraseManager
-    self.allowBiometricUsageUseCase = allowBiometricUsageUseCase
-    self.hasBiometricAuthUseCase = hasBiometricAuthUseCase
-    self.isBiometricUsageAllowedUseCase = isBiometricUsageAllowedUseCase
-    self.context = context
-  }
-
   // MARK: Internal
 
   func execute(with uniquePassphrase: Data) async throws {
@@ -51,16 +33,20 @@ struct ChangeBiometricStatusUseCase: ChangeBiometricStatusUseCaseProtocol {
 
   // MARK: Private
 
-  private let context: LAContextProtocol
-  private let uniquePassphraseManager: UniquePassphraseManagerProtocol
-  private var requestBiometricAuthUseCase: RequestBiometricAuthUseCaseProtocol
-  private var allowBiometricUsageUseCase: AllowBiometricUsageUseCaseProtocol
-  private var hasBiometricAuthUseCase: HasBiometricAuthUseCaseProtocol
-  private var isBiometricUsageAllowedUseCase: IsBiometricUsageAllowedUseCaseProtocol
+  @Injected(\.userSession) private var userSession: Session
+  @Injected(\.uniquePassphraseManager) private var uniquePassphraseManager: UniquePassphraseManagerProtocol
+  @Injected(\.requestBiometricAuthUseCase) private var requestBiometricAuthUseCase: RequestBiometricAuthUseCaseProtocol
+  @Injected(\.allowBiometricUsageUseCase) private var allowBiometricUsageUseCase: AllowBiometricUsageUseCaseProtocol
+  @Injected(\.hasBiometricAuthUseCase) private var hasBiometricAuthUseCase: HasBiometricAuthUseCaseProtocol
+  @Injected(\.isBiometricUsageAllowedUseCase) private var isBiometricUsageAllowedUseCase: IsBiometricUsageAllowedUseCaseProtocol
 
   private func enableBiometrics(uniquePassphrase: Data) async throws {
+    guard userSession.isLoggedIn, let context = userSession.context else {
+      throw UserSessionError.notLoggedIn
+    }
+
     do {
-      try await requestBiometricAuthUseCase.execute(reason: L10n.biometricSetupReason, context: LAContext())
+      try await requestBiometricAuthUseCase.execute(reason: L10n.biometricSetupReason, context: context)
     } catch LAError.userCancel {
       throw ChangeBiometricStatusError.userCancel
     }

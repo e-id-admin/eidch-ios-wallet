@@ -17,4 +17,4 @@ public protocol LAContextProtocol {
 
 // MARK: - LAContext + LAContextProtocol
 
-extension LAContext: LAContextProtocol { }
+extension LAContext: LAContextProtocol {}

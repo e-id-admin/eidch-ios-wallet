@@ -1,5 +1,7 @@
 import BITCore
+import Factory
 import Foundation
+import LocalAuthentication
 import Spyable
 import XCTest
 @testable import BITAppAuth
@@ -12,46 +14,56 @@ final class UpdatePinCodeUseCaseTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    spyContext = LAContextProtocolSpy()
-    spyPinCodeManager = PinCodeManagerProtocolSpy()
-    spyContextManager = ContextManagerProtocolSpy()
-    spyUniquePassphraseManager = UniquePassphraseManagerProtocolSpy()
+    context = LAContextProtocolSpy()
+    pinCodeManager = PinCodeManagerProtocolSpy()
+    userSession = SessionSpy()
+    uniquePassphraseManager = UniquePassphraseManagerProtocolSpy()
 
-    useCase = UpdatePinCodeUseCase(
-      uniquePassphraseManager: spyUniquePassphraseManager,
-      context: spyContext,
-      pinCodeManager: spyPinCodeManager,
-      contextManager: spyContextManager)
+    Container.shared.internalContext.register { self.context }
+    Container.shared.pinCodeManager.register { self.pinCodeManager }
+    Container.shared.userSession.register { self.userSession }
+    Container.shared.uniquePassphraseManager.register { self.uniquePassphraseManager }
+
+    useCase = UpdatePinCodeUseCase()
   }
 
   func testHappyPath() throws {
-    let mockData = Data()
+    let pinCodeMockData = Data()
+    let uniquePassphraseMockData = Data()
     let pinCode = "123456"
 
-    spyPinCodeManager.encryptReturnValue = mockData
-    spyUniquePassphraseManager.generateReturnValue = mockData
+    userSession.startSessionPassphraseCredentialTypeReturnValue = LAContextProtocolSpy()
 
-    try useCase.execute(with: pinCode, and: mockData)
+    pinCodeManager.encryptReturnValue = pinCodeMockData
+    uniquePassphraseManager.generateReturnValue = uniquePassphraseMockData
 
-    XCTAssertTrue(spyUniquePassphraseManager.saveUniquePassphraseForContextCalled)
-    XCTAssertEqual(mockData, spyUniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.uniquePassphrase)
-    XCTAssertEqual(AuthMethod.appPin, spyUniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.authMethod)
-    XCTAssertEqual(spyUniquePassphraseManager.saveUniquePassphraseForContextCallsCount, 1)
+    try useCase.execute(with: pinCode, and: uniquePassphraseMockData)
 
-    XCTAssertTrue(spyPinCodeManager.encryptCalled)
-    XCTAssertEqual(pinCode, spyPinCodeManager.encryptReceivedPinCode)
+    XCTAssertTrue(uniquePassphraseManager.saveUniquePassphraseForContextCalled)
+    XCTAssertEqual(uniquePassphraseMockData, uniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.uniquePassphrase)
+    XCTAssertEqual(AuthMethod.appPin, uniquePassphraseManager.saveUniquePassphraseForContextReceivedArguments?.authMethod)
+    XCTAssertEqual(uniquePassphraseManager.saveUniquePassphraseForContextCallsCount, 1)
 
-    XCTAssertTrue(spyContextManager.setCredentialContextCalled)
-    XCTAssertEqual(mockData, spyContextManager.setCredentialContextReceivedArguments?.data)
+    XCTAssertTrue(pinCodeManager.encryptCalled)
+    XCTAssertEqual(pinCode, pinCodeManager.encryptReceivedPinCode)
+
+    XCTAssertTrue(userSession.startSessionPassphraseCredentialTypeCalled)
+    XCTAssertEqual(userSession.startSessionPassphraseCredentialTypeCallsCount, 2)
+    let invocations: [(passphrase: Data, credentialType: LACredentialType)] = [
+      (pinCodeMockData, .applicationPassword),
+      (uniquePassphraseMockData, .applicationPassword),
+    ]
+    XCTAssertEqual(invocations[0].passphrase, userSession.startSessionPassphraseCredentialTypeReceivedInvocations[0].passphrase)
+    XCTAssertEqual(invocations[1].passphrase, userSession.startSessionPassphraseCredentialTypeReceivedInvocations[1].passphrase)
   }
 
   // MARK: Private
 
   // swiftlint:disable all
   private var useCase: UpdatePinCodeUseCase!
-  private var spyPinCodeManager: PinCodeManagerProtocolSpy!
-  private var spyUniquePassphraseManager: UniquePassphraseManagerProtocolSpy!
-  private var spyContextManager: ContextManagerProtocolSpy!
-  private var spyContext: LAContextProtocolSpy!
+  private var pinCodeManager: PinCodeManagerProtocolSpy!
+  private var uniquePassphraseManager: UniquePassphraseManagerProtocolSpy!
+  private var userSession: SessionSpy!
+  private var context: LAContextProtocolSpy!
   // swiftlint:enable all
 }

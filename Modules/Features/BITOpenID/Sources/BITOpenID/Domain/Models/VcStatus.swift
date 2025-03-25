@@ -7,6 +7,7 @@ public enum VcStatus: String, Codable, CaseIterable {
   case revoked
   case suspended
   case expired
+  case notYetValid
   case unsupported
   case unknown
 }

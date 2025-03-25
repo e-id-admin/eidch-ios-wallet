@@ -36,8 +36,8 @@ public enum L10n {
   public static let cameraQrcodeScannerLoader = L10n.tr("Localizable", "camera_qrcode_scanner_loader", fallback: "Please wait")
   /// Scan QR code
   public static let cameraQrcodeScannerPrimary = L10n.tr("Localizable", "camera_qrcode_scanner_primary", fallback: "Scan QR code")
-  /// For identification or for adding evidence.
-  public static let cameraQrcodeScannerSecondary = L10n.tr("Localizable", "camera_qrcode_scanner_secondary", fallback: "For identification or for adding evidence.")
+  /// To identify yourself or add IDs and documents.
+  public static let cameraQrcodeScannerSecondary = L10n.tr("Localizable", "camera_qrcode_scanner_secondary", fallback: "To identify yourself or add IDs and documents.")
   /// MISSING: Fortfahren
   public static let cameraPermissionContinueButton = L10n.tr("Localizable", "cameraPermission_continue_button", fallback: "MISSING: Fortfahren")
   /// It seems you denied the access to the camera
@@ -52,8 +52,8 @@ public enum L10n {
   public static let cameraPermissionSecondary = L10n.tr("Localizable", "cameraPermission_secondary", fallback: "MISSING: Erlauben Sie den Zugriff auf die Kamera für das Scannen von QR-Codes um Ausweise zu empfangen oder eine Überprüfung durchzuführen.")
   /// Value:
   public static let cellValueAccessibilityLabel = L10n.tr("Localizable", "cell_value_accessibility_label", fallback: "Value:")
-  /// Accept
-  public static let credentialOfferAcceptButton = L10n.tr("Localizable", "credential_offer_acceptButton", fallback: "Accept")
+  /// Allow
+  public static let credentialOfferAcceptButton = L10n.tr("Localizable", "credential_offer_acceptButton", fallback: "Allow")
   /// Details
   public static let credentialOfferContentSectionTitle = L10n.tr("Localizable", "credential_offer_content_section_title", fallback: "Details")
   /// Would like to issue the following credential:
@@ -92,10 +92,10 @@ public enum L10n {
   public static let globalContinue = L10n.tr("Localizable", "global_continue", fallback: "Continue")
   /// Go to settings
   public static let globalErrorNoDevicePinButton = L10n.tr("Localizable", "global_error_no_device_pin_button", fallback: "Go to settings")
-  /// The Device has no PIN code set. The app can't be used.
-  public static let globalErrorNoDevicePinMessage = L10n.tr("Localizable", "global_error_no_device_pin_message", fallback: "The Device has no PIN code set. The app can't be used.")
-  /// No Device Pin
-  public static let globalErrorNoDevicePinTitle = L10n.tr("Localizable", "global_error_no_device_pin_title", fallback: "No Device Pin")
+  /// Please define a smartphone passcode so that you can use the app.
+  public static let globalErrorNoDevicePinMessage = L10n.tr("Localizable", "global_error_no_device_pin_message", fallback: "Please define a smartphone passcode so that you can use the app.")
+  /// Missing smartphone code
+  public static let globalErrorNoDevicePinTitle = L10n.tr("Localizable", "global_error_no_device_pin_title", fallback: "Missing smartphone code")
   /// n/a
   public static let globalNotAssigned = L10n.tr("Localizable", "global_not_assigned", fallback: "n/a")
   /// App Version
@@ -106,22 +106,22 @@ public enum L10n {
   public static let impressumDisclaimerText = L10n.tr("Localizable", "impressum_disclaimer_text", fallback: "The authors assume no liability whatsoever with regard to the reliability and completeness of the information. References and links to third-party websites are outside our area of responsibility.")
   /// Disclaimer
   public static let impressumDisclaimerTitle = L10n.tr("Localizable", "impressum_disclaimer_title", fallback: "Disclaimer")
-  /// https://www.github.com/e-id-admin
-  public static let impressumGithubLink = L10n.tr("Localizable", "impressum_github_link", fallback: "https://www.github.com/e-id-admin")
-  /// www.github.com/e-id-admin
-  public static let impressumGithubLinkText = L10n.tr("Localizable", "impressum_github_link_text", fallback: "www.github.com/e-id-admin")
+  /// https://www.github.com/swiyu-admin-ch
+  public static let impressumGithubLink = L10n.tr("Localizable", "impressum_github_link", fallback: "https://www.github.com/swiyu-admin-ch")
+  /// www.github.com/swiyu-admin-ch
+  public static let impressumGithubLinkText = L10n.tr("Localizable", "impressum_github_link_text", fallback: "www.github.com/swiyu-admin-ch")
   /// The swiyu app is open source. Its source code can be viewed on GitHub.
   public static let impressumHeaderText = L10n.tr("Localizable", "impressum_header_text", fallback: "The swiyu app is open source. Its source code can be viewed on GitHub.")
-  /// https://www.eid.admin.ch/en/swiyu-privacy-e
-  public static let impressumLegalsLink = L10n.tr("Localizable", "impressum_legals_link", fallback: "https://www.eid.admin.ch/en/swiyu-privacy-e")
+  /// https://www.eid.admin.ch/en/swiyu-terms-e
+  public static let impressumLegalsLink = L10n.tr("Localizable", "impressum_legals_link", fallback: "https://www.eid.admin.ch/en/swiyu-terms-e")
   /// Terms of use
   public static let impressumLegalsLinkText = L10n.tr("Localizable", "impressum_legals_link_text", fallback: "Terms of use")
   /// Legals
   public static let impressumLegalsTitle = L10n.tr("Localizable", "impressum_legals_title", fallback: "Legals")
   /// Publisher, implementation and operation
   public static let impressumManagerTitle = L10n.tr("Localizable", "impressum_manager_title", fallback: "Publisher, implementation and operation")
-  /// https://www.bit.admin.ch
-  public static let impressumMoreInformationLink = L10n.tr("Localizable", "impressum_more_information_link", fallback: "https://www.bit.admin.ch")
+  /// https://www.bit.admin.ch/en
+  public static let impressumMoreInformationLink = L10n.tr("Localizable", "impressum_more_information_link", fallback: "https://www.bit.admin.ch/en")
   /// www.bit.admin.ch
   public static let impressumMoreInformationLinkText = L10n.tr("Localizable", "impressum_more_information_link_text", fallback: "www.bit.admin.ch")
   /// More information
@@ -145,8 +145,6 @@ public enum L10n {
   public static let licencesText = L10n.tr("Localizable", "licences_text", fallback: "Below is the list of software licenses used by this app.\nThe licenses follow the BIT guidelines for compliance with privacy and the latest security standards. With this list we want to ensure transparency towards the users.")
   /// Licences
   public static let licencesTitle = L10n.tr("Localizable", "licences_title", fallback: "Licences")
-  /// You can still log in with your pin, if biometrics are not working
-  public static let onboardingBiometricPermissionReason = L10n.tr("Localizable", "onboarding_biometric_permission_reason", fallback: "You can still log in with your pin, if biometrics are not working")
   /// Continue
   public static let onboardingContinue = L10n.tr("Localizable", "onboarding_continue", fallback: "Continue")
   /// Start tour
@@ -199,12 +197,6 @@ public enum L10n {
   public static let onboardingSecurityPrimary = L10n.tr("Localizable", "onboarding_security_primary", fallback: "Your data - with you")
   /// Your credentials are stored exclusively on your device. Only you have access to them.
   public static let onboardingSecuritySecondary = L10n.tr("Localizable", "onboarding_security_secondary", fallback: "Your credentials are stored exclusively on your device. Only you have access to them.")
-  /// Try again
-  public static let onboardingSetupErrorButtonText = L10n.tr("Localizable", "onboarding_setupError_buttonText", fallback: "Try again")
-  /// Something has gone wrong
-  public static let onboardingSetupErrorPrimary = L10n.tr("Localizable", "onboarding_setupError_primary", fallback: "Something has gone wrong")
-  /// We cannot setup the app at the moment. Please try again.
-  public static let onboardingSetupErrorSecondary = L10n.tr("Localizable", "onboarding_setupError_secondary", fallback: "We cannot setup the app at the moment. Please try again.")
   /// Share information
   public static let presentationAcceptButtonText = L10n.tr("Localizable", "presentation_accept_button_text", fallback: "Share information")
   /// The verification was canceled and no data was transferred.
@@ -219,8 +211,8 @@ public enum L10n {
   public static let presentationSelectCredentialTitle = L10n.tr("Localizable", "presentation_select_credential_title", fallback: "Which credential must be presented?")
   /// Unknown verifier
   public static let presentationVerifierNameUnknown = L10n.tr("Localizable", "presentation_verifier_name_unknown", fallback: "Unknown verifier")
-  /// Analysis and Improvements
-  public static let securitySettingsAnalysisTitle = L10n.tr("Localizable", "securitySettings_analysisTitle", fallback: "Analysis and Improvements")
+  /// Analysis & Improvements
+  public static let securitySettingsAnalysisTitle = L10n.tr("Localizable", "securitySettings_analysisTitle", fallback: "Analysis & Improvements")
   /// Biometrics
   public static let securitySettingsBiometrics = L10n.tr("Localizable", "securitySettings_biometrics", fallback: "Biometrics")
   /// Change password
@@ -245,8 +237,8 @@ public enum L10n {
   public static let settingsContactLink = L10n.tr("Localizable", "settings_contactLink", fallback: "https://forms.eid.admin.ch")
   /// Help
   public static let settingsHelp = L10n.tr("Localizable", "settings_help", fallback: "Help")
-  /// https://www.eid.admin.ch/en
-  public static let settingsHelpLink = L10n.tr("Localizable", "settings_helpLink", fallback: "https://www.eid.admin.ch/en")
+  /// https://www.eid.admin.ch/en/help-publicbeta-e
+  public static let settingsHelpLink = L10n.tr("Localizable", "settings_helpLink", fallback: "https://www.eid.admin.ch/en/help-publicbeta-e")
   /// Publication details
   public static let settingsImpressum = L10n.tr("Localizable", "settings_impressum", fallback: "Publication details")
   /// Language
@@ -255,8 +247,8 @@ public enum L10n {
   public static let settingsLicences = L10n.tr("Localizable", "settings_licences", fallback: "Licences")
   /// Data protection and security
   public static let settingsSecurity = L10n.tr("Localizable", "settings_security", fallback: "Data protection and security")
-  /// Menu
-  public static let settingsTitle = L10n.tr("Localizable", "settings_title", fallback: "Menu")
+  /// Settings
+  public static let settingsTitle = L10n.tr("Localizable", "settings_title", fallback: "Settings")
   /// Your settings will be applied, which can take up to 30 seconds.
   public static let storageSetupText = L10n.tr("Localizable", "storageSetup_text", fallback: "Your settings will be applied, which can take up to 30 seconds.")
   /// Applying settings
@@ -309,6 +301,15 @@ public enum L10n {
   public static let tkDisplaydeleteDisplaycredential1Title4 = L10n.tr("Localizable", "tk_displaydelete_displaycredential1_title4", fallback: "Validity")
   /// Issued by
   public static let tkDisplaydeleteDisplaycredential1Title5 = L10n.tr("Localizable", "tk_displaydelete_displaycredential1_title5", fallback: "Issued by")
+  /// Once issued, a credential cannot be changed.
+  ///
+  /// If you notice an error in your data, please contact the issuer.
+  /// They can issue a new, corrected credential.
+  public static let tkDisplaydeleteWrongdataBody = L10n.tr("Localizable", "tk_displaydelete_wrongdata_body", fallback: "Once issued, a credential cannot be changed.\n\nIf you notice an error in your data, please contact the issuer.\nThey can issue a new, corrected credential.")
+  /// Found any incorrect data?
+  public static let tkDisplaydeleteWrongdataNavigationTitle = L10n.tr("Localizable", "tk_displaydelete_wrongdata_navigation_title", fallback: "Found any incorrect data?")
+  /// Report incorrect details
+  public static let tkDisplaydeleteWrongdataTitle = L10n.tr("Localizable", "tk_displaydelete_wrongdata_title", fallback: "Report incorrect details")
   /// Please try again.
   public static let tkErrorConnectionproblemBody = L10n.tr("Localizable", "tk_error_connectionproblem_body", fallback: "Please try again.")
   /// Connection problems
@@ -337,8 +338,8 @@ public enum L10n {
   public static let tkErrorNotregisteredBody = L10n.tr("Localizable", "tk_error_notregistered_body", fallback: "This issuer is not registered.")
   /// Unknown issuer
   public static let tkErrorNotregisteredTitle = L10n.tr("Localizable", "tk_error_notregistered_title", fallback: "Unknown issuer")
-  /// This QR code has already been used and cannot be used again.
-  public static let tkErrorNotusableBody = L10n.tr("Localizable", "tk_error_notusable_body", fallback: "This QR code has already been used and cannot be used again.")
+  /// This QR code is no longer valid, please create a new one.
+  public static let tkErrorNotusableBody = L10n.tr("Localizable", "tk_error_notusable_body", fallback: "This QR code is no longer valid, please create a new one.")
   /// QR code no longer valid
   public static let tkErrorNotusableTitle = L10n.tr("Localizable", "tk_error_notusable_title", fallback: "QR code no longer valid")
   /// Beta-ID was added
@@ -410,6 +411,8 @@ public enum L10n {
   public static let tkGetEidNotificationEidReadyGreenButton = L10n.tr("Localizable", "tk_getEid_notification_eidReady_greenButton", fallback: "Start identification (deepl)")
   /// Unfortunately, your order cannot be processed immediately due to high demand. You will be notified via the app as soon as it is your turn. This may take a few days. (deepl)
   public static let tkGetEidQueuingBody = L10n.tr("Localizable", "tk_getEid_queuing_body", fallback: "Unfortunately, your order cannot be processed immediately due to high demand. You will be notified via the app as soon as it is your turn. This may take a few days. (deepl)")
+  /// Expected date:
+  public static let tkGetEidQueuingBody2Ios = L10n.tr("Localizable", "tk_getEid_queuing_body2_ios", fallback: "Expected date:")
   /// processing delay (deepl)
   public static let tkGetEidQueuingTitle = L10n.tr("Localizable", "tk_getEid_queuing_title", fallback: "processing delay (deepl)")
   /// Please have your ID ready and point the camera at the area with the code line.
@@ -435,13 +438,11 @@ public enum L10n {
   /// Add
   public static let tkGlobalAddPrimarybutton = L10n.tr("Localizable", "tk_global_add_primarybutton", fallback: "Add")
   /// Allow
-  public static let tkGlobalAllow = L10n.tr("Localizable", "tk_global_allow", fallback: "Allow")
-  /// Allow
   public static let tkGlobalAllowPrimarybutton = L10n.tr("Localizable", "tk_global_allow_primarybutton", fallback: "Allow")
   /// Back
   public static let tkGlobalBackAlt = L10n.tr("Localizable", "tk_global_back_alt", fallback: "Back")
-  /// https://www.bcs.admin.ch/bcs-web
-  public static let tkGlobalBetaidUrl = L10n.tr("Localizable", "tk_global_betaid_url", fallback: "https://www.bcs.admin.ch/bcs-web")
+  /// https://www.bcs.admin.ch/bcs-web/?lang=EN
+  public static let tkGlobalBetaidUrl = L10n.tr("Localizable", "tk_global_betaid_url", fallback: "https://www.bcs.admin.ch/bcs-web/?lang=EN")
   /// Cancel
   public static let tkGlobalCancel = L10n.tr("Localizable", "tk_global_cancel", fallback: "Cancel")
   /// Cancel
@@ -462,8 +463,6 @@ public enum L10n {
   public static let tkGlobalClosescanAlt = L10n.tr("Localizable", "tk_global_closescan_alt", fallback: "Close QR code scanner")
   /// Close warning
   public static let tkGlobalClosewarningAlt = L10n.tr("Localizable", "tk_global_closewarning_alt", fallback: "Close warning")
-  /// Confirm password
-  public static let tkGlobalConfirmpassword = L10n.tr("Localizable", "tk_global_confirmpassword", fallback: "Confirm password")
   /// Next
   public static let tkGlobalContinue = L10n.tr("Localizable", "tk_global_continue", fallback: "Next")
   /// Credential
@@ -506,10 +505,8 @@ public enum L10n {
   public static let tkGlobalDetailsAlt = L10n.tr("Localizable", "tk_global_details_alt", fallback: "Open details")
   /// Enter password
   public static let tkGlobalEnterpassword = L10n.tr("Localizable", "tk_global_enterpassword", fallback: "Enter password")
-  /// Link to exit swiyu app
-  public static let tkGlobalExternallinkAlt = L10n.tr("Localizable", "tk_global_externallink_alt", fallback: "Link to exit swiyu app")
-  /// https://www.bcs.admin.ch/bcs-web
-  public static let tkGlobalGetbetaidLinkValue = L10n.tr("Localizable", "tk_global_getbetaid_link_value", fallback: "https://www.bcs.admin.ch/bcs-web")
+  /// https://www.bcs.admin.ch/bcs-web/?lang=EN
+  public static let tkGlobalGetbetaidLinkValue = L10n.tr("Localizable", "tk_global_getbetaid_link_value", fallback: "https://www.bcs.admin.ch/bcs-web/?lang=EN")
   /// Create Beta-ID
   public static let tkGlobalGetbetaidPrimarybutton = L10n.tr("Localizable", "tk_global_getbetaid_primarybutton", fallback: "Create Beta-ID")
   /// Show password
@@ -528,8 +525,6 @@ public enum L10n {
   public static let tkGlobalNewpassword = L10n.tr("Localizable", "tk_global_newpassword", fallback: "New password")
   /// No thanks
   public static let tkGlobalNo = L10n.tr("Localizable", "tk_global_no", fallback: "No thanks")
-  /// Do not allow
-  public static let tkGlobalNotallow = L10n.tr("Localizable", "tk_global_notallow", fallback: "Do not allow")
   /// Not verified
   public static let tkGlobalNotVerified = L10n.tr("Localizable", "tk_global_notVerified", fallback: "Not verified")
   /// Please wait
@@ -546,8 +541,8 @@ public enum L10n {
   public static let tkGlobalScanqrcode = L10n.tr("Localizable", "tk_global_scanqrcode", fallback: "Scan QR code")
   /// Skip
   public static let tkGlobalSkip = L10n.tr("Localizable", "tk_global_skip", fallback: "Skip")
-  /// Go to Settings
-  public static let tkGlobalTothesettings = L10n.tr("Localizable", "tk_global_tothesettings", fallback: "Go to Settings")
+  /// Go to settings
+  public static let tkGlobalTothesettings = L10n.tr("Localizable", "tk_global_tothesettings", fallback: "Go to settings")
   /// Verified
   public static let tkGlobalVerified = L10n.tr("Localizable", "tk_global_verified", fallback: "Verified")
   /// Hide password
@@ -588,8 +583,8 @@ public enum L10n {
   public static let tkLoginForgottenpasswordAlt = L10n.tr("Localizable", "tk_login_forgottenpassword_alt", fallback: "More information")
   /// Forgotten your password?
   public static let tkLoginLockedSecondarybuttonText = L10n.tr("Localizable", "tk_login_locked_secondarybutton_text", fallback: "Forgotten your password?")
-  /// https://www.eid.admin.ch/en
-  public static let tkLoginLockedSecondarybuttonValue = L10n.tr("Localizable", "tk_login_locked_secondarybutton_value", fallback: "https://www.eid.admin.ch/en")
+  /// https://www.eid.admin.ch/en/help-publicbeta-e
+  public static let tkLoginLockedSecondarybuttonValue = L10n.tr("Localizable", "tk_login_locked_secondarybutton_value", fallback: "https://www.eid.admin.ch/en/help-publicbeta-e")
   /// Sorry, the swiyu app is currently unavailable. Please try again later.
   public static let tkLoginLockedTitle = L10n.tr("Localizable", "tk_login_locked_title", fallback: "Sorry, the swiyu app is currently unavailable. Please try again later.")
   /// Enter swiyu app password
@@ -665,8 +660,8 @@ public enum L10n {
   public static let tkMenuLicencesBody = L10n.tr("Localizable", "tk_menu_licences_body", fallback: "The following is a list of the software licences used by this app.\n\nThe licences follow the guidelines of the Federal IT Office for compliance with privacy and the latest security standards. With this list, we want to ensure transparency for users.")
   /// Further information (deepl)
   public static let tkMenuLicencesLinkText = L10n.tr("Localizable", "tk_menu_licences_link_text", fallback: "Further information (deepl)")
-  /// Licences (deepl)
-  public static let tkMenuLicencesTitle = L10n.tr("Localizable", "tk_menu_licences_title", fallback: "Licences (deepl)")
+  /// Licences
+  public static let tkMenuLicencesTitle = L10n.tr("Localizable", "tk_menu_licences_title", fallback: "Licences")
   /// Biometric unlocking has been activated.
   public static let tkMenuSecurityPrivacyAndroidStatusActivating = L10n.tr("Localizable", "tk_menu_securityPrivacy_android_status_activating", fallback: "Biometric unlocking has been activated.")
   /// diagnostic data (deepl)
@@ -693,8 +688,8 @@ public enum L10n {
   public static let tkMenuSettingTitle = L10n.tr("Localizable", "tk_menu_setting_title", fallback: "Settings (deepl)")
   /// Share feedback
   public static let tkMenuSettingWalletFeedback = L10n.tr("Localizable", "tk_menu_setting_wallet_feedback", fallback: "Share feedback")
-  /// https://findmind.ch/c/rBVu-3vyY
-  public static let tkMenuSettingWalletFeedbackLinkValue = L10n.tr("Localizable", "tk_menu_setting_wallet_feedback_link_value", fallback: "https://findmind.ch/c/rBVu-3vyY")
+  /// https://findmind.ch/c/feedback_public_beta_en
+  public static let tkMenuSettingWalletFeedbackLinkValue = L10n.tr("Localizable", "tk_menu_setting_wallet_feedback_link_value", fallback: "https://findmind.ch/c/feedback_public_beta_en")
   /// Help & Contact (deepl)
   public static let tkMenuSettingWalletHelp = L10n.tr("Localizable", "tk_menu_setting_wallet_help", fallback: "Help & Contact (deepl)")
   /// Imprint (deepl)
@@ -711,34 +706,62 @@ public enum L10n {
   public static let tkMenuSetupMenuFeedback = L10n.tr("Localizable", "tk_menu_setup_menu_feedback", fallback: "Share feedback")
   /// Wallet
   public static let tkMenuSetupSubtitleWallet = L10n.tr("Localizable", "tk_menu_setup_subtitle_wallet", fallback: "Wallet")
-  /// Your swiyu app now has optimal protection against unauthorised access.
-  public static let tkOnboardingAllsetBody = L10n.tr("Localizable", "tk_onboarding_allset_body", fallback: "Your swiyu app now has optimal protection against unauthorised access.")
-  /// All done!
-  public static let tkOnboardingAllsetTitle = L10n.tr("Localizable", "tk_onboarding_allset_title", fallback: "All done!")
-  /// Your settings are being applied. This may take up to 30 seconds.
-  public static let tkOnboardingApplysettingsBody = L10n.tr("Localizable", "tk_onboarding_applysettings_body", fallback: "Your settings are being applied. This may take up to 30 seconds.")
-  /// Please wait a moment...
-  public static let tkOnboardingApplysettingsTitle = L10n.tr("Localizable", "tk_onboarding_applysettings_title", fallback: "Please wait a moment...")
+  /// Allow
+  public static let tkOnboardingAnalyticsButtonPrimary = L10n.tr("Localizable", "tk_onboarding_analytics_button_primary", fallback: "Allow")
+  /// Do not allow
+  public static let tkOnboardingAnalyticsButtonSecondary = L10n.tr("Localizable", "tk_onboarding_analytics_button_secondary", fallback: "Do not allow")
+  /// Contribute anonymously to improving the app
+  public static let tkOnboardingAnalyticsPrimary = L10n.tr("Localizable", "tk_onboarding_analytics_primary", fallback: "Contribute anonymously to improving the app")
+  /// Take advantage of an app tailored to your needs. Do you want to share your anonymous user data with the development team in return?
+  public static let tkOnboardingAnalyticsSecondary = L10n.tr("Localizable", "tk_onboarding_analytics_secondary", fallback: "Take advantage of an app tailored to your needs. Do you want to share your anonymous user data with the development team in return?")
+  /// Link to exit swiyu app
+  public static let tkOnboardingAnalyticsTertiaryLinkAlt = L10n.tr("Localizable", "tk_onboarding_analytics_tertiary_link_alt", fallback: "Link to exit swiyu app")
+  /// Data protection and security
+  public static let tkOnboardingAnalyticsTertiaryLinkText = L10n.tr("Localizable", "tk_onboarding_analytics_tertiary_link_text", fallback: "Data protection and security")
+  /// https://www.eid.admin.ch/en/swiyu-privacy-e
+  public static let tkOnboardingAnalyticsTertiaryLinkValue = L10n.tr("Localizable", "tk_onboarding_analytics_tertiary_link_value", fallback: "https://www.eid.admin.ch/en/swiyu-privacy-e")
   /// Yes please
-  public static let tkOnboardingBiometricios1Primarybutton = L10n.tr("Localizable", "tk_onboarding_biometricios1_primarybutton", fallback: "Yes please")
-  /// Password
-  public static let tkOnboardingCharactersNote = L10n.tr("Localizable", "tk_onboarding_characters_note", fallback: "Password")
+  public static let tkOnboardingBiometricsPermissionButtonPrimary = L10n.tr("Localizable", "tk_onboarding_biometricsPermission_button_primary", fallback: "Yes please")
+  /// You can still log in with your password, if biometrics are not working
+  public static let tkOnboardingBiometricsPermissionReason = L10n.tr("Localizable", "tk_onboarding_biometricsPermission_reason", fallback: "You can still log in with your password, if biometrics are not working")
+  /// Go to settings
+  public static let tkOnboardingBiometricsPermissionDisabledButtonPrimary = L10n.tr("Localizable", "tk_onboarding_biometricsPermissionDisabled_button_primary", fallback: "Go to settings")
   /// Password must be at least 6 characters
   public static let tkOnboardingCharactersSubtitle = L10n.tr("Localizable", "tk_onboarding_characters_subtitle", fallback: "Password must be at least 6 characters")
   /// Confirm password
   public static let tkOnboardingConfirmNote = L10n.tr("Localizable", "tk_onboarding_confirm_note", fallback: "Confirm password")
-  /// Take advantage of an app tailored to your needs. Do you want to share your anonymous user data with the development team in return?
-  public static let tkOnboardingImprovementBody = L10n.tr("Localizable", "tk_onboarding_improvement_body", fallback: "Take advantage of an app tailored to your needs. Do you want to share your anonymous user data with the development team in return?")
-  /// Data protection and security
-  public static let tkOnboardingImprovementLinkText = L10n.tr("Localizable", "tk_onboarding_improvement_link_text", fallback: "Data protection and security")
-  /// https://www.eid.admin.ch/en/swiyu-privacy-e
-  public static let tkOnboardingImprovementLinkValue = L10n.tr("Localizable", "tk_onboarding_improvement_link_value", fallback: "https://www.eid.admin.ch/en/swiyu-privacy-e")
-  /// Contribute anonymously to improving the app
-  public static let tkOnboardingImprovementTitle = L10n.tr("Localizable", "tk_onboarding_improvement_title", fallback: "Contribute anonymously to improving the app")
-  /// Thanks to the swiyu app, you always have ID with you on your mobile phone.
-  public static let tkOnboardingNeverforgetBody = L10n.tr("Localizable", "tk_onboarding_neverforget_body", fallback: "Thanks to the swiyu app, you always have ID with you on your mobile phone.")
+  /// All done!
+  public static let tkOnboardingDonePrimary = L10n.tr("Localizable", "tk_onboarding_done_primary", fallback: "All done!")
+  /// Your swiyu app now has optimal protection against unauthorised access.
+  public static let tkOnboardingDoneSecondary = L10n.tr("Localizable", "tk_onboarding_done_secondary", fallback: "Your swiyu app now has optimal protection against unauthorised access.")
+  /// Try again
+  public static let tkOnboardingDoneErrorButtonPrimary = L10n.tr("Localizable", "tk_onboarding_doneError_button_primary", fallback: "Try again")
+  /// Something has gone wrong
+  public static let tkOnboardingDoneErrorPrimary = L10n.tr("Localizable", "tk_onboarding_doneError_primary", fallback: "Something has gone wrong")
+  /// We cannot setup the app at the moment. Please try again.
+  public static let tkOnboardingDoneErrorSecondary = L10n.tr("Localizable", "tk_onboarding_doneError_secondary", fallback: "We cannot setup the app at the moment. Please try again.")
   /// Never forget your ID again
-  public static let tkOnboardingNeverforgetTitle = L10n.tr("Localizable", "tk_onboarding_neverforget_title", fallback: "Never forget your ID again")
+  public static let tkOnboardingIntroductionStepNeverForgetPrimary = L10n.tr("Localizable", "tk_onboarding_introductionStep_neverForget_primary", fallback: "Never forget your ID again")
+  /// Thanks to the swiyu app, you always have your ID with you on your mobile phone.
+  public static let tkOnboardingIntroductionStepNeverForgetSecondary = L10n.tr("Localizable", "tk_onboarding_introductionStep_neverForget_secondary", fallback: "Thanks to the swiyu app, you always have your ID with you on your mobile phone.")
+  /// Start
+  public static let tkOnboardingIntroductionStepSecurityButtonPrimary = L10n.tr("Localizable", "tk_onboarding_introductionStep_security_button_primary", fallback: "Start")
+  /// Storing digital IDs securely
+  public static let tkOnboardingIntroductionStepSecurityPrimary = L10n.tr("Localizable", "tk_onboarding_introductionStep_security_primary", fallback: "Storing digital IDs securely")
+  /// Welcome to the onboarding for the swiyu app.
+  public static let tkOnboardingIntroductionStepSecurityScreenAlt = L10n.tr("Localizable", "tk_onboarding_introductionStep_security_screen_alt", fallback: "Welcome to the onboarding for the swiyu app.")
+  /// Your ID data is encrypted and stored locally in the swiyu app on your mobile phone.
+  public static let tkOnboardingIntroductionStepSecuritySecondary = L10n.tr("Localizable", "tk_onboarding_introductionStep_security_secondary", fallback: "Your ID data is encrypted and stored locally in the swiyu app on your mobile phone.")
+  /// Your data belongs to you
+  public static let tkOnboardingIntroductionStepYourDataPrimary = L10n.tr("Localizable", "tk_onboarding_introductionStep_yourData_primary", fallback: "Your data belongs to you")
+  /// You have control over who can check your ID data, and when. No access without permission.
+  public static let tkOnboardingIntroductionStepYourDataSecondary = L10n.tr("Localizable", "tk_onboarding_introductionStep_yourData_secondary", fallback: "You have control over who can check your ID data, and when. No access without permission.")
+  /// Learn more about SSI technology
+  public static let tkOnboardingIntroductionStepYourDataTertiaryLinkText = L10n.tr("Localizable", "tk_onboarding_introductionStep_yourData_tertiary_link_text", fallback: "Learn more about SSI technology")
+  /// Link to exit swiyu app
+  public static let tkOnboardingIntroductionStepYourDataTertiaryLinkTextAlt = L10n.tr("Localizable", "tk_onboarding_introductionStep_yourData_tertiary_link_text_alt", fallback: "Link to exit swiyu app")
+  /// https://www.eid.admin.ch/en/technology
+  public static let tkOnboardingIntroductionStepYourDataTertiaryLinkValue = L10n.tr("Localizable", "tk_onboarding_introductionStep_yourData_tertiary_link_value", fallback: "https://www.eid.admin.ch/en/technology")
   /// Please confirm the password
   public static let tkOnboardingNopasswordmismatchAlt = L10n.tr("Localizable", "tk_onboarding_nopasswordmismatch_alt", fallback: "Please confirm the password")
   /// The passwords do not match. Please try again.
@@ -747,44 +770,48 @@ public enum L10n {
   public static let tkOnboardingPasswordErrorEmpty = L10n.tr("Localizable", "tk_onboarding_password_error_empty", fallback: "Please enter your password")
   /// Password mismatch
   public static let tkOnboardingPasswordErrorMismatch = L10n.tr("Localizable", "tk_onboarding_password_error_mismatch", fallback: "Password mismatch")
+  /// Enter swiyu app password
+  public static let tkOnboardingPasswordInputAlt = L10n.tr("Localizable", "tk_onboarding_password_input_alt", fallback: "Enter swiyu app password")
+  /// Password
+  public static let tkOnboardingPasswordInputPlaceholder = L10n.tr("Localizable", "tk_onboarding_password_input_placeholder", fallback: "Password")
+  /// Password must be at least 6 characters
+  public static let tkOnboardingPasswordInputSubtitle = L10n.tr("Localizable", "tk_onboarding_password_input_subtitle", fallback: "Password must be at least 6 characters")
   /// Password
   public static let tkOnboardingPasswordPlaceholder = L10n.tr("Localizable", "tk_onboarding_password_placeholder", fallback: "Password")
-  /// Incorrect password entered too many times. Please set a new password.
-  public static let tkOnboardingPassworderrorBody = L10n.tr("Localizable", "tk_onboarding_passworderror_body", fallback: "Incorrect password entered too many times. Please set a new password.")
+  /// Enter password
+  public static let tkOnboardingPasswordTitle = L10n.tr("Localizable", "tk_onboarding_password_title", fallback: "Enter password")
+  /// Enter swiyu app password
+  public static let tkOnboardingPasswordConfirmationInputAlt = L10n.tr("Localizable", "tk_onboarding_passwordConfirmation_input_alt", fallback: "Enter swiyu app password")
+  /// The password is incorrect. Please try again.
+  public static let tkOnboardingPasswordConfirmationInputErrorWrongPassword = L10n.tr("Localizable", "tk_onboarding_passwordConfirmation_input_error_wrongPassword", fallback: "The password is incorrect. Please try again.")
+  /// Password
+  public static let tkOnboardingPasswordConfirmationInputPlaceholder = L10n.tr("Localizable", "tk_onboarding_passwordConfirmation_input_placeholder", fallback: "Password")
+  /// Confirm password
+  public static let tkOnboardingPasswordConfirmationTitle = L10n.tr("Localizable", "tk_onboarding_passwordConfirmation_title", fallback: "Confirm password")
   /// Create password
   public static let tkOnboardingPassworderrorPrimarybutton = L10n.tr("Localizable", "tk_onboarding_passworderror_primarybutton", fallback: "Create password")
   /// Failed to set up the password
   public static let tkOnboardingPassworderrorTitle = L10n.tr("Localizable", "tk_onboarding_passworderror_title", fallback: "Failed to set up the password")
+  /// Enter password
+  public static let tkOnboardingPasswordIntroductionButtonPrimary = L10n.tr("Localizable", "tk_onboarding_passwordIntroduction_button_primary", fallback: "Enter password")
+  /// Incorrect password entered too many times. Please set a new password.
+  public static let tkOnboardingPasswordIntroductionErrorTooManyAttempts = L10n.tr("Localizable", "tk_onboarding_passwordIntroduction_error_tooManyAttempts", fallback: "Incorrect password entered too many times. Please set a new password.")
+  /// Secure the app with a password
+  public static let tkOnboardingPasswordIntroductionPrimary = L10n.tr("Localizable", "tk_onboarding_passwordIntroduction_primary", fallback: "Secure the app with a password")
+  /// Protect your app from unauthorised access.
+  public static let tkOnboardingPasswordIntroductionSecondary = L10n.tr("Localizable", "tk_onboarding_passwordIntroduction_secondary", fallback: "Protect your app from unauthorised access.")
   /// Password must be at least 6 characters
   public static let tkOnboardingPasswordlengthNotification = L10n.tr("Localizable", "tk_onboarding_passwordlength_notification", fallback: "Password must be at least 6 characters")
-  /// Protect your app from unauthorised access.
-  public static let tkOnboardingSecurewithcodeBody = L10n.tr("Localizable", "tk_onboarding_securewithcode_body", fallback: "Protect your app from unauthorised access.")
-  /// Enter password
-  public static let tkOnboardingSecurewithcodePrimarybutton = L10n.tr("Localizable", "tk_onboarding_securewithcode_primarybutton", fallback: "Enter password")
-  /// Secure the app with a password
-  public static let tkOnboardingSecurewithcodeTitle = L10n.tr("Localizable", "tk_onboarding_securewithcode_title", fallback: "Secure the app with a password")
+  /// Please wait a moment...
+  public static let tkOnboardingSetupPrimary = L10n.tr("Localizable", "tk_onboarding_setup_primary", fallback: "Please wait a moment...")
+  /// Your settings are being applied. This may take up to 30 seconds.
+  public static let tkOnboardingSetupSecondary = L10n.tr("Localizable", "tk_onboarding_setup_secondary", fallback: "Your settings are being applied. This may take up to 30 seconds.")
   /// Sorry, the swiyu app cannot currently be loaded. Please try again.
   public static let tkOnboardingSomethingwentwrongBody = L10n.tr("Localizable", "tk_onboarding_somethingwentwrong_body", fallback: "Sorry, the swiyu app cannot currently be loaded. Please try again.")
   /// Try again
   public static let tkOnboardingSomethingwentwrongPrimarybutton = L10n.tr("Localizable", "tk_onboarding_somethingwentwrong_primarybutton", fallback: "Try again")
   /// Something went wrong
   public static let tkOnboardingSomethingwentwrongTitle = L10n.tr("Localizable", "tk_onboarding_somethingwentwrong_title", fallback: "Something went wrong")
-  /// Welcome to the onboarding for the swiyu app.
-  public static let tkOnboardingStartAlt = L10n.tr("Localizable", "tk_onboarding_start_alt", fallback: "Welcome to the onboarding for the swiyu app.")
-  /// Your ID data is encrypted and stored locally in the swiyu app on your mobile phone.
-  public static let tkOnboardingStartBody = L10n.tr("Localizable", "tk_onboarding_start_body", fallback: "Your ID data is encrypted and stored locally in the swiyu app on your mobile phone.")
-  /// Start
-  public static let tkOnboardingStartPrimarybutton = L10n.tr("Localizable", "tk_onboarding_start_primarybutton", fallback: "Start")
-  /// Storing digital IDs securely
-  public static let tkOnboardingStartTitle = L10n.tr("Localizable", "tk_onboarding_start_title", fallback: "Storing digital IDs securely")
-  /// You have control over who can check your ID data, and when. No access without permission.
-  public static let tkOnboardingYourdataBody = L10n.tr("Localizable", "tk_onboarding_yourdata_body", fallback: "You have control over who can check your ID data, and when. No access without permission.")
-  /// Learn more about SSI technology
-  public static let tkOnboardingYourdataLinkText = L10n.tr("Localizable", "tk_onboarding_yourdata_link_text", fallback: "Learn more about SSI technology")
-  /// https://www.eid.admin.ch/en/technology
-  public static let tkOnboardingYourdataLinkValue = L10n.tr("Localizable", "tk_onboarding_yourdata_link_value", fallback: "https://www.eid.admin.ch/en/technology")
-  /// Your data belongs to you
-  public static let tkOnboardingYourdataTitle = L10n.tr("Localizable", "tk_onboarding_yourdata_title", fallback: "Your data belongs to you")
   /// Your details have been successfully checked.
   public static let tkPresentAcceptTitle = L10n.tr("Localizable", "tk_present_accept_title", fallback: "Your details have been successfully checked.")
   /// Required credential available
@@ -807,6 +834,10 @@ public enum L10n {
   public static let tkPresentMultiplecredentialsTitle = L10n.tr("Localizable", "tk_present_multiplecredentials_title", fallback: "Select ID or document")
   /// Sorry, no details could be sent
   public static let tkPresentNoinformationprovidedTitle = L10n.tr("Localizable", "tk_present_noinformationprovided_title", fallback: "Sorry, no details could be sent")
+  /// Verification of the transmitted data failed.
+  public static let tkPresentResultInvalidCredentialPrimary = L10n.tr("Localizable", "tk_present_result_invalidCredential_primary", fallback: "Verification of the transmitted data failed.")
+  /// Please check the validity of your credential.
+  public static let tkPresentResultInvalidCredentialSecondary = L10n.tr("Localizable", "tk_present_result_invalidCredential_secondary", fallback: "Please check the validity of your credential.")
   /// Warning
   public static let tkPresentWarningAlt = L10n.tr("Localizable", "tk_present_warning_alt", fallback: "Warning")
   /// This QR code has already been used. Please request a new QR code.
@@ -861,17 +892,11 @@ public enum L10n {
   public static let tkReceiveDeny1Title = L10n.tr("Localizable", "tk_receive_deny1_title", fallback: "Decline credential?")
   /// Credential declined
   public static let tkReceiveDeny2Title = L10n.tr("Localizable", "tk_receive_deny2_title", fallback: "Credential declined")
-  /// You can either add or decline the credential.
+  /// Once issued, a credential cannot be changed.
   ///
-  /// If you want to accept the credential:
-  /// 1. Open the detailed view of the incorrect credential.
-  /// 2. Click on "Report incorrect data" again.
-  /// 3. Follow the instructions.
-  public static let tkReceiveIncorrectdataBody = L10n.tr("Localizable", "tk_receive_incorrectdata_body", fallback: "You can either add or decline the credential.\n\nIf you want to accept the credential:\n1. Open the detailed view of the incorrect credential.\n2. Click on \"Report incorrect data\" again.\n3. Follow the instructions.")
-  /// Report incorrect data
-  public static let tkReceiveIncorrectdataLinkText = L10n.tr("Localizable", "tk_receive_incorrectdata_link_text", fallback: "Report incorrect data")
-  /// https://www.eid.admin.ch/en/support-help
-  public static let tkReceiveIncorrectdataLinkValue = L10n.tr("Localizable", "tk_receive_incorrectdata_link_value", fallback: "https://www.eid.admin.ch/en/support-help")
+  /// If you notice an error in your data, please contact the issuer.
+  /// They can issue a new, corrected credential.
+  public static let tkReceiveIncorrectdataBody = L10n.tr("Localizable", "tk_receive_incorrectdata_body", fallback: "Once issued, a credential cannot be changed.\n\nIf you notice an error in your data, please contact the issuer.\nThey can issue a new, corrected credential.")
   /// Found any incorrect data?
   public static let tkReceiveIncorrectdataSubtitle = L10n.tr("Localizable", "tk_receive_incorrectdata_subtitle", fallback: "Found any incorrect data?")
   /// Report incorrect details
@@ -884,15 +909,14 @@ public enum L10n {
   public static let tkReceiveScanningNotfoundAlt = L10n.tr("Localizable", "tk_receive_scanning_notfound_alt", fallback: "No QR code found. Try to reposition the camera.")
   /// Verified
   public static let tkReceiveTrustedIssuerText = L10n.tr("Localizable", "tk_receive_trusted_issuer_text", fallback: "Verified")
-  /// For security reasons, you cannot use the swiyu app on this device.
-  public static let tkUnsafedeviceUnsafeBody = L10n.tr("Localizable", "tk_unsafedevice_unsafe_body", fallback: "For security reasons, you cannot use the swiyu app on this device.")
-  /// More Information (deep)
-  public static let tkUnsafedeviceUnsafePrimaryButton = L10n.tr("Localizable", "tk_unsafedevice_unsafe_primaryButton", fallback: "More Information (deep)")
-  /// If you want to use the swiyu app:
-  /// Restore this device to factory settings, or install the original firmware.
-  public static let tkUnsafedeviceUnsafeSmallbody = L10n.tr("Localizable", "tk_unsafedevice_unsafe_smallbody", fallback: "If you want to use the swiyu app:\nRestore this device to factory settings, or install the original firmware.")
-  /// swiyu app cannot be used
-  public static let tkUnsafedeviceUnsafeTitle = L10n.tr("Localizable", "tk_unsafedevice_unsafe_title", fallback: "swiyu app cannot be used")
+  /// Please define a smartphone passcode so that you can use the app.
+  public static let tkUnsafedeviceUnsafeBody = L10n.tr("Localizable", "tk_unsafedevice_unsafe_body", fallback: "Please define a smartphone passcode so that you can use the app.")
+  /// Go to settings
+  public static let tkUnsafedeviceUnsafePrimaryButton = L10n.tr("Localizable", "tk_unsafedevice_unsafe_primaryButton", fallback: "Go to settings")
+  ///
+  public static let tkUnsafedeviceUnsafeSmallbody = L10n.tr("Localizable", "tk_unsafedevice_unsafe_smallbody", fallback: " ")
+  /// Missing smartphone code
+  public static let tkUnsafedeviceUnsafeTitle = L10n.tr("Localizable", "tk_unsafedevice_unsafe_title", fallback: "Missing smartphone code")
   /// Update app
   public static let versionEnforcementButton = L10n.tr("Localizable", "version_enforcement_button", fallback: "Update app")
   /// https://www.eid.admin.ch
@@ -951,11 +975,6 @@ public enum L10n {
   /// e-ID ready for %@ (deepl)
   public static func tkGetEidNotificationEidReadyTitleIos(_ p1: Any) -> String {
     L10n.tr("Localizable", "tk_getEid_notification_eidReady_title_ios", String(describing: p1), fallback: "e-ID ready for %@ (deepl)")
-  }
-
-  /// Expected date: %@ (deepl)
-  public static func tkGetEidQueuingBody2Ios(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_getEid_queuing_body2_ios", String(describing: p1), fallback: "Expected date: %@ (deepl)")
   }
 
   /// Valid in %@ days
@@ -1018,9 +1037,9 @@ public enum L10n {
     L10n.tr("Localizable", "tk_menu_activatingBiometrics_ios_body", String(describing: p1), fallback: "Enter your swiyu password to activate %@. (deepl)")
   }
 
-  /// Unlock with %@  (deepl)
+  /// Unlock with %@
   public static func tkMenuActivatingBiometricsIosTitle(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_menu_activatingBiometrics_ios_title", String(describing: p1), fallback: "Unlock with %@  (deepl)")
+    L10n.tr("Localizable", "tk_menu_activatingBiometrics_ios_title", String(describing: p1), fallback: "Unlock with %@")
   }
 
   /// Enter your swiyu password to disable %@. (deepl)
@@ -1028,19 +1047,19 @@ public enum L10n {
     L10n.tr("Localizable", "tk_menu_deactivatingBiometrics_ios_note", String(describing: p1), fallback: "Enter your swiyu password to disable %@. (deepl)")
   }
 
-  /// Deactivate %@  (deepl)
+  /// Deactivate %@
   public static func tkMenuDeactivatingBiometricsIosTitle(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_menu_deactivatingBiometrics_ios_title", String(describing: p1), fallback: "Deactivate %@  (deepl)")
+    L10n.tr("Localizable", "tk_menu_deactivatingBiometrics_ios_title", String(describing: p1), fallback: "Deactivate %@")
   }
 
-  /// %@ successfully activated (deepl)
+  /// %@ successfully activated
   public static func tkMenuSecurityPrivacyIosStatusActivating(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_menu_securityPrivacy_ios_status_activating", String(describing: p1), fallback: "%@ successfully activated (deepl)")
+    L10n.tr("Localizable", "tk_menu_securityPrivacy_ios_status_activating", String(describing: p1), fallback: "%@ successfully activated")
   }
 
-  /// %@ successfully disabled (deepl)
+  /// %@ successfully disabled
   public static func tkMenuSecurityPrivacyIosStatusDeactivating(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_menu_securityPrivacy_ios_status_deactivating", String(describing: p1), fallback: "%@ successfully disabled (deepl)")
+    L10n.tr("Localizable", "tk_menu_securityPrivacy_ios_status_deactivating", String(describing: p1), fallback: "%@ successfully disabled")
   }
 
   /// %@ is not activated on this device. Go to the device settings to activate biometrics. (deepl)
@@ -1053,39 +1072,39 @@ public enum L10n {
     L10n.tr("Localizable", "tk_menu_securityPrivacy_security_ios_unlock", String(describing: p1), fallback: "Unlock with %@ (deepl)")
   }
 
-  /// Do you want to use %@ to unlock the app?
-  public static func tkOnboardingBiometricios1Body(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_onboarding_biometricios1_body", String(describing: p1), fallback: "Do you want to use %@ to unlock the app?")
-  }
-
-  /// If %@ does not work, you can still use your password.
-  public static func tkOnboardingBiometricios1Smallbody(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_onboarding_biometricios1_smallbody", String(describing: p1), fallback: "If %@ does not work, you can still use your password.")
-  }
-
-  /// Use %@
-  public static func tkOnboardingBiometricios1Title(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_onboarding_biometricios1_title", String(describing: p1), fallback: "Use %@")
-  }
-
-  /// Do you want to use %@ to unlock the app?
-  public static func tkOnboardingBiometricios3Body(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_onboarding_biometricios3_body", String(describing: p1), fallback: "Do you want to use %@ to unlock the app?")
-  }
-
-  /// If %@ does not work, you can still use your password.
-  public static func tkOnboardingBiometricios3Smallbody(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_onboarding_biometricios3_smallbody", String(describing: p1), fallback: "If %@ does not work, you can still use your password.")
-  }
-
-  /// Use %@
-  public static func tkOnboardingBiometricios3Title(_ p1: Any) -> String {
-    L10n.tr("Localizable", "tk_onboarding_biometricios3_title", String(describing: p1), fallback: "Use %@")
-  }
-
   /// %@
   public static func tkOnboardingBiometricios4Title(_ p1: Any) -> String {
     L10n.tr("Localizable", "tk_onboarding_biometricios4_title", String(describing: p1), fallback: "%@")
+  }
+
+  /// Use %@
+  public static func tkOnboardingBiometricsPermissionPrimary(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_onboarding_biometricsPermission_primary", String(describing: p1), fallback: "Use %@")
+  }
+
+  /// Do you want to use %@ to unlock the app?
+  public static func tkOnboardingBiometricsPermissionSecondary(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_onboarding_biometricsPermission_secondary", String(describing: p1), fallback: "Do you want to use %@ to unlock the app?")
+  }
+
+  /// If %@ does not work, you can still use your password.
+  public static func tkOnboardingBiometricsPermissionTertiary(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_onboarding_biometricsPermission_tertiary", String(describing: p1), fallback: "If %@ does not work, you can still use your password.")
+  }
+
+  /// Use %@
+  public static func tkOnboardingBiometricsPermissionDisabledPrimary(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_onboarding_biometricsPermissionDisabled_primary", String(describing: p1), fallback: "Use %@")
+  }
+
+  /// Do you want to use %@ to unlock the app?
+  public static func tkOnboardingBiometricsPermissionDisabledSecondary(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_onboarding_biometricsPermissionDisabled_secondary", String(describing: p1), fallback: "Do you want to use %@ to unlock the app?")
+  }
+
+  /// If %@ does not work, you can still use your password.
+  public static func tkOnboardingBiometricsPermissionDisabledTertiary(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_onboarding_biometricsPermissionDisabled_tertiary", String(describing: p1), fallback: "If %@ does not work, you can still use your password.")
   }
 
   /// %@ characters entered
@@ -1096,6 +1115,11 @@ public enum L10n {
   /// Password is too short, minimum %@ characters
   public static func tkOnboardingPasswordErrorTooShort(_ p1: Any) -> String {
     L10n.tr("Localizable", "tk_onboarding_password_error_too_short", String(describing: p1), fallback: "Password is too short, minimum %@ characters")
+  }
+
+  /// You have %@ attempt(s) remaining
+  public static func tkOnboardingPasswordConfirmationInputErrorNumberOfTriesLeft(_ p1: Any) -> String {
+    L10n.tr("Localizable", "tk_onboarding_passwordConfirmation_input_error_numberOfTriesLeft", String(describing: p1), fallback: "You have %@ attempt(s) remaining")
   }
 
   /// Would like to read %@ detail(s)

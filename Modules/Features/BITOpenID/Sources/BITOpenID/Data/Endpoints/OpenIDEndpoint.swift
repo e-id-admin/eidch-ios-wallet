@@ -5,6 +5,8 @@ import Moya
 // MARK: - OpenIDEndpoint
 
 enum OpenIDEndpoint {
+  case vcSchema(url: URL)
+  case typeMetadata(url: URL)
   case metadata(fromIssuerUrl: URL)
   case credential(url: URL, body: CredentialRequestBody, acccessToken: String)
   case accessToken(fromTokenUrl: URL, preAuthorizedCode: String)
@@ -20,22 +22,17 @@ enum OpenIDEndpoint {
 extension OpenIDEndpoint: TargetType {
   var baseURL: URL {
     switch self {
-    case .metadata(let issuerUrl):
-      issuerUrl
-    case .openIdConfiguration(let issuerURL):
-      issuerURL
-    case .accessToken(let tokenUrl, _):
-      tokenUrl
-    case .credential(let credentialURL, _, _):
-      credentialURL
-    case .status(let url):
-      url
-    case .publicKeyInfo(let jwksUrl):
-      jwksUrl
-    case .requestObject(let url):
-      url
-    case .trustStatements(let url, _):
-      url
+    case .accessToken(let baseUrl, _),
+         .credential(let baseUrl, _, _),
+         .metadata(let baseUrl),
+         .openIdConfiguration(let baseUrl),
+         .publicKeyInfo(let baseUrl),
+         .requestObject(let baseUrl),
+         .status(let baseUrl),
+         .trustStatements(let baseUrl, _),
+         .typeMetadata(let baseUrl),
+         .vcSchema(let baseUrl):
+      baseUrl
     }
   }
 
@@ -51,7 +48,9 @@ extension OpenIDEndpoint: TargetType {
          .credential,
          .publicKeyInfo,
          .requestObject,
-         .status:
+         .status,
+         .typeMetadata,
+         .vcSchema:
       "" // The path is already included in the baseUrl of the tokenUrl
     }
   }
@@ -63,7 +62,9 @@ extension OpenIDEndpoint: TargetType {
          .publicKeyInfo,
          .requestObject,
          .status,
-         .trustStatements:
+         .trustStatements,
+         .typeMetadata,
+         .vcSchema:
       .get
     case .accessToken,
          .credential:
@@ -78,7 +79,9 @@ extension OpenIDEndpoint: TargetType {
          .publicKeyInfo,
          .requestObject,
          .status,
-         .trustStatements:
+         .trustStatements,
+         .typeMetadata,
+         .vcSchema:
       .requestPlain
 
     case .accessToken(_, let preAuthorizedCode):
@@ -101,7 +104,9 @@ extension OpenIDEndpoint: TargetType {
          .openIdConfiguration,
          .publicKeyInfo,
          .requestObject,
-         .trustStatements:
+         .trustStatements,
+         .typeMetadata,
+         .vcSchema:
       NetworkHeader.standard.raw
     case .credential(_, _, let token):
       NetworkHeader.authorization(token).raw

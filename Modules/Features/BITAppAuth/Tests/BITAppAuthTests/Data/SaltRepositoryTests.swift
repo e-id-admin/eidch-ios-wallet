@@ -1,5 +1,6 @@
 import BITCore
 import BITCrypto
+import Factory
 import Foundation
 import Spyable
 import XCTest
@@ -15,9 +16,8 @@ final class SaltRepositoryTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    keyManagerSpy = KeyManagerProtocolSpy()
-    secretManagerSpy = SecretManagerProtocolSpy()
-    repository = SecretsRepository(keyManager: keyManagerSpy, secretManager: secretManagerSpy)
+    registerMocks()
+    repository = SecretsRepository()
   }
 
   func testSetPinSalt() throws {
@@ -61,5 +61,14 @@ final class SaltRepositoryTests: XCTestCase {
   private var secretManagerSpy: SecretManagerProtocolSpy!
   private var keyManagerSpy: KeyManagerProtocolSpy!
   private var repository: SaltRepositoryProtocol!
+
   // swiftlint:enable all
+
+  private func registerMocks() {
+    secretManagerSpy = SecretManagerProtocolSpy()
+    keyManagerSpy = KeyManagerProtocolSpy()
+
+    Container.shared.secretManager.register { self.secretManagerSpy }
+    Container.shared.keyManager.register { self.keyManagerSpy }
+  }
 }

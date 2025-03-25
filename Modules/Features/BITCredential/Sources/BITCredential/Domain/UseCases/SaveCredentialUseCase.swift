@@ -1,29 +1,31 @@
 import BITAnyCredentialFormat
 import BITCredentialShared
+import BITCrypto
 import BITOpenID
 import Factory
 import Foundation
+import Spyable
+
+// MARK: - SaveCredentialUseCaseProtocol
+
+@Spyable
+public protocol SaveCredentialUseCaseProtocol {
+  func execute(credential: AnyCredential, keyPair: KeyPair?, metadataWrapper: CredentialMetadataWrapper) async throws -> Credential
+}
 
 // MARK: - SaveCredentialUseCase
 
 struct SaveCredentialUseCase: SaveCredentialUseCaseProtocol {
 
-  // MARK: Lifecycle
-
-  init(credentialRepository: CredentialRepositoryProtocol = Container.shared.databaseCredentialRepository()) {
-    self.credentialRepository = credentialRepository
-  }
-
   // MARK: Internal
 
-  func execute(credentialWithKeyBinding: CredentialWithKeyBinding, metadataWrapper: CredentialMetadataWrapper) async throws -> Credential {
-    try await credentialRepository.create(
-      credential: Credential(credentialWithKeyBinding: credentialWithKeyBinding, metadataWrapper: metadataWrapper)
-    )
+  func execute(credential: AnyCredential, keyPair: KeyPair?, metadataWrapper: CredentialMetadataWrapper) async throws -> Credential {
+    let credential = try Credential(anyCredential: credential, keyPair: keyPair, metadataWrapper: metadataWrapper)
+    return try await credentialRepository.create(credential: credential)
   }
 
   // MARK: Private
 
-  private let credentialRepository: CredentialRepositoryProtocol
+  @Injected(\.databaseCredentialRepository) private var credentialRepository: CredentialRepositoryProtocol
 
 }

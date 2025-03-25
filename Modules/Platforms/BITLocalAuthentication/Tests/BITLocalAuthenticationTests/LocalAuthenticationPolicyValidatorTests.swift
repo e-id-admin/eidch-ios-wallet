@@ -7,39 +7,40 @@ final class LocalAuthenticationPolicyValidatorTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    spyContext = LAContextProtocolSpy()
+    contextSpy = LAContextProtocolSpy()
     validator = LocalAuthenticationPolicyValidator()
   }
 
-  func testValidatePolicySuccess() throws {
+  func testValidatePolicy_argumentsPassed() throws {
     let policy = LocalAuthenticationPolicy.deviceOwnerAuthenticationWithBiometrics
-    spyContext.canEvaluatePolicyErrorReturnValue = true
+    contextSpy.canEvaluatePolicyErrorReturnValue = true
 
-    try validator.validatePolicy(policy, context: spyContext)
-    XCTAssertTrue(spyContext.canEvaluatePolicyErrorCalled)
-    XCTAssertEqual(policy, spyContext.canEvaluatePolicyErrorReceivedArguments?.policy)
+    let _ = try validator.validatePolicy(policy, context: contextSpy)
+    XCTAssertEqual(policy, contextSpy.canEvaluatePolicyErrorReceivedArguments?.policy)
   }
 
-  func testValidatePolicyFailed() throws {
+  func testValidatePolicy_policyIsValid_returnsTrue() throws {
     let policy = LocalAuthenticationPolicy.deviceOwnerAuthenticationWithBiometrics
-    spyContext.canEvaluatePolicyErrorReturnValue = false
+    contextSpy.canEvaluatePolicyErrorReturnValue = true
 
-    do {
-      try validator.validatePolicy(policy, context: spyContext)
-      XCTFail("An error was expected")
-    } catch LocalAuthenticationPolicyError.invalidPolicy {
-      XCTAssertTrue(spyContext.canEvaluatePolicyErrorCalled)
-      XCTAssertEqual(policy, spyContext.canEvaluatePolicyErrorReceivedArguments?.policy)
-    } catch {
-      XCTFail("Not the expected error")
-    }
+    let result = try validator.validatePolicy(policy, context: contextSpy)
+
+    XCTAssertTrue(result)
+  }
+
+  func testValidatePolicy_policyIsNotValid_returnsFalse() throws {
+    let policy = LocalAuthenticationPolicy.deviceOwnerAuthenticationWithBiometrics
+    contextSpy.canEvaluatePolicyErrorReturnValue = false
+
+    let result = try validator.validatePolicy(policy, context: contextSpy)
+
+    XCTAssertFalse(result)
   }
 
   // MARK: Private
 
   // swiftlint:disable all
-  private var spyContext: LAContextProtocolSpy!
-  private var spyLocalAuthenticationPolicyValidator: LocalAuthenticationPolicyValidatorProtocolSpy!
+  private var contextSpy: LAContextProtocolSpy!
   private var validator: LocalAuthenticationPolicyValidator!
   // swiftlint:enable all
 

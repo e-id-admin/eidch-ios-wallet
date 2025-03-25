@@ -1,25 +1,29 @@
 import BITCore
+import BITCredentialShared
 import BITOpenID
 import Factory
 import Foundation
 
+/// Get `VerifierDisplay` from `Verifier` and `TrustStatement` if present
+/// If we cannot decode the `TrustStatement`, return the localized verifier display from the verifier's client metadata
+///
+/// Note: Verifier's `logo` is always taken from the verifier's client metadata, the trust statement is considered only for the `name`
 struct GetVerifierDisplayUseCase: GetVerifierDisplayUseCaseProtocol {
 
   // MARK: Internal
 
   func execute(for verifier: Verifier?, trustStatement: TrustStatement?) -> VerifierDisplay? {
-    guard
+    let trustStatus: TrustStatus = trustStatement != nil ? .verified : .unverified
+    let logo = getVerifierLogo(from: verifier)
+    var name = getVerifierName(from: verifier)
+    if
       let trustStatement,
       let orgName = try? trustStatement.disclosableClaims.first(where: { $0.key == Self.orgNameKey })?.anyValue() as? [String: Any],
-      let name = getDisplayForClaim(orgName, with: Self.orgNameKey, in: trustStatement),
-      let logoUri = try? trustStatement.disclosableClaims.first(where: { $0.key == Self.logoUriKey })?.anyValue() as? [String: Any],
-      let logo = getDisplayForClaim(logoUri, with: Self.logoUriKey, in: trustStatement),
-      let decodedURI = CredentialDisplayLogoURIDecoder.decode(logo)
-    else {
-      return VerifierDisplay(verifier: verifier, trustStatus: .unverified)
+      let trustedName = getDisplayForClaim(orgName, with: Self.orgNameKey, in: trustStatement)
+    {
+      name = trustedName
     }
-
-    return VerifierDisplay(name: name, logo: Data(base64Encoded: decodedURI), trustStatus: .verified)
+    return VerifierDisplay(name: name, logo: logo, trustStatus: trustStatus)
   }
 
   // MARK: Private
@@ -49,5 +53,19 @@ struct GetVerifierDisplayUseCase: GetVerifierDisplayUseCaseProtocol {
     }
 
     return (entry.value as? CodableValue)?.rawValue
+  }
+
+  private func getVerifierName(from verifier: Verifier?) -> String? {
+    Verifier.LocalizedDisplay.getPreferredDisplay(from: verifier?.clientName, considering: preferredUserLanguageCodes)
+  }
+
+  private func getVerifierLogo(from verifier: Verifier?) -> Data? {
+    guard
+      let logoUri = Verifier.LocalizedDisplay.getPreferredDisplay(from: verifier?.logoUri, considering: preferredUserLanguageCodes),
+      let decodedURI = CredentialDisplayLogoURIDecoder.decode(logoUri) else
+    {
+      return nil
+    }
+    return Data(base64Encoded: decodedURI)
   }
 }

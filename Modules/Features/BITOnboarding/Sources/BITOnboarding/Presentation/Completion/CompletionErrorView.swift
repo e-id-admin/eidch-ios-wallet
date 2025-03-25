@@ -12,14 +12,20 @@ struct CompletionErrorView: View {
 
   var body: some View {
     InformationView(
-      primary: L10n.onboardingSetupErrorPrimary,
-      secondary: L10n.onboardingSetupErrorSecondary,
       image: Assets.xmarkCircle.swiftUIImage,
       backgroundColor: ThemingAssets.Background.secondary.swiftUIColor,
-      primaryButtonLabel: L10n.onboardingSetupErrorButtonText,
-      primaryButtonAction: {
-        delegate?.restartSetup()
-        router.pop()
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.tkOnboardingDoneErrorPrimary,
+          secondary: L10n.tkOnboardingDoneErrorSecondary)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.tkOnboardingDoneErrorButtonPrimary,
+          primaryButtonAction: {
+            delegate?.restartSetup()
+            router.pop()
+          })
       })
       .navigationBarBackButtonHidden(true)
   }

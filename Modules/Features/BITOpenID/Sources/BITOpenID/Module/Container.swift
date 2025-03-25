@@ -16,8 +16,8 @@ extension Container {
     self { FetchMetadataUseCase() }
   }
 
-  public var fetchCredentialUseCase: Factory<FetchCredentialUseCaseProtocol> {
-    self { FetchCredentialUseCase() }
+  public var fetchAnyVerifiableCredentialUseCase: Factory<FetchAnyVerifiableCredentialUseCaseProtocol> {
+    self { FetchAnyVerifiableCredentialUseCase() }
   }
 
   public var fetchRequestObjectUseCase: Factory<FetchRequestObjectUseCaseProtocol> {
@@ -49,6 +49,14 @@ extension Container {
     self { PresentationFieldsValidator() }
   }
 
+  public var typeMetadataService: Factory<TypeMetadataServiceProtocol> {
+    self { TypeMetadataService() }
+  }
+
+  public var vcSchemaService: Factory<VcSchemaServiceProtocol> {
+    self { VcSchemaService() }
+  }
+
   // MARK: Internal
 
   var credentialKeyPairGenerator: Factory<CredentialKeyPairGeneratorProtocol> {
@@ -65,6 +73,18 @@ extension Container {
 
   var jwtDecoder: Factory<JWTDecoderProtocol> {
     self { JWTDecoder() }
+  }
+
+  var preferredKeyBindingAlgorithmsOrdered: Factory<[JWTAlgorithm]> {
+    self { [.ES256] }
+  }
+
+  var sriValidator: Factory<SRIValidatorProtocol> {
+    self { SRIValidator() }
+  }
+
+  var jsonSchemaValidator: Factory<JsonSchema> {
+    self { JsonSchemaValidator() }
   }
 
   // MARK: Private
@@ -186,22 +206,22 @@ extension Container {
     self { FetchTrustStatementUseCase() }
   }
 
-  // MARK: Internal
-
-  var baseRegistryDomainPattern: Factory<String> {
+  public var baseRegistryDomainPattern: Factory<String> {
     self { #"^did:tdw:[^:]+:([^:]+\.swiyu(-int)?\.admin\.ch):[^:]+"# }
   }
 
-  var trustRegistryRepository: Factory<TrustRegistryRepositoryProtocol> {
+  public var trustRegistryRepository: Factory<TrustRegistryRepositoryProtocol> {
     self { TrustRegistryRepository() }
   }
+
+  // MARK: Internal
 
   var validateTrustStatementUseCase: Factory<ValidateTrustStatementUseCaseProtocol> {
     self { ValidateTrustStatementUseCase() }
   }
 
-  var bundleInfoDictionary: Factory<[String: Any]?> {
-    self { Bundle.main.infoDictionary }
+  var constraintPathRegex: Factory<String> {
+    self { #".*\[\s*\?.*"# }
   }
 
 }

@@ -11,6 +11,8 @@ public struct JWTSignatureValidator: JWTSignatureValidatorProtocol {
     let jwks: [PublicKeyInfo.JWK]
     do {
       jwks = try await didResolverHelper.getJWKS(from: did, keyIdentifier: kid)
+    } catch DidResolverHelperError.didDocumentDeactivated {
+      return false
     } catch {
       throw JWTSignatureValidatorError.cannotResolveDid(error)
     }

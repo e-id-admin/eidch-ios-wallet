@@ -22,7 +22,7 @@ class PinCodeViewModel: ObservableObject, Vibrating {
 
   var error: Error? = nil
   @Published var isErrorPresented = false
-  @Published var inputFieldMessage: String = L10n.tkOnboardingCharactersSubtitle
+  @Published var inputFieldMessage: String = L10n.tkOnboardingPasswordInputSubtitle
 
   // attempts allows us to have the ShakeEffect on the inputField
   @Published var attempts = 0
@@ -34,7 +34,7 @@ class PinCodeViewModel: ObservableObject, Vibrating {
       guard userDidRequestValidation else { return }
       do {
         try validatePinCodeRuleUseCase.execute(pinCode)
-        inputFieldMessage = L10n.tkOnboardingCharactersSubtitle
+        inputFieldMessage = L10n.tkOnboardingPasswordInputSubtitle
       } catch {
         handleError(error)
       }
@@ -74,7 +74,7 @@ class PinCodeViewModel: ObservableObject, Vibrating {
     pinCode = ""
     isErrorPresented = false
     error = nil
-    inputFieldMessage = L10n.tkOnboardingCharactersSubtitle
+    inputFieldMessage = L10n.tkOnboardingPasswordInputSubtitle
     attempts = 0
   }
 

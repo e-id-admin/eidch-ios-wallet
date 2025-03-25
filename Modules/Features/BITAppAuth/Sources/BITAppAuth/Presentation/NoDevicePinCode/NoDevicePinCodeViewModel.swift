@@ -14,9 +14,8 @@ public class NoDevicePinCodeViewModel {
 
   // MARK: Lifecycle
 
-  public init(routes: NoDevicePinCodeRouterRoutes, hasDevicePinUseCase: HasDevicePinUseCaseProtocol = Container.shared.hasDevicePinUseCase()) {
-    self.routes = routes
-    self.hasDevicePinUseCase = hasDevicePinUseCase
+  public init(router: NoDevicePinCodeRouterRoutes) {
+    self.router = router
 
     configureObservers()
   }
@@ -25,15 +24,21 @@ public class NoDevicePinCodeViewModel {
 
   public weak var delegate: NoDevicePinCodeDelegate?
 
+  // MARK: Internal
+
+  func openSettings() {
+    router.settings()
+  }
+
   // MARK: Private
 
-  private let routes: NoDevicePinCodeRouterRoutes
-  private let hasDevicePinUseCase: HasDevicePinUseCaseProtocol
+  private let router: NoDevicePinCodeRouterRoutes
+  @Injected(\.hasDevicePinUseCase) private var hasDevicePinUseCase: HasDevicePinUseCaseProtocol
 
   private func configureObservers() {
     NotificationCenter.default.addObserver(forName: .willEnterForeground, object: nil, queue: .main) { [weak self] _ in
       guard let self, hasDevicePinUseCase.execute() else { return }
-      routes.close(onComplete: nil)
+      router.close(onComplete: nil)
       delegate?.didCompleteNoDevicePinCode()
     }
   }

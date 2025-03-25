@@ -1,23 +1,10 @@
 import BITAnyCredentialFormat
 import BITJWT
 import BITSdJWT
-import BITVault
 import Factory
 import Foundation
 
 struct FetchVcSdJwtCredentialUseCase: FetchAnyCredentialUseCaseProtocol {
-
-  // MARK: Lifecycle
-
-  init(
-    jwtSignatureValidator: JWTSignatureValidatorProtocol = Container.shared.jwtSignatureValidator(),
-    repository: OpenIDRepositoryProtocol = Container.shared.openIDRepository(),
-    jwtContextHelper: JWTContextHelperProtocol = Container.shared.jwtContextHelper())
-  {
-    self.jwtSignatureValidator = jwtSignatureValidator
-    self.repository = repository
-    self.jwtContextHelper = jwtContextHelper
-  }
 
   // MARK: Internal
 
@@ -40,24 +27,38 @@ struct FetchVcSdJwtCredentialUseCase: FetchAnyCredentialUseCaseProtocol {
 
     guard
       let vcSdJwt = try? VcSdJwt(from: credentialResponse.rawCredential),
-      let kid = vcSdJwt.kid else
-    {
-      throw FetchCredentialError.validationFailed
+      let kid = vcSdJwt.kid
+    else {
+      throw FetchAnyVerifiableCredentialError.validationFailed
     }
 
     do {
       guard try await jwtSignatureValidator.validate(vcSdJwt, did: vcSdJwt.issuer, kid: kid) else {
-        throw FetchCredentialError.validationFailed
+        throw FetchAnyVerifiableCredentialError.validationFailed
       }
+
+      guard
+        let typeMetadata = try await typeMetadataService.fetch(vcSdJwt),
+        let vcSchema = try await vcSchemaService.fetch(for: vcSdJwt, with: typeMetadata),
+        vcSchemaService.validate(vcSchema, with: vcSdJwt)
+      else {
+        return vcSdJwt
+      }
+
       return vcSdJwt
     } catch JWTSignatureValidator.JWTSignatureValidatorError.cannotResolveDid(_) {
-      throw FetchCredentialError.unknownIssuer
+      throw FetchAnyVerifiableCredentialError.unknownIssuer
+    } catch {
+      throw error
     }
   }
 
   // MARK: Private
 
-  private let jwtSignatureValidator: JWTSignatureValidatorProtocol
-  private let repository: OpenIDRepositoryProtocol
-  private let jwtContextHelper: JWTContextHelperProtocol
+  @Injected(\.jwtSignatureValidator) private var jwtSignatureValidator: JWTSignatureValidatorProtocol
+  @Injected(\.openIDRepository) private var repository: OpenIDRepositoryProtocol
+  @Injected(\.jwtContextHelper) private var jwtContextHelper: JWTContextHelperProtocol
+  @Injected(\.vcSchemaService) private var vcSchemaService: VcSchemaServiceProtocol
+  @Injected(\.typeMetadataService) private var typeMetadataService: TypeMetadataServiceProtocol
+
 }

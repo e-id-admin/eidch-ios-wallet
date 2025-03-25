@@ -18,6 +18,7 @@ extension RequestObject {
       static let sampleWithUnsupportedClientIdScheme: RequestObject = Mocker.decode(fromFile: "request-object-with-unsupported-client-id-scheme", bundle: Bundle.module)
       static let sampleWithUnsupportedClientId: RequestObject = Mocker.decode(fromFile: "request-object-with-unsupported-client-id", bundle: Bundle.module)
       static let sampleWithoutAnyConstraintsFields: RequestObject = Mocker.decode(fromFile: "request-object-no-constraints-fields", bundle: Bundle.module)
+      static let sampleWithInvalidContraintPath: RequestObject = Mocker.decode(fromFile: "request-object-with-invalid-constraint-path", bundle: Bundle.module)
 
       static let jsonSampleData: Data = Mocker.getData(fromFile: "request-object-multipass", bundle: Bundle.module) ?? Data()
       static let sampleWithoutClientMetadataData: Data = Mocker.getData(fromFile: "request-object-multipass-no-metadata", bundle: Bundle.module) ?? Data()

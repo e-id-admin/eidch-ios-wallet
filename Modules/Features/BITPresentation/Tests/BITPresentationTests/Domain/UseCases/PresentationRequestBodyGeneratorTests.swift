@@ -4,6 +4,7 @@ import XCTest
 @testable import BITAnalytics
 @testable import BITAnalyticsMocks
 @testable import BITAnyCredentialFormat
+@testable import BITAppAuth
 @testable import BITCredentialShared
 @testable import BITCrypto
 @testable import BITJWT
@@ -89,6 +90,15 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
     }
   }
 
+  func testCreatePresentationRequestBody_userLoggedOut() throws {
+    userSession.isLoggedIn = false
+
+    XCTAssertThrowsError(try generator.generate(for: CompatibleCredential.Mock.BIT, requestObject: mockRequestObject, inputDescriptor: mockInputDescriptor)) { error in
+      XCTAssertEqual(error as? UserSessionError, .notLoggedIn)
+      XCTAssertEqual(analyticsProvider.logCounter, 0)
+    }
+  }
+
   // MARK: Private
 
   private static let mockVpToken = "vpToken"
@@ -109,12 +119,13 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
   private var spyAnyDescriptorMapGenerator: AnyDescriptorMapGeneratorProtocolSpy!
   private var analytics: AnalyticsProtocol!
   private var analyticsProvider: MockProvider!
+  private var userSession: SessionSpy!
 
   // swiftlint:enable all
 
   private func setupMocks() {
     spyKeyManager = KeyManagerProtocolSpy()
-    spyAuthContext = LAContextProtocolSpy()
+    userSession = SessionSpy()
     spyVpTokenGenerator = AnyVpTokenGeneratorProtocolSpy()
     spyCreateAnyCredentialUseCase = CreateAnyCredentialUseCaseProtocolSpy()
     spyAnyDescriptorMapGenerator = AnyDescriptorMapGeneratorProtocolSpy()
@@ -122,13 +133,16 @@ final class PresentationRequestBodyGeneratorTests: XCTestCase {
     analytics = Analytics()
 
     Container.shared.keyManager.register { self.spyKeyManager }
-    Container.shared.authContext.register { self.spyAuthContext }
+    Container.shared.userSession.register { self.userSession }
     Container.shared.anyVpTokenGenerator.register { self.spyVpTokenGenerator }
     Container.shared.createAnyCredentialUseCase.register { self.spyCreateAnyCredentialUseCase }
     Container.shared.anyDescriptorMapGenerator.register { self.spyAnyDescriptorMapGenerator }
     Container.shared.analytics.register { self.analytics }
 
     analytics.register(analyticsProvider)
+
+    userSession.isLoggedIn = true
+    userSession.context = LAContextProtocolSpy()
   }
 
   private func success() {

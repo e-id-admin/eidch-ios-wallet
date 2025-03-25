@@ -1,3 +1,4 @@
+import Factory
 import Foundation
 import Spyable
 import XCTest
@@ -10,7 +11,10 @@ final class AllowBiometricUsageUseCaseTests: XCTestCase {
   override func setUp() {
     super.setUp()
     mockBiometricRepository = BiometricRepositoryProtocolSpy()
-    useCase = AllowBiometricUsageUseCase(repository: mockBiometricRepository)
+
+    Container.shared.biometricRepository.register { self.mockBiometricRepository }
+
+    useCase = AllowBiometricUsageUseCase()
   }
 
   func testHappyPath() throws {
@@ -26,7 +30,8 @@ final class AllowBiometricUsageUseCaseTests: XCTestCase {
 
   func testFailurePath() throws {
     mockBiometricRepository.allowBiometricUsageThrowableError = AuthError.biometricNotAvailable
-    useCase = AllowBiometricUsageUseCase(repository: mockBiometricRepository)
+
+    useCase = AllowBiometricUsageUseCase()
 
     do {
       try useCase.execute(allow: true)

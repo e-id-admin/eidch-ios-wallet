@@ -21,6 +21,10 @@ extension VcSdJwt: AnyCredential {
     statusList
   }
 
+  public var validFrom: Date? {
+    activatedAt
+  }
+
   public var validUntil: Date? {
     expiredAt
   }

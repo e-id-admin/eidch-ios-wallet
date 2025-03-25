@@ -1,4 +1,4 @@
-#if DEBUG || UITEST || targetEnvironment(simulator)
+#if DEBUG
 import Factory
 import Foundation
 import Moya
@@ -20,17 +20,12 @@ enum Argument: String, CaseIterable {
   case disableDelays = "-disable-delays"
   case disableOnboarding = "-disable-onboarding"
   case disableLockWallet = "-disable-lock-wallet"
-  case uiTests = "-ui-tests"
 }
 
 // MARK: - Container + AutoRegistering
 
 extension Container: AutoRegistering {
   public func autoRegister() {
-    #if targetEnvironment(simulator)
-    contextManager.register { SimulatorContextManager() }
-    #endif
-
     if ProcessInfo().arguments.contains(Argument.disableDevicePin.rawValue) {
       hasDevicePinUseCase.register { MockHasDevicePinUseCase(true) }
     }
@@ -54,36 +49,7 @@ extension Container: AutoRegistering {
       lockWalletUseCase.register { MockLockWalletUseCase() }
     }
 
-    if ProcessInfo().arguments.contains(Argument.uiTests.rawValue) {
-      NetworkContainer.shared.stubClosure.register { { _ in .immediate } }
-      homeRouter.register { MockHomeRouter() }
-
-      let jwtSignatureValidatorSpy = JWTSignatureValidatorProtocolSpy()
-      jwtSignatureValidatorSpy.validateDidKidReturnValue = true
-      jwtSignatureValidator.register { jwtSignatureValidatorSpy }
-
-      let dataStoreConfigurationSpy = DataStoreConfigurationManagerProtocolSpy()
-      dataStoreConfigurationSpy.setEncryptionKeyClosure = { _ in } // skip encryption
-      dataStoreConfigurationManager.register { dataStoreConfigurationSpy }
-
-      realmDataStoreConfiguration.register { Realm.Configuration(inMemoryIdentifier: "RealmDataStore") }
-    }
-
   }
 }
 
 #endif
-
-extension AppDelegate {
-
-  #if DEBUG || UITEST || targetEnvironment(simulator)
-  func setupAdditionalConfigurationsIfNeeded() {
-    if ProcessInfo().arguments.contains(Argument.disableOnboarding.rawValue) {
-      try? Container.shared.registerPinCodeUseCase().execute(pinCode: "000000")
-      UserDefaults.standard.set(false, forKey: "rootOnboardingIsEnabled")
-    }
-  }
-  #else
-  func setupAdditionalConfigurationsIfNeeded() {}
-  #endif
-}

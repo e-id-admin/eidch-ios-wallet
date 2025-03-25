@@ -152,19 +152,6 @@ extension BadgeStyle where Self == ErrorBadgeStyle {
   public static var error: ErrorBadgeStyle { ErrorBadgeStyle() }
 }
 
-// MARK: - SecondaryErrorBadgeStyle
-
-public struct SecondaryErrorBadgeStyle: BadgeStyle {
-  public func makeBody(configuration: Configuration) -> some View {
-    configuration.label
-      .foregroundColor(ThemingAssets.Brand.Core.swissRed.swiftUIColor)
-  }
-}
-
-extension BadgeStyle where Self == SecondaryErrorBadgeStyle {
-  public static var secondaryError: SecondaryErrorBadgeStyle { SecondaryErrorBadgeStyle() }
-}
-
 // MARK: - WarningBadgeStyle
 
 public struct WarningBadgeStyle: BadgeStyle {
@@ -190,7 +177,7 @@ public struct OutlineBadgeStyle: BadgeStyle {
       .padding(.vertical, .x2)
       .overlay {
         RoundedRectangle(cornerRadius: 50)
-          .stroke(.white.opacity(0.5), lineWidth: 1)
+          .stroke(ThemingAssets.Brand.Core.black.swiftUIColor.opacity(0.5), lineWidth: 1)
       }
   }
 }

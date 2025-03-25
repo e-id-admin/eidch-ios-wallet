@@ -3,10 +3,10 @@ import Foundation
 public enum RootDeeplinkRoute: DeeplinkRoute, CaseIterable {
   case credential
 
-  public var scheme: String {
+  public var schemes: [String] {
     switch self {
     case .credential:
-      "openid-credential-offer"
+      ["openid-credential-offer", "swiyu"]
     }
   }
 

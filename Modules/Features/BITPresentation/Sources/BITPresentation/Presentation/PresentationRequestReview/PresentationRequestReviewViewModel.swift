@@ -29,11 +29,7 @@ public class PresentationRequestReviewViewModel: ObservableObject {
     }
     self.credential = credential
 
-    guard let trustStatement = context.trustStatement else {
-      verifierDisplay = VerifierDisplay(verifier: context.requestObject.clientMetadata, trustStatus: .unverified)
-      return
-    }
-    verifierDisplay = getVerifierDisplayUseCase.execute(for: context.requestObject.clientMetadata, trustStatement: trustStatement)
+    verifierDisplay = getVerifierDisplayUseCase.execute(for: context.requestObject.clientMetadata, trustStatement: context.trustStatement)
   }
 
   // MARK: Internal
@@ -84,11 +80,7 @@ public class PresentationRequestReviewViewModel: ObservableObject {
     Timer.scheduledTimer(withTimeInterval: loadingMessageDelay, repeats: false, block: { _ in
       Task { @MainActor [weak self] in
         guard let self else { return }
-        if case .loading = state {
-          showLoadingMessage = true
-        } else {
-          showLoadingMessage = false
-        }
+        showLoadingMessage = state == .loading
       }
     })
   }
@@ -96,8 +88,15 @@ public class PresentationRequestReviewViewModel: ObservableObject {
   private func handleSubmitError(_ error: Error) {
     showLoadingMessage = false
     analytics.log(error)
-    if let presentationError = error as? PresentationError, presentationError == .presentationCancelled {
-      router.presentationResultState(with: .cancelled, context: context)
+    if let presentationError = error as? PresentationError {
+      switch presentationError {
+      case .invalidCredential:
+        router.presentationResultState(with: .invalidCredential(claims: credential.requestedClaims), context: context)
+      case .processClosed:
+        router.presentationResultState(with: .cancelled, context: context)
+      default:
+        router.presentationResultState(with: .error, context: context)
+      }
     } else {
       router.presentationResultState(with: .error, context: context)
     }

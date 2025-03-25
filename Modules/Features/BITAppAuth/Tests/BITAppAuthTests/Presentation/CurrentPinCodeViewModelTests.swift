@@ -19,6 +19,7 @@ final class CurrentPinCodeViewModelTests: XCTestCase {
     Container.shared.getUniquePassphraseUseCase.register { self.getUniquePassphraseUseCase }
     Container.shared.lockWalletUseCase.register { self.lockWalletUseCase }
     Container.shared.getLoginAttemptCounterUseCase.register { self.getLoginAttemptCounterUseCase }
+    Container.shared.pinCodeMinimumSize.register { 6 }
   }
 
   override func tearDown() {
@@ -32,6 +33,7 @@ final class CurrentPinCodeViewModelTests: XCTestCase {
     XCTAssertTrue(viewModel.pinCode.isEmpty)
     XCTAssertNil(viewModel.inputFieldMessage)
     XCTAssertEqual(viewModel.attempts, 0)
+    XCTAssertFalse(viewModel.isSubmitEnabled)
     XCTAssertEqual(viewModel.inputFieldState, .normal)
     XCTAssertNil(viewModel.router.context.uniquePassphrase)
     XCTAssertNil(viewModel.router.context.newPinCode)

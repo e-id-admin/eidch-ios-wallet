@@ -8,7 +8,7 @@ extension Container {
 
   // MARK: - Credential offer
 
-  var credentialOfferViewModel: ParameterFactory<(credential: Credential, trustStatement: TrustStatement?, state: CredentialOfferViewModel.State, router: CredentialOfferRouter.Routes), CredentialOfferViewModel> {
+  var credentialOfferViewModel: ParameterFactory<(credential: Credential, trustStatement: TrustStatement?, state: CredentialOfferViewModel.State, router: CredentialOfferInternalRoutes), CredentialOfferViewModel> {
     self { CredentialOfferViewModel(credential: $0, trustStatement: $1, state: $2, router: $3) }
   }
 
@@ -54,14 +54,18 @@ extension Container {
     self { CheckInvitationTypeUseCase() }
   }
 
-  public var credentialOfferRouter: Factory<CredentialOfferRouter> {
-    self { CredentialOfferRouter() }
+  public var delayAfterAcceptingCredential: Factory<UInt64> {
+    self { 2_000_000_000 }
   }
 
   // MARK: Internal
 
-  var delayAfterAcceptingCredential: Factory<UInt64> {
-    self { 2_000_000_000 }
+  var credentialOfferWrongDataViewModel: ParameterFactory<CredentialOfferInternalRoutes, CredentialOfferWrongDataViewModel> {
+    self { CredentialOfferWrongDataViewModel(router: $0) }
+  }
+
+  var credentialOfferRouter: Factory<CredentialOfferRouter> {
+    self { CredentialOfferRouter() }
   }
 
   var scannerDelay: Factory<UInt64> {

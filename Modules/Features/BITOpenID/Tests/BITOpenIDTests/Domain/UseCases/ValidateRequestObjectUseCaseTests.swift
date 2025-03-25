@@ -72,6 +72,26 @@ final class ValidateRequestObjectUseCaseTests: XCTestCase {
     XCTAssertFalse(result)
   }
 
+  func testValidationWithInvalidConstraintsPath() async {
+    let mockRequestObject = RequestObject.Mock.VcSdJwt.sampleWithInvalidContraintPath
+
+    let result = await useCase.execute(mockRequestObject)
+
+    XCTAssertFalse(result)
+  }
+
+  func testValidationWithInvalidConstraintsPathRegex() async {
+    Container.shared.constraintPathRegex.register { "" }
+
+    useCase = ValidateRequestObjectUseCase()
+
+    let mockRequestObject = RequestObject.Mock.VcSdJwt.sample
+
+    let result = await useCase.execute(mockRequestObject)
+
+    XCTAssertFalse(result)
+  }
+
   // MARK: - JWT Request Object
 
   func testValidationJwtRequestObjectSuccess() async {

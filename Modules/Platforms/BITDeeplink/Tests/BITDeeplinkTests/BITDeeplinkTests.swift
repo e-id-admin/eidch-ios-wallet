@@ -12,11 +12,11 @@ enum RegisteredDeeplink: DeeplinkRoute, CaseIterable {
 
   // MARK: Internal
 
-  var scheme: String {
+  var schemes: [String] {
     switch self {
     case .detailPage,
          .detailPageWithParameters,
-         .menu: deeplinkScheme
+         .menu: [deeplinkScheme]
     }
   }
 

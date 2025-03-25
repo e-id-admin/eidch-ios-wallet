@@ -7,6 +7,7 @@ import Foundation
 
 enum VcSdJwtError: Error, Equatable {
   case keyNotFound(_ key: String)
+  case nonDisclosableClaimFound
 }
 
 // MARK: - VcSdJwt
@@ -21,8 +22,15 @@ open class VcSdJwt: SdJWT {
     try super.init(from: rawVcSdJwt)
 
     keyBinding = vcSdJwtDecoder.decodeKeyBinding(from: rawVcSdJwt)
-    vct = vcSdJwtDecoder.decodeVct(from: rawVcSdJwt)
+    let (vct, vctIntegrity) = vcSdJwtDecoder.decodeVct(from: rawVcSdJwt)
+    self.vct = vct
+    self.vctIntegrity = vctIntegrity
     statusList = vcSdJwtDecoder.decodeTokenStatusList(from: rawVcSdJwt)
+
+    let claims = vcSdJwtDecoder.decodeNonDisclosableClaims(from: rawVcSdJwt)
+    guard claims.isEmpty else {
+      throw VcSdJwtError.nonDisclosableClaimFound
+    }
 
     // issuer is required for VcSdJwt but optional on JWT so we check here
     guard let vcIssuer = iss else {
@@ -30,11 +38,6 @@ open class VcSdJwt: SdJWT {
     }
 
     self.vcIssuer = vcIssuer
-  }
-
-  public convenience init(from rawVcSdJwt: String, rawDisclosures: String) throws {
-    let sdJwt = try SdJWT(from: rawVcSdJwt, rawDisclosures: rawDisclosures)
-    try self.init(from: sdJwt.raw)
   }
 
   // MARK: Public
@@ -46,6 +49,9 @@ open class VcSdJwt: SdJWT {
 
   /// JWT `vct`
   public var vct: String?
+
+  /// JWT `vct#integrity`
+  public var vctIntegrity: String?
 
   public var vcIssuer = ""
 

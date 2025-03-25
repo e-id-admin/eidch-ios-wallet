@@ -1,3 +1,4 @@
+import BITCredentialShared
 import BITL10n
 import BITOpenID
 import BITTheming
@@ -9,8 +10,8 @@ public struct CredentialStatusBadge: View {
 
   // MARK: Lifecycle
 
-  public init(status: VcStatus) {
-    self.status = status
+  public init(credential: Credential) {
+    self.credential = credential
   }
 
   // MARK: Public
@@ -19,17 +20,17 @@ public struct CredentialStatusBadge: View {
     VStack {
       Badge {
         Label(title: {
-          Text(status.text)
+          Text(credential.statusText)
         }, icon: {
           if !sizeCategory.isAccessibilityCategory {
-            status.image
+            credential.statusImage
               .resizable()
               .scaledToFit()
               .frame(width: Defaults.imageWidth, height: Defaults.imageHeight)
           }
         }) }
-        .accessibilityLabel(status.textAlt)
-        .badgeStyle(AnyBadgeStyle(style: status.style))
+        .accessibilityLabel(credential.statusTextAlt)
+        .badgeStyle(AnyBadgeStyle(style: credential.statusBadgeStyle))
     }
   }
 
@@ -42,27 +43,14 @@ public struct CredentialStatusBadge: View {
 
   @Environment(\.sizeCategory) private var sizeCategory
 
-  private var status: VcStatus
+  private var credential: Credential
 
 }
 
-extension VcStatus {
-
-  var style: any BadgeStyle {
-    switch self {
-    case .unknown,
-         .unsupported,
-         .valid: .outline
-    case .expired,
-         .revoked,
-         .suspended: .error
-    }
-  }
-
-}
-
+#if DEBUG
 #Preview {
   VStack {
-    CredentialStatusBadge(status: .valid)
+    CredentialStatusBadge(credential: .Mock.sample)
   }.background(.blue)
 }
+#endif

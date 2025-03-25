@@ -11,7 +11,8 @@ final class BetaIdViewModelTests: XCTestCase {
 
     viewModel.openBetaIdLink()
 
-    XCTAssertTrue(mockRouter.didCallExternalLink)
+    XCTAssertTrue(mockRouter.didCallExternalLinkComplete)
+    XCTAssertTrue(mockRouter.closeCalled)
   }
 
   // MARK: Private

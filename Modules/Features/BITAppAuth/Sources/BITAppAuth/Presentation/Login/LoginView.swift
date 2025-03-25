@@ -24,7 +24,6 @@ public struct LoginView: View {
           .resizable()
           .ignoresSafeArea()
           .accessibilityHidden(true))
-      .colorScheme(.light)
       .task {
         UIAccessibility.post(notification: .screenChanged, argument: L10n.tkLoginPasswordAlt)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -131,9 +130,8 @@ extension LoginView {
             Spacer()
           }
         } else {
-          VStack(spacing: .x4) {
-            lockedViewFooter()
-          }
+          lockedViewFooter()
+            .padding(.bottom, .x4)
         }
       }
       .padding(.horizontal, .x3)
@@ -283,7 +281,12 @@ extension LoginView {
 
   @ViewBuilder
   private func secureField() -> some View {
-    SecureTextField(text: $viewModel.pinCode, prompt: L10n.tkLoginPasswordNote) {
+    SecureTextField(
+      text: $viewModel.pinCode,
+      prompt: L10n.tkLoginPasswordNote,
+      textColor: ThemingAssets.Label.primary.light,
+      tintColor: ThemingAssets.Label.tertiary.light)
+    {
       viewModel.pinCodeAuthentication()
     }
     .submitLabel(.done)
@@ -349,6 +352,7 @@ extension LoginView {
     } label: {
       Text(L10n.tkGlobalLoginPrimarybutton)
     }
+    .environment(\.colorScheme, .light)
     .buttonStyle(.filledPrimary)
     .controlSize(.large)
     .accessibilityFocused($focus, equals: .loginButton)
@@ -356,10 +360,8 @@ extension LoginView {
 
 }
 
-// MARK: - LoginView_Previews
-
-struct LoginView_Previews: PreviewProvider {
-  static var previews: some View {
-    LoginView(viewModel: LoginViewModel(router: Container.shared.loginRouter(), state: .locked))
-  }
+#if DEBUG
+#Preview {
+  LoginView(viewModel: LoginViewModel(router: LoginRouter(), state: .locked))
 }
+#endif

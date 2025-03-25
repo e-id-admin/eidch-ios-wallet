@@ -30,7 +30,7 @@ extension PresentationRequestContext {
 
   // MARK: Lifecycle
 
-  fileprivate convenience init(requestObject: RequestObject, compatibleCredentials: [CompatibleCredential], trustStatement: TrustStatement? = nil) {
+  public convenience init(requestObject: RequestObject, compatibleCredentials: [CompatibleCredential], trustStatement: TrustStatement? = nil) {
     self.init(requestObject: requestObject)
     let inputDescriptors = requestObject.presentationDefinition.inputDescriptors.map(\.id)
     var requests: [InputDescriptorID: [CompatibleCredential]] = [:]

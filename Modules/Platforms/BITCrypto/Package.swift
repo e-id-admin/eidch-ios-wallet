@@ -16,7 +16,7 @@ let package = Package(
   ],
   dependencies: [
     .package(path: "../../Platforms/BITCore"),
-    .package(url: "https://github.com/Matejkob/swift-spyable", revision: "8f78f36989bde9f06cc5a5254a6748c23c16b045"),
+    .package(url: "https://github.com/Matejkob/swift-spyable", exact: "0.8.0"),
     .package(url: "git@github.com:krzyzanowskim/CryptoSwift.git", exact: "1.8.3"),
   ],
   targets: [

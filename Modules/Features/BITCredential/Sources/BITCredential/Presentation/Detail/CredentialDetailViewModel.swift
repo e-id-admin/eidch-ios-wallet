@@ -11,18 +11,9 @@ class CredentialDetailViewModel: ObservableObject {
 
   // MARK: Lifecycle
 
-  init(
-    _ credential: Credential,
-    router: CredentialDetailRouterRoutes = Container.shared.credentialDetailRouter(),
-    deleteCredentialUseCase: DeleteCredentialUseCaseProtocol = Container.shared.deleteCredentialUseCase(),
-    checkAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialStatusUseCaseProtocol = Container.shared.checkAndUpdateCredentialStatusUseCase(),
-    analytics: AnalyticsProtocol = Container.shared.analytics())
-  {
+  init(_ credential: Credential, router: CredentialDetailInternalRoutes) {
     self.credential = credential
-    self.checkAndUpdateCredentialStatusUseCase = checkAndUpdateCredentialStatusUseCase
-    self.analytics = analytics
     self.router = router
-    self.deleteCredentialUseCase = deleteCredentialUseCase
     credentialBody = CredentialDetailBody(from: credential)
     configureObservers()
   }
@@ -70,10 +61,10 @@ class CredentialDetailViewModel: ObservableObject {
 
   // MARK: Private
 
-  private let analytics: AnalyticsProtocol
-  private let router: CredentialDetailRouterRoutes
-  private let deleteCredentialUseCase: DeleteCredentialUseCaseProtocol
-  private let checkAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialStatusUseCaseProtocol
+  private let router: CredentialDetailInternalRoutes
+  @Injected(\.analytics) private var analytics: AnalyticsProtocol
+  @Injected(\.deleteCredentialUseCase) private var deleteCredentialUseCase: DeleteCredentialUseCaseProtocol
+  @Injected(\.checkAndUpdateCredentialStatusUseCase) private var checkAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialStatusUseCaseProtocol
 
   private func updateCredentialStatus() async {
     guard let credential = try? await checkAndUpdateCredentialStatusUseCase.execute(for: credential) else {

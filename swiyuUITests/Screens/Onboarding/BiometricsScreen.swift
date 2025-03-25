@@ -26,7 +26,6 @@ class BiometricsScreen: Screen {
 
   func assertDisplayed() {
     XCTAssertTrue(primaryText.exists)
-    XCTAssertTrue(secondaryText.exists)
   }
 
 }

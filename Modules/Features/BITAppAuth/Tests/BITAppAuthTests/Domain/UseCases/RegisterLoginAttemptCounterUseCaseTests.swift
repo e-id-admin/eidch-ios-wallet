@@ -1,4 +1,5 @@
 import BITCore
+import Factory
 import Foundation
 import Spyable
 import XCTest
@@ -11,7 +12,10 @@ final class RegisterLoginAttemptCounterUseCaseTests: XCTestCase {
   override func setUp() {
     super.setUp()
     repository = LoginRepositoryProtocolSpy()
-    useCase = RegisterLoginAttemptCounterUseCase(repository: repository)
+
+    Container.shared.loginRepository.register { self.repository }
+
+    useCase = RegisterLoginAttemptCounterUseCase()
   }
 
   func testHappyPath_biometrics() throws {

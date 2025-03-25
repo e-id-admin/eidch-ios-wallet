@@ -16,6 +16,8 @@ final class LoginViewModelTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
+    Container.shared.reset()
+
     mockHasBiometricAuthUseCase = HasBiometricAuthUseCaseProtocolSpy()
     mockIsBiometricUsageAllowedUseCase = IsBiometricUsageAllowedUseCaseProtocolSpy()
     mockLoginPinCodeUseCase = LoginPinCodeUseCaseProtocolSpy()
@@ -55,6 +57,7 @@ final class LoginViewModelTests: XCTestCase {
 
     isLoginRequiredNotificationTriggered = false
     mockRouter = LoginRouterMock()
+
   }
 
   func testLoginProductionValues() {

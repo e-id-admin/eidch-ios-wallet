@@ -14,22 +14,8 @@ class BiometricViewModel: ObservableObject {
 
   // MARK: Lifecycle
 
-  init(
-    router: OnboardingInternalRoutes,
-    getBiometricTypeUseCase: GetBiometricTypeUseCaseProtocol = Container.shared.getBiometricTypeUseCase(),
-    hasBiometricAuthUseCase: HasBiometricAuthUseCaseProtocol = Container.shared.hasBiometricAuthUseCase(),
-    requestBiometricAuthUseCase: RequestBiometricAuthUseCaseProtocol = Container.shared.requestBiometricAuthUseCase(),
-    allowBiometricUsageUseCase: AllowBiometricUsageUseCaseProtocol = Container.shared.allowBiometricUsageUseCase(),
-    analytics: AnalyticsProtocol = Container.shared.analytics(),
-    autoHideErrorDelay: Double = Container.shared.autoHideErrorDelay())
-  {
+  init(router: OnboardingInternalRoutes) {
     self.router = router
-    self.getBiometricTypeUseCase = getBiometricTypeUseCase
-    self.hasBiometricAuthUseCase = hasBiometricAuthUseCase
-    self.requestBiometricAuthUseCase = requestBiometricAuthUseCase
-    self.allowBiometricUsageUseCase = allowBiometricUsageUseCase
-    self.analytics = analytics
-    self.autoHideErrorDelay = autoHideErrorDelay
 
     biometricType = getBiometricTypeUseCase.execute()
     hasBiometricAuth = hasBiometricAuthUseCase.execute()
@@ -44,23 +30,23 @@ class BiometricViewModel: ObservableObject {
   }
 
   @Published var hasBiometricAuth = false
-  var biometricType: BiometricType
+  var biometricType = BiometricType.none
 
   @Published var error: Error?
   @Published var isErrorPresented = false
 
-  let autoHideErrorDelay: Double
+  @Injected(\.autoHideErrorDelay) var autoHideErrorDelay: Double
 
   var primaryText: String {
-    hasBiometricAuth ? L10n.tkOnboardingBiometricios1Title(biometricType.text) : L10n.tkOnboardingBiometricios3Title(biometricType.text)
+    hasBiometricAuth ? L10n.tkOnboardingBiometricsPermissionPrimary(biometricType.text) : L10n.tkOnboardingBiometricsPermissionDisabledPrimary(biometricType.text)
   }
 
   var secondaryText: String {
-    hasBiometricAuth ? L10n.tkOnboardingBiometricios1Body(biometricType.text) : L10n.tkOnboardingBiometricios3Body(biometricType.text)
+    hasBiometricAuth ? L10n.tkOnboardingBiometricsPermissionSecondary(biometricType.text) : L10n.tkOnboardingBiometricsPermissionDisabledSecondary(biometricType.text)
   }
 
   var tertiaryText: String {
-    hasBiometricAuth ? L10n.tkOnboardingBiometricios1Smallbody(biometricType.text) : L10n.tkOnboardingBiometricios3Smallbody(biometricType.text)
+    hasBiometricAuth ? L10n.tkOnboardingBiometricsPermissionTertiary(biometricType.text) : L10n.tkOnboardingBiometricsPermissionDisabledTertiary(biometricType.text)
   }
 
   var image: Image {
@@ -73,7 +59,7 @@ class BiometricViewModel: ObservableObject {
 
   func registerBiometrics() async {
     do {
-      try await requestBiometricAuthUseCase.execute(reason: L10n.onboardingBiometricPermissionReason, context: authContext)
+      try await requestBiometricAuthUseCase.execute(reason: L10n.tkOnboardingBiometricsPermissionReason, context: internalLAContext)
       try allowBiometricUsageUseCase.execute(allow: true)
 
       router.setup()
@@ -94,13 +80,12 @@ class BiometricViewModel: ObservableObject {
   // MARK: Private
 
   private let router: OnboardingInternalRoutes
-  private let authContext: LAContextProtocol = Container.shared.authContext()
-  private let analytics: AnalyticsProtocol
-
-  private var hasBiometricAuthUseCase: HasBiometricAuthUseCaseProtocol
-  private var getBiometricTypeUseCase: GetBiometricTypeUseCaseProtocol
-  private var requestBiometricAuthUseCase: RequestBiometricAuthUseCaseProtocol
-  private var allowBiometricUsageUseCase: AllowBiometricUsageUseCaseProtocol
+  @Injected(\.internalLAContext) private var internalLAContext: LAContextProtocol
+  @Injected(\.analytics) private var analytics: AnalyticsProtocol
+  @Injected(\.hasBiometricAuthUseCase) private var hasBiometricAuthUseCase: HasBiometricAuthUseCaseProtocol
+  @Injected(\.getBiometricTypeUseCase) private var getBiometricTypeUseCase: GetBiometricTypeUseCaseProtocol
+  @Injected(\.requestBiometricAuthUseCase) private var requestBiometricAuthUseCase: RequestBiometricAuthUseCaseProtocol
+  @Injected(\.allowBiometricUsageUseCase) private var allowBiometricUsageUseCase: AllowBiometricUsageUseCaseProtocol
 
   private func configureObservers() {
     NotificationCenter.default.addObserver(forName: .willEnterForeground, object: nil, queue: .main) { [weak self] _ in

@@ -15,10 +15,10 @@ public struct JWTDecoder: JWTDecoderProtocol {
     case algorithmNotFound
   }
 
-  public func decodeJWS(from rawJWT: String) throws -> JWS {
+  public func decodeJWS(from rawJWT: String) throws -> JOSESwift.JWS {
     // take only the raw JWT in consideration in case the JWT contains additional parts such as disclosures for an SD-JWT
     let jwt = rawJWT.separatedByDisclosures.first.map(String.init) ?? rawJWT
-    return try JWS(compactSerialization: jwt)
+    return try JOSESwift.JWS(compactSerialization: jwt)
   }
 
   public func decodeAlgorithm(from rawJWT: String) throws -> String {

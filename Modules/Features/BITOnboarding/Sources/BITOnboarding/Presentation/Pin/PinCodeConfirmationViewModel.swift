@@ -89,7 +89,7 @@ public class PinCodeConfirmationViewModel: ObservableObject {
     }
 
     withAnimation {
-      inputFieldMessage = "\(L10n.tkLoginPasswordfailedNotification) \(L10n.tkLoginPasswordfailedIosSubtitle(attemptLeft))"
+      inputFieldMessage = "\(L10n.tkOnboardingPasswordConfirmationInputErrorWrongPassword) \(L10n.tkOnboardingPasswordConfirmationInputErrorNumberOfTriesLeft(attemptLeft))"
     }
   }
 

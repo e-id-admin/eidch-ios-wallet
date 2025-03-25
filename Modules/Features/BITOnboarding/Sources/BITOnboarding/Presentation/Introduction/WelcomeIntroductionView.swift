@@ -8,21 +8,34 @@ import SwiftUI
 
 struct WelcomeIntroductionView: View {
 
-  private let viewModel: WelcomeIntroductionViewModel
+  // MARK: Lifecycle
 
   init(router: OnboardingInternalRoutes) {
     viewModel = Container.shared.welcomeIntroductionViewModel(router)
   }
 
+  // MARK: Internal
+
   var body: some View {
     InformationView(
-      primary: L10n.tkOnboardingStartTitle,
-      primaryAlt: L10n.tkOnboardingStartAlt,
-      secondary: L10n.tkOnboardingStartBody,
       image: Assets.shieldCross.swiftUIImage,
-      primaryButtonLabel: L10n.tkOnboardingStartPrimarybutton,
-      primaryButtonAction: viewModel.primaryAction)
+      content: {
+        DefaultInformationContentView(
+          primary: L10n.tkOnboardingIntroductionStepSecurityPrimary,
+          primaryAlt: L10n.tkOnboardingIntroductionStepSecurityScreenAlt,
+          secondary: L10n.tkOnboardingIntroductionStepSecuritySecondary)
+      },
+      footer: {
+        DefaultInformationFooterView(
+          primaryButtonLabel: L10n.tkOnboardingIntroductionStepSecurityButtonPrimary,
+          primaryButtonAction: viewModel.primaryAction)
+      })
   }
+
+  // MARK: Private
+
+  private let viewModel: WelcomeIntroductionViewModel
+
 }
 
 // MARK: - WelcomeIntroductionViewModel

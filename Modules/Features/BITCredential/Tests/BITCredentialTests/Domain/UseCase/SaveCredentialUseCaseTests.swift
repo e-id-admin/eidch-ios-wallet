@@ -1,3 +1,4 @@
+import BITCrypto
 import Factory
 import Spyable
 import XCTest
@@ -18,14 +19,14 @@ final class SaveCredentialUseCaseTests: XCTestCase {
   override func setUp() {
     repository = CredentialRepositoryProtocolSpy()
     Container.shared.databaseCredentialRepository.register { self.repository }
-    useCase = SaveCredentialUseCase(credentialRepository: repository)
+    useCase = SaveCredentialUseCase()
   }
 
   func testSaveCredentialHappyPath() async throws {
     let metadataWrapper = CredentialMetadataWrapper.Mock.sample
     let mockCredential = Credential.Mock.sample
     let mockCredentialWithKeyBinding = makeCredentialWithKeyBinding()
-    let mockAnyCredential = mockCredentialWithKeyBinding.anyCredential
+    let mockAnyCredential = mockCredentialWithKeyBinding.credential
     guard let mockClaimPayload = mockAnyCredential.raw.data(using: .utf8) else {
       XCTFail("Cannot convert raw to Data")
       return
@@ -33,7 +34,7 @@ final class SaveCredentialUseCaseTests: XCTestCase {
 
     repository.createCredentialReturnValue = mockCredential
 
-    let credential = try await useCase.execute(credentialWithKeyBinding: mockCredentialWithKeyBinding, metadataWrapper: metadataWrapper)
+    let credential = try await useCase.execute(credential: mockCredentialWithKeyBinding.credential, keyPair: mockCredentialWithKeyBinding.keyPair, metadataWrapper: metadataWrapper)
 
     XCTAssertEqual(credential, mockCredential)
     XCTAssertTrue(repository.createCredentialCalled)
@@ -51,10 +52,9 @@ final class SaveCredentialUseCaseTests: XCTestCase {
   func testSaveCredentialFailurePath() async throws {
     let metadataWrapper = CredentialMetadataWrapper.Mock.sample
     repository.createCredentialThrowableError = TestingError.error
-    let mockCredentialWithKeyBinding = CredentialWithKeyBinding(anyCredential: MockAnyCredential(), boundTo: nil)
 
     do {
-      _ = try await useCase.execute(credentialWithKeyBinding: mockCredentialWithKeyBinding, metadataWrapper: metadataWrapper)
+      _ = try await useCase.execute(credential: MockAnyCredential(), keyPair: nil, metadataWrapper: metadataWrapper)
       XCTFail("Should have thrown an exception")
     } catch TestingError.error {
       XCTAssertTrue(repository.createCredentialCalled)
@@ -70,14 +70,13 @@ final class SaveCredentialUseCaseTests: XCTestCase {
   func testSaveCredential_saveActivityFails() async throws {
     let metadataWrapper = CredentialMetadataWrapper.Mock.sample
     let mockCredential = Credential.Mock.sample
-    let mockCredentialWithKeyBinding = CredentialWithKeyBinding(anyCredential: MockAnyCredential(), boundTo: nil)
 
     repository.createCredentialReturnValue = mockCredential
     let expectation = expectation(description: "saveCredential does not fail if saveActivity does")
 
     Task {
       do {
-        let credential = try await useCase.execute(credentialWithKeyBinding: mockCredentialWithKeyBinding, metadataWrapper: metadataWrapper)
+        let credential = try await useCase.execute(credential: MockAnyCredential(), keyPair: nil, metadataWrapper: metadataWrapper)
         XCTAssertNoThrow(credential)
         XCTAssertEqual(credential, mockCredential)
         XCTAssertTrue(repository.createCredentialCalled)
@@ -104,7 +103,7 @@ final class SaveCredentialUseCaseTests: XCTestCase {
 }
 
 extension SaveCredentialUseCaseTests {
-  private func makeCredentialWithKeyBinding() -> CredentialWithKeyBinding {
+  private func makeCredentialWithKeyBinding() -> (credential: AnyCredential, keyPair: KeyPair?) {
     let anyCredential = AnyCredentialSpy()
     anyCredential.format = UUID().uuidString
     anyCredential.raw = UUID().uuidString
@@ -113,6 +112,6 @@ extension SaveCredentialUseCaseTests {
     anyClaim.key = "lastName" // must be a key existing in the metadataWrapper
     anyClaim.value = .string(UUID().uuidString)
     anyCredential.claims = [anyClaim]
-    return CredentialWithKeyBinding(anyCredential: anyCredential, boundTo: nil)
+    return (anyCredential, nil)
   }
 }

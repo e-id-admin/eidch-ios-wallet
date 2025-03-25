@@ -34,7 +34,7 @@ let package = Package(
     .package(path: "../BITCredentialShared"),
     .package(path: "../BITOpenID"),
     .package(url: "https://github.com/hmlongco/Factory", exact: "2.2.0"),
-    .package(url: "https://github.com/Matejkob/swift-spyable", revision: "8f78f36989bde9f06cc5a5254a6748c23c16b045"),
+    .package(url: "https://github.com/Matejkob/swift-spyable", exact: "0.8.0"),
     .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI", exact: "2.2.6"),
     .package(url: "https://github.com/KittyMac/Sextant.git", revision: "e59c57e4fa19a02f336cd91b9f6cd8e4022e5ed0"),
     .package(url: "https://github.com/gh123man/SwiftUI-Refresher", exact: "1.1.8"),
@@ -71,8 +71,7 @@ let package = Package(
         "BITCredential",
         .product(name: "BITCore", package: "BITCore"),
         .product(name: "BITTestingCore", package: "BITCore"),
-      ],
-      resources: [.process("Resources")]),
+      ]),
     .testTarget(
       name: "BITCredentialTests",
       dependencies: [
@@ -83,7 +82,6 @@ let package = Package(
         .product(name: "BITJWT", package: "BITJWT"),
         .product(name: "BITSdJWTMocks", package: "BITSdJWT"),
         .product(name: "BITTestingCore", package: "BITCore"),
-        .product(name: "BITSdJWTMocks", package: "BITSdJWT"),
         .product(name: "BITNavigationTestCore", package: "BITNavigation"),
         .product(name: "RealmSwift", package: "realm-swift"),
       ]),

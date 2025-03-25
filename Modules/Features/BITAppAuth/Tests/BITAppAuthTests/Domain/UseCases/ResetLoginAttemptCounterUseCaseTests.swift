@@ -1,4 +1,5 @@
 import BITCore
+import Factory
 import Foundation
 import Spyable
 import XCTest
@@ -11,7 +12,10 @@ final class ResetLoginAttemptCounterUseCaseTests: XCTestCase {
   override func setUp() {
     super.setUp()
     repository = LoginRepositoryProtocolSpy()
-    useCase = ResetLoginAttemptCounterUseCase(repository: repository)
+
+    Container.shared.loginRepository.register { self.repository }
+
+    useCase = ResetLoginAttemptCounterUseCase()
   }
 
   func testHappyPath() throws {

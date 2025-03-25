@@ -3,6 +3,7 @@ import Foundation
 
 @MainActor
 extension Container {
+
   var introductionViewModel: ParameterFactory<EIDRequestInternalRoutes, IntroductionViewModel> {
     self { IntroductionViewModel(router: $0) }
   }
@@ -26,6 +27,11 @@ extension Container {
   var queueInformationViewModel: ParameterFactory<(EIDRequestInternalRoutes, Date), QueueInformationViewViewModel> {
     self { QueueInformationViewViewModel(router: $0, onlineSessionStartDate: $1) }
   }
+
+  var walletPairingViewModel: ParameterFactory<EIDRequestInternalRoutes, WalletPairingViewModel> {
+    self { WalletPairingViewModel(router: $0) }
+  }
+
 }
 
 extension Container {
@@ -51,6 +57,14 @@ extension Container {
 
   public var enableEIDRequestAfterOnboardingUseCase: Factory<EnableEIDRequestAfterOnboardingUseCaseProtocol> {
     self { EnableEIDRequestAfterOnboardingUseCase() }
+  }
+
+  public var getEIDRequestCaseListUseCase: Factory<GetEIDRequestCaseListUseCaseProtocol> {
+    self { GetEIDRequestCaseListUseCase() }
+  }
+
+  public var updateEIDRequestCaseStatusUseCase: Factory<UpdateEIDRequestCaseStatusUseCaseProtocol> {
+    self { UpdateEIDRequestCaseStatusUseCase() }
   }
 
   // MARK: Internal
@@ -79,5 +93,9 @@ extension Container {
 
   var submitEIDRequestUseCase: Factory<SubmitEIDRequestUseCaseProtocol> {
     self { SubmitEIDRequestUseCase() }
+  }
+
+  var requestCasePriorityOrder: Factory<[EIDRequestStatus.State]> {
+    self { [.readyForOnlineSession, .inQueue] }
   }
 }

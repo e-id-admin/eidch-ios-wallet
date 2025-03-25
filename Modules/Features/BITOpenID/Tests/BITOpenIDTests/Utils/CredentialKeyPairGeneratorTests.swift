@@ -2,6 +2,7 @@ import Factory
 import Foundation
 import Spyable
 import XCTest
+@testable import BITAppAuth
 @testable import BITLocalAuthentication
 @testable import BITOpenID
 @testable import BITTestingCore
@@ -13,7 +14,17 @@ final class CredentialKeyPairGeneratorTests: XCTestCase {
 
   override func setUp() {
     keyManagerProtocolSpy = KeyManagerProtocolSpy()
-    generator = CredentialKeyPairGenerator(keyManager: keyManagerProtocolSpy, vaultAccessControlFlags: mockControlAccessFlags, vaultProtection: mockProtection, context: context)
+
+    userSession.isLoggedIn = true
+    userSession.context = LAContextProtocolSpy()
+
+    Container.shared.keyManager.register { self.keyManagerProtocolSpy }
+    Container.shared.vaultOptions.register { self.vaultOptions }
+    Container.shared.vaultAccessControlFlags.register { self.mockControlAccessFlags }
+    Container.shared.vaultProtection.register { self.mockProtection }
+    Container.shared.userSession.register { self.userSession }
+
+    generator = CredentialKeyPairGenerator()
   }
 
   func testCreatePrivateKey() throws {
@@ -22,13 +33,14 @@ final class CredentialKeyPairGeneratorTests: XCTestCase {
     let identifier = UUID()
     let mockReason = "mockReason"
     keyManagerProtocolSpy.generateKeyPairWithIdentifierAlgorithmOptionsQueryReturnValue = mockSecKey
-    context.localizedReason = mockReason
+    userSession.context?.localizedReason = mockReason
 
     let keyPair = try generator.generate(identifier: identifier, algorithm: mockAlgorithm)
     XCTAssertEqual(mockSecKey, keyPair.privateKey)
     XCTAssertTrue(keyManagerProtocolSpy.generateKeyPairWithIdentifierAlgorithmOptionsQueryCalled)
     XCTAssertEqual(identifier.uuidString, keyManagerProtocolSpy.generateKeyPairWithIdentifierAlgorithmOptionsQueryReceivedArguments?.identifier)
     XCTAssertEqual(keyManagerProtocolSpy.generateKeyPairWithIdentifierAlgorithmOptionsQueryReceivedArguments?.algorithm, try VaultAlgorithm(fromSignatureAlgorithm: mockAlgorithm))
+    XCTAssertEqual(keyManagerProtocolSpy.generateKeyPairWithIdentifierAlgorithmOptionsQueryReceivedArguments?.options, vaultOptions)
     XCTAssertEqual((keyManagerProtocolSpy.generateKeyPairWithIdentifierAlgorithmOptionsQueryReceivedArguments?.query?[kSecUseAuthenticationContext as String] as? LAContextProtocolSpy)?.localizedReason, mockReason) // Compare reason cause cannot compare LAContextProtocol
     // swiftlint:disable force_cast
     XCTAssertEqual(keyManagerProtocolSpy.generateKeyPairWithIdentifierAlgorithmOptionsQueryReceivedArguments?.query?[kSecAttrAccessControl as String] as! SecAccessControl, SecKeyTestsHelper.createAccessControl(accessControlFlags: mockControlAccessFlags, protection: mockProtection))
@@ -36,10 +48,8 @@ final class CredentialKeyPairGeneratorTests: XCTestCase {
   }
 
   func testCreatePrivateKey_UnknownAlgorithm_ThrowsError() throws {
-    let mockAlgorithm = "unkown"
+    let mockAlgorithm = "unknown"
     let identifier = UUID()
-    let mockReason = "mockReason"
-    context.localizedReason = mockReason
 
     XCTAssertThrowsError(try generator.generate(identifier: identifier, algorithm: mockAlgorithm)) { error in
       XCTAssertEqual(error as? CredentialKeyPairGenerator.CredentialKeyPairGeneratorError, .invalidAlgorithm)
@@ -51,7 +61,8 @@ final class CredentialKeyPairGeneratorTests: XCTestCase {
 
   private var keyManagerProtocolSpy = KeyManagerProtocolSpy()
   private var generator = CredentialKeyPairGenerator()
-  private var context = LAContextProtocolSpy()
+  private var userSession = SessionSpy()
+  private var vaultOptions: VaultOption = []
   private var mockProtection = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
   private var mockControlAccessFlags: SecAccessControlCreateFlags = [.privateKeyUsage, .applicationPassword]
 }

@@ -100,6 +100,16 @@ final class JWTSignatureValidatorTests: XCTestCase {
     }
   }
 
+  func testValidate_didResolverThrows_GetDeactivatedError() async throws {
+    spyDidResolver.getJWKSFromKeyIdentifierThrowableError = DidResolverHelperError.didDocumentDeactivated
+
+    let result = try await validator.validate(.Mock.sample, did: issuer, kid: kid)
+
+    XCTAssertFalse(result)
+    XCTAssertEqual(spyDidResolver.getJWKSFromKeyIdentifierReceivedArguments?.did, issuer)
+    XCTAssertEqual(spyDidResolver.getJWKSFromKeyIdentifierReceivedArguments?.keyIdentifier, kid)
+  }
+
   // MARK: Private
 
   // swiftlint:disable all

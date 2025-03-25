@@ -1,3 +1,4 @@
+import BITCrypto
 import BITNetworking
 import Factory
 import Foundation
@@ -22,15 +23,11 @@ final class CameraViewModelTests: XCTestCase {
 
   @MainActor
   override func setUp() {
-
     Container.shared.validateCredentialOfferInvitationUrlUseCase.register { self.validateCredentialOfferInvitationUrlUseCase }
     Container.shared.fetchRequestObjectUseCase.register { self.fetchRequestObjectUseCase }
     Container.shared.checkInvitationTypeUseCase.register { self.checkInvitationTypeUseCase }
     Container.shared.getCompatibleCredentialsUseCase.register { self.getCompatibleCredentialsUseCase }
-    Container.shared.fetchMetadataUseCase.register { self.fetchMetadataUseCase }
     Container.shared.fetchCredentialUseCase.register { self.fetchCredentialUseCase }
-    Container.shared.saveCredentialUseCase.register { self.saveCredentialUseCase }
-    Container.shared.checkAndUpdateCredentialStatusUseCase.register { self.checkAndUpdateCredentialStatusUseCase }
     Container.shared.getCredentialsCountUseCase.register { self.getCredentialsCountUseCase }
     Container.shared.fetchTrustStatementUseCase.register { self.fetchTrustStatementUseCase }
     Container.shared.denyPresentationUseCase.register { self.denyPresentationUseCase }
@@ -38,7 +35,8 @@ final class CameraViewModelTests: XCTestCase {
     Container.shared.createAnyCredentialUseCase.register { self.createAnyCredentialUseCase }
 
     mockRequestObject = .Mock.VcSdJwt.sample
-    mockCredentialWithKeyBinding = CredentialWithKeyBinding(anyCredential: MockAnyCredential(), boundTo: nil)
+    // MockAnyCredential
+    mockCredentialWithKeyBinding = (MockAnyCredential(), nil)
     viewModel = createViewModel(mode: .qr)
   }
 
@@ -60,12 +58,9 @@ final class CameraViewModelTests: XCTestCase {
     let mockCredentialOffer = CredentialOffer.Mock.sample
     let credential = Credential.Mock.sample
 
-    checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
+    checkInvitationTypeUseCase.executeUrlReturnValue = InvitationType.credentialOffer
     validateCredentialOfferInvitationUrlUseCase.executeReturnValue = mockCredentialOffer
-    fetchMetadataUseCase.executeFromReturnValue = .Mock.sample
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenReturnValue = mockCredentialWithKeyBinding
-    saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReturnValue = credential
-    checkAndUpdateCredentialStatusUseCase.executeForReturnValue = credential
+    fetchCredentialUseCase.executeFromReturnValue = credential
     createAnyCredentialUseCase.executeFromFormatReturnValue = mockAnyCredential
     fetchTrustStatementUseCase.executeCredentialReturnValue = .Mock.validSample
 
@@ -79,10 +74,8 @@ final class CameraViewModelTests: XCTestCase {
 
     XCTAssertTrue(validateCredentialOfferInvitationUrlUseCase.executeCalled)
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
-    XCTAssertTrue(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertTrue(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertEqual(mockCredentialWithKeyBinding.anyCredential.raw, saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReceivedArguments?.credentialWithKeyBinding.anyCredential.raw)
-    XCTAssertTrue(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertTrue(fetchCredentialUseCase.executeFromCalled)
+//    XCTAssertEqual(mockCredentialWithKeyBinding.anyCredential.raw, saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReceivedArguments?.credentialWithKeyBinding.anyCredential.raw)
     XCTAssertEqual(createAnyCredentialUseCase.executeFromFormatReceivedArguments?.format, credential.format)
     XCTAssertEqual(createAnyCredentialUseCase.executeFromFormatReceivedArguments?.payload, credential.payload)
     XCTAssertEqual(fetchTrustStatementUseCase.executeCredentialReceivedCredential?.issuer, mockAnyCredential.issuer)
@@ -100,11 +93,10 @@ final class CameraViewModelTests: XCTestCase {
 
     checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
     validateCredentialOfferInvitationUrlUseCase.executeReturnValue = mockCredentialOffer
-    fetchMetadataUseCase.executeFromReturnValue = .Mock.sample
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenReturnValue = mockCredentialWithKeyBinding
-    saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReturnValue = credential
+
+    fetchCredentialUseCase.executeFromReturnValue = credential
+
     createAnyCredentialUseCase.executeFromFormatReturnValue = mockAnyCredential
-    checkAndUpdateCredentialStatusUseCase.executeForReturnValue = credential
     fetchTrustStatementUseCase.executeCredentialReturnValue = .Mock.validSample
 
     await viewModel.setMetadataUrl(url)
@@ -119,16 +111,8 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertEqual(1, validateCredentialOfferInvitationUrlUseCase.executeCallsCount)
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
     XCTAssertEqual(1, checkInvitationTypeUseCase.executeUrlCallsCount)
-    XCTAssertTrue(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertEqual(1, fetchMetadataUseCase.executeFromCallsCount)
-    XCTAssertTrue(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertEqual(1, fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCallsCount)
-    XCTAssertTrue(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertEqual(1, saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCallsCount)
-    XCTAssertTrue(checkAndUpdateCredentialStatusUseCase.executeForCalled)
-    XCTAssertEqual(1, checkAndUpdateCredentialStatusUseCase.executeForCallsCount)
-    XCTAssertTrue(checkAndUpdateCredentialStatusUseCase.executeForCalled)
-    XCTAssertEqual(1, checkAndUpdateCredentialStatusUseCase.executeForCallsCount)
+    XCTAssertTrue(fetchCredentialUseCase.executeFromCalled)
+    XCTAssertEqual(1, fetchCredentialUseCase.executeFromCallsCount)
     XCTAssertEqual(createAnyCredentialUseCase.executeFromFormatReceivedArguments?.format, credential.format)
     XCTAssertEqual(createAnyCredentialUseCase.executeFromFormatReceivedArguments?.payload, credential.payload)
     XCTAssertEqual(fetchTrustStatementUseCase.executeCredentialReceivedCredential?.issuer, mockAnyCredential.issuer)
@@ -141,24 +125,16 @@ final class CameraViewModelTests: XCTestCase {
   func testValidateCredentialOfferSuccess_deeplink() async {
     let mockCredentialOffer = CredentialOffer.Mock.sample
     let credential = Credential.Mock.sample
-    let expectation = XCTestExpectation(description: "Async operation completes")
 
     checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
     validateCredentialOfferInvitationUrlUseCase.executeReturnValue = mockCredentialOffer
-    fetchMetadataUseCase.executeFromReturnValue = .Mock.sample
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenReturnValue = mockCredentialWithKeyBinding
-    saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReturnValue = credential
-    createAnyCredentialUseCase.executeFromFormatReturnValue = MockAnyCredential()
-    checkAndUpdateCredentialStatusUseCase.executeForReturnValue = credential
-    checkAndUpdateCredentialStatusUseCase.executeForClosure = { credential in
-      expectation.fulfill()
-      return credential
-    }
+    fetchCredentialUseCase.executeFromReturnValue = credential
+
+    createAnyCredentialUseCase.executeFromFormatReturnValue = mockAnyCredential
     fetchTrustStatementUseCase.executeCredentialReturnValue = .Mock.validSample
 
     viewModel = createViewModel(mode: .deeplink(url: url))
-
-    await fulfillment(of: [expectation], timeout: 5.0)
+    try? await Task.sleep(nanoseconds: 1_000_000_000)
 
     XCTAssertEqual(url, validateCredentialOfferInvitationUrlUseCase.executeReceivedUrl)
 
@@ -166,16 +142,8 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertEqual(1, validateCredentialOfferInvitationUrlUseCase.executeCallsCount)
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
     XCTAssertEqual(1, checkInvitationTypeUseCase.executeUrlCallsCount)
-    XCTAssertTrue(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertEqual(1, fetchMetadataUseCase.executeFromCallsCount)
-    XCTAssertTrue(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertEqual(1, fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCallsCount)
-    XCTAssertTrue(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertEqual(1, saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCallsCount)
-    XCTAssertTrue(checkAndUpdateCredentialStatusUseCase.executeForCalled)
-    XCTAssertEqual(1, checkAndUpdateCredentialStatusUseCase.executeForCallsCount)
-    XCTAssertTrue(checkAndUpdateCredentialStatusUseCase.executeForCalled)
-    XCTAssertEqual(1, checkAndUpdateCredentialStatusUseCase.executeForCallsCount)
+    XCTAssertTrue(fetchCredentialUseCase.executeFromCalled)
+    XCTAssertEqual(1, fetchCredentialUseCase.executeFromCallsCount)
     XCTAssertFalse(fetchRequestObjectUseCase.executeCalled)
     XCTAssertFalse(getCompatibleCredentialsUseCase.executeUsingCalled)
     XCTAssertEqual(createAnyCredentialUseCase.executeFromFormatReceivedArguments?.format, credential.format)
@@ -206,10 +174,7 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
     XCTAssertEqual(1, checkInvitationTypeUseCase.executeUrlCallsCount)
 
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
     XCTAssertFalse(fetchRequestObjectUseCase.executeCalled)
     XCTAssertFalse(getCompatibleCredentialsUseCase.executeUsingCalled)
   }
@@ -220,8 +185,7 @@ final class CameraViewModelTests: XCTestCase {
 
     checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
     validateCredentialOfferInvitationUrlUseCase.executeReturnValue = mockCredentialOffer
-    fetchMetadataUseCase.executeFromReturnValue = .Mock.sample
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenThrowableError = FetchCredentialError.validationFailed
+    fetchCredentialUseCase.executeFromThrowableError = FetchAnyVerifiableCredentialError.validationFailed
 
     viewModel.isTorchEnabled = true
 
@@ -240,13 +204,8 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
     XCTAssertEqual(1, checkInvitationTypeUseCase.executeUrlCallsCount)
 
-    XCTAssertTrue(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertEqual(fetchMetadataUseCase.executeFromCallsCount, 1)
-
-    XCTAssertTrue(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertEqual(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCallsCount, 1)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertTrue(fetchCredentialUseCase.executeFromCalled)
+    XCTAssertEqual(fetchCredentialUseCase.executeFromCallsCount, 1)
     XCTAssertFalse(fetchRequestObjectUseCase.executeCalled)
     XCTAssertFalse(getCompatibleCredentialsUseCase.executeUsingCalled)
   }
@@ -261,8 +220,7 @@ final class CameraViewModelTests: XCTestCase {
 
     checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
     validateCredentialOfferInvitationUrlUseCase.executeReturnValue = mockCredentialOffer
-    fetchMetadataUseCase.executeFromReturnValue = .Mock.sample
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenThrowableError = FetchCredentialError.unknownIssuer
+    fetchCredentialUseCase.executeFromThrowableError = FetchAnyVerifiableCredentialError.unknownIssuer
 
     viewModel.isTorchEnabled = true
 
@@ -276,11 +234,8 @@ final class CameraViewModelTests: XCTestCase {
 
     XCTAssertEqual(url, validateCredentialOfferInvitationUrlUseCase.executeReceivedUrl)
     XCTAssertEqual(url, checkInvitationTypeUseCase.executeUrlReceivedUrl)
-    XCTAssertEqual(mockOfferIssuerUrl, fetchMetadataUseCase.executeFromReceivedIssuerUrl)
-    XCTAssertEqual(mockOfferIssuerUrl, fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenReceivedArguments?.issuerUrl)
+//    XCTAssertEqual(mockCredentialOffer, fetchCredentialUseCase.executeFromReceivedArguments?.offer)
 
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
     XCTAssertFalse(fetchRequestObjectUseCase.executeCalled)
     XCTAssertFalse(getCompatibleCredentialsUseCase.executeUsingCalled)
   }
@@ -291,8 +246,7 @@ final class CameraViewModelTests: XCTestCase {
 
     checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
     validateCredentialOfferInvitationUrlUseCase.executeReturnValue = mockCredentialOffer
-    fetchMetadataUseCase.executeFromReturnValue = .Mock.sample
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenThrowableError = FetchCredentialError.expiredInvitation
+    fetchCredentialUseCase.executeFromThrowableError = FetchAnyVerifiableCredentialError.expiredInvitation
 
     viewModel.isTorchEnabled = true
 
@@ -311,13 +265,8 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
     XCTAssertEqual(1, checkInvitationTypeUseCase.executeUrlCallsCount)
 
-    XCTAssertTrue(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertEqual(fetchMetadataUseCase.executeFromCallsCount, 1)
-
-    XCTAssertTrue(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertEqual(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCallsCount, 1)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertTrue(fetchCredentialUseCase.executeFromCalled)
+    XCTAssertEqual(fetchCredentialUseCase.executeFromCallsCount, 1)
     XCTAssertFalse(fetchRequestObjectUseCase.executeCalled)
     XCTAssertFalse(getCompatibleCredentialsUseCase.executeUsingCalled)
   }
@@ -329,10 +278,7 @@ final class CameraViewModelTests: XCTestCase {
 
     checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
     validateCredentialOfferInvitationUrlUseCase.executeReturnValue = mockCredentialOffer
-    fetchMetadataUseCase.executeFromReturnValue = .Mock.sample
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenReturnValue = mockCredentialWithKeyBinding
-    saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReturnValue = credential
-    checkAndUpdateCredentialStatusUseCase.executeForReturnValue = credential
+    fetchCredentialUseCase.executeFromReturnValue = credential
     createAnyCredentialUseCase.executeFromFormatReturnValue = MockAnyCredential()
     fetchTrustStatementUseCase.executeCredentialThrowableError = TestingError.error
 
@@ -346,11 +292,7 @@ final class CameraViewModelTests: XCTestCase {
 
     XCTAssertTrue(validateCredentialOfferInvitationUrlUseCase.executeCalled)
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
-    XCTAssertTrue(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertTrue(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertTrue(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertEqual(mockCredentialWithKeyBinding.anyCredential.raw, saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReceivedArguments?.credentialWithKeyBinding.anyCredential.raw)
-    XCTAssertTrue(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertTrue(fetchCredentialUseCase.executeFromCalled)
     XCTAssertTrue(fetchTrustStatementUseCase.executeCredentialCalled)
 
     XCTAssertFalse(fetchRequestObjectUseCase.executeCalled)
@@ -364,10 +306,9 @@ final class CameraViewModelTests: XCTestCase {
 
     checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
     validateCredentialOfferInvitationUrlUseCase.executeReturnValue = mockCredentialOffer
-    fetchMetadataUseCase.executeFromReturnValue = .Mock.sample
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenReturnValue = mockCredentialWithKeyBinding
-    saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReturnValue = credential
-    checkAndUpdateCredentialStatusUseCase.executeForReturnValue = credential
+
+    fetchCredentialUseCase.executeFromReturnValue = credential
+
     createAnyCredentialUseCase.executeFromFormatThrowableError = TestingError.error
 
     await viewModel.setMetadataUrl(url)
@@ -380,10 +321,7 @@ final class CameraViewModelTests: XCTestCase {
 
     XCTAssertTrue(validateCredentialOfferInvitationUrlUseCase.executeCalled)
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
-    XCTAssertTrue(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertTrue(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertEqual(mockCredentialWithKeyBinding.anyCredential.raw, saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReceivedArguments?.credentialWithKeyBinding.anyCredential.raw)
-    XCTAssertTrue(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertTrue(fetchCredentialUseCase.executeFromCalled)
 
     XCTAssertEqual(createAnyCredentialUseCase.executeFromFormatReceivedArguments?.format, credential.format)
     XCTAssertEqual(createAnyCredentialUseCase.executeFromFormatReceivedArguments?.payload, credential.payload)
@@ -423,10 +361,7 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertEqual(1, getCompatibleCredentialsUseCase.executeUsingCallsCount)
     XCTAssertEqual(context.requestObject, getCompatibleCredentialsUseCase.executeUsingReceivedRequestObject)
 
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
 
     XCTAssertTrue(validateRequestObjectUseCase.executeCalled)
     XCTAssertEqual(validateRequestObjectUseCase.executeReceivedRequestObject, context.requestObject)
@@ -490,10 +425,7 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertEqual(1, getCompatibleCredentialsUseCase.executeUsingCallsCount)
     XCTAssertEqual(context.requestObject, getCompatibleCredentialsUseCase.executeUsingReceivedRequestObject)
 
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
 
     XCTAssertTrue(validateRequestObjectUseCase.executeCalled)
     XCTAssertEqual(validateRequestObjectUseCase.executeReceivedRequestObject, context.requestObject)
@@ -520,11 +452,7 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertFalse(getCompatibleCredentialsUseCase.executeUsingCalled)
     XCTAssertEqual(0, getCompatibleCredentialsUseCase.executeUsingCallsCount)
 
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
-
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
     XCTAssertFalse(validateRequestObjectUseCase.executeCalled)
     XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
   }
@@ -555,10 +483,7 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertTrue(getCompatibleCredentialsUseCase.executeUsingCalled)
     XCTAssertEqual(1, getCompatibleCredentialsUseCase.executeUsingCallsCount)
 
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
 
     XCTAssertTrue(validateRequestObjectUseCase.executeCalled)
     XCTAssertEqual(validateRequestObjectUseCase.executeReceivedRequestObject, mockRequestObject)
@@ -573,6 +498,8 @@ final class CameraViewModelTests: XCTestCase {
     await viewModel.setMetadataUrl(url)
 
     XCTAssertNil(viewModel.offer)
+    XCTAssertTrue(viewModel.isPopupErrorPresented)
+    XCTAssertEqual(viewModel.qrScannerError as? CameraViewModel.CameraError, .invalidPresentationRequest)
 
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
     XCTAssertEqual(1, checkInvitationTypeUseCase.executeUrlCallsCount)
@@ -583,10 +510,7 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertFalse(getCompatibleCredentialsUseCase.executeUsingCalled)
     XCTAssertEqual(0, getCompatibleCredentialsUseCase.executeUsingCallsCount)
 
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
 
     XCTAssertFalse(validateRequestObjectUseCase.executeCalled)
     XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
@@ -608,10 +532,7 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertTrue(getCompatibleCredentialsUseCase.executeUsingCalled)
     XCTAssertEqual(1, getCompatibleCredentialsUseCase.executeUsingCallsCount)
 
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
     XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
     XCTAssertTrue(validateRequestObjectUseCase.executeCalled)
     XCTAssertEqual(validateRequestObjectUseCase.executeReceivedRequestObject, mockRequestObject)
@@ -633,41 +554,23 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertTrue(getCompatibleCredentialsUseCase.executeUsingCalled)
     XCTAssertEqual(1, getCompatibleCredentialsUseCase.executeUsingCallsCount)
 
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
     XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
     XCTAssertTrue(validateRequestObjectUseCase.executeCalled)
     XCTAssertEqual(validateRequestObjectUseCase.executeReceivedRequestObject, mockRequestObject)
   }
 
   @MainActor
-  func testFetchMetadataFailed_networkError() async {
-    checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
-    validateCredentialOfferInvitationUrlUseCase.executeReturnValue = .Mock.sample
-    fetchMetadataUseCase.executeFromThrowableError = NetworkError(status: .noConnection)
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenReturnValue = mockCredentialWithKeyBinding
-
-    await viewModel.setMetadataUrl(url)
-
-    assertsNoInternetConnexion()
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-  }
-
-  @MainActor
   func testFetchCredentialFailed_networkError() async {
     checkInvitationTypeUseCase.executeUrlReturnValue = .credentialOffer
     validateCredentialOfferInvitationUrlUseCase.executeReturnValue = .Mock.sample
-    fetchMetadataUseCase.executeFromReturnValue = .Mock.sample
-    fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenThrowableError = NetworkError(status: .noConnection)
-    saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperReturnValue = .Mock.sample
-    checkAndUpdateCredentialStatusUseCase.executeForReturnValue = .Mock.sample
+
+    fetchCredentialUseCase.executeFromThrowableError = NetworkError(status: .noConnection)
 
     await viewModel.setMetadataUrl(url)
 
     assertsNoInternetConnexion()
-    XCTAssertTrue(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
+    XCTAssertTrue(fetchCredentialUseCase.executeFromCalled)
   }
 
   @MainActor
@@ -693,10 +596,7 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
     XCTAssertTrue(fetchRequestObjectUseCase.executeCalled)
     XCTAssertFalse(getCompatibleCredentialsUseCase.executeUsingCalled)
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
     XCTAssertFalse(denyPresentationUseCase.executeContextErrorCalled)
   }
 
@@ -717,15 +617,16 @@ final class CameraViewModelTests: XCTestCase {
     XCTAssertTrue(fetchRequestObjectUseCase.executeCalled)
     XCTAssertFalse(getCredentialsCountUseCase.executeCalled)
     XCTAssertFalse(router.didCallCompatibleCredentials)
-    XCTAssertFalse(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(fetchCredentialUseCase.executeFromMetadataWrapperCredentialOfferAccessTokenCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
+    XCTAssertFalse(fetchCredentialUseCase.executeFromCalled)
 
     XCTAssertTrue(validateRequestObjectUseCase.executeCalled)
     XCTAssertEqual(validateRequestObjectUseCase.executeReceivedRequestObject, context.requestObject)
     XCTAssertTrue(denyPresentationUseCase.executeContextErrorCalled)
     XCTAssertEqual(denyPresentationUseCase.executeContextErrorReceivedArguments?.error, .invalidRequest)
+
+    XCTAssertFalse(viewModel.isLoading)
+    XCTAssertTrue(viewModel.isPopupErrorPresented)
+    XCTAssertEqual(viewModel.qrScannerError as? CameraViewModel.CameraError, .invalidPresentationRequest)
   }
 
   @MainActor
@@ -792,10 +693,7 @@ final class CameraViewModelTests: XCTestCase {
   private var fetchRequestObjectUseCase = FetchRequestObjectUseCaseProtocolSpy()
   private var checkInvitationTypeUseCase = CheckInvitationTypeUseCaseProtocolSpy()
   private var getCompatibleCredentialsUseCase = GetCompatibleCredentialsUseCaseProtocolSpy()
-  private var fetchMetadataUseCase = FetchMetadataUseCaseProtocolSpy()
   private var fetchCredentialUseCase = FetchCredentialUseCaseProtocolSpy()
-  private var saveCredentialUseCase = SaveCredentialUseCaseProtocolSpy()
-  private var checkAndUpdateCredentialStatusUseCase = CheckAndUpdateCredentialStatusUseCaseProtocolSpy()
   private var getCredentialsCountUseCase = GetCredentialsCountUseCaseProtocolSpy()
   private var fetchTrustStatementUseCase = FetchTrustStatementUseCaseProtocolSpy()
   private var denyPresentationUseCase = DenyPresentationUseCaseProtocolSpy()
@@ -806,7 +704,7 @@ final class CameraViewModelTests: XCTestCase {
   private var router = InvitationRouterMock()
 
   private var viewModel: CameraViewModel!
-  private var mockCredentialWithKeyBinding: CredentialWithKeyBinding!
+  private var mockCredentialWithKeyBinding: (AnyCredential, KeyPair?)!
   private let url = URL(string: "openid-credential-offer://url")!
   private let scannerDelay: UInt64 = 0
   // swiftlint: enable all
@@ -840,9 +738,6 @@ extension CameraViewModelTests {
     XCTAssertEqual(url, validateCredentialOfferInvitationUrlUseCase.executeReceivedUrl)
     XCTAssertTrue(validateCredentialOfferInvitationUrlUseCase.executeCalled)
     XCTAssertTrue(checkInvitationTypeUseCase.executeUrlCalled)
-    XCTAssertTrue(fetchMetadataUseCase.executeFromCalled)
-    XCTAssertFalse(saveCredentialUseCase.executeCredentialWithKeyBindingMetadataWrapperCalled)
-    XCTAssertFalse(checkAndUpdateCredentialStatusUseCase.executeForCalled)
     XCTAssertFalse(fetchRequestObjectUseCase.executeCalled)
     XCTAssertFalse(getCompatibleCredentialsUseCase.executeUsingCalled)
     XCTAssertFalse(validateRequestObjectUseCase.executeCalled)

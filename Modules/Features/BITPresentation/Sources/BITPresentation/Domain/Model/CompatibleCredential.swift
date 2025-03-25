@@ -9,7 +9,7 @@ public struct CompatibleCredential: Identifiable {
 
   // MARK: Lifecycle
 
-  init(credential: Credential, requestedFields: [PresentationField]) {
+  public init(credential: Credential, requestedFields: [PresentationField]) {
     self.credential = credential
     id = credential.id
 

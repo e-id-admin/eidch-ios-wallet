@@ -1,19 +1,20 @@
-import BITLocalAuthentication
 import Factory
 import Foundation
+import Spyable
+
+// MARK: - IsUserLoggedInUseCaseProtocol
+
+@Spyable
+public protocol IsUserLoggedInUseCaseProtocol {
+  func execute() -> Bool
+}
 
 // MARK: - IsUserLoggedInUseCase
 
-/// This use case contains a direct dependency to the shared LAContext which
-/// allows us to define if the user is logged in or not when the LAContext contains a setCredential
 public struct IsUserLoggedInUseCase: IsUserLoggedInUseCaseProtocol {
-
   public func execute() -> Bool {
-    context.isCredentialSet(.applicationPassword)
+    userSession.isLoggedIn
   }
 
-  private var context: LAContextProtocol {
-    Container.shared.authContext()
-  }
-
+  @Injected(\.userSession) private var userSession: Session
 }

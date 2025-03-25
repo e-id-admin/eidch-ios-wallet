@@ -1,5 +1,6 @@
 import BITCore
 import BITVault
+import Factory
 import Foundation
 import XCTest
 @testable import BITAppAuth
@@ -15,33 +16,34 @@ final class LoginBiometricUseCaseTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    spyRequestBiometricAuthUseCase = RequestBiometricAuthUseCaseProtocolSpy()
-    spyUniquePassphraseManager = UniquePassphraseManagerProtocolSpy()
-    spyContextManager = ContextManagerProtocolSpy()
-    spyContext = LAContextProtocolSpy()
+    uniquePassphraseManager = UniquePassphraseManagerProtocolSpy()
+    userSession = SessionSpy()
+    context = LAContextProtocolSpy()
     dataStoreConfiguration = DataStoreConfigurationManagerProtocolSpy()
-    useCase = LoginBiometricUseCase(
-      requestBiometricAuthUseCase: spyRequestBiometricAuthUseCase,
-      uniquePassphraseManager: spyUniquePassphraseManager,
-      contextManager: spyContextManager,
-      context: spyContext,
-      dataStoreConfigurationManager: dataStoreConfiguration)
+
+    Container.shared.uniquePassphraseManager.register { self.uniquePassphraseManager }
+    Container.shared.dataStoreConfigurationManager.register { self.dataStoreConfiguration }
+    Container.shared.internalContext.register { self.context }
+    Container.shared.userSession.register { self.userSession }
+
+    useCase = LoginBiometricUseCase()
   }
 
   func testHappyPath() async throws {
     let mockUniquePassphraseData = Data()
-    spyRequestBiometricAuthUseCase.executeReasonContextClosure = { _, _ in }
-    spyUniquePassphraseManager.getUniquePassphraseAuthMethodContextReturnValue = mockUniquePassphraseData
+    userSession.startSessionPassphraseCredentialTypeReturnValue = context
+    context.evaluatePolicyLocalizedReasonReturnValue = true
+    uniquePassphraseManager.getUniquePassphraseAuthMethodContextReturnValue = mockUniquePassphraseData
 
     let didLoginNotification = expectation(forNotification: .didLogin, object: nil)
 
     try await useCase.execute()
-    XCTAssertTrue(spyRequestBiometricAuthUseCase.executeReasonContextCalled)
-    XCTAssertTrue(spyUniquePassphraseManager.getUniquePassphraseAuthMethodContextCalled)
-    XCTAssertTrue(spyContextManager.setCredentialContextCalled)
+    XCTAssertTrue(context.evaluatePolicyLocalizedReasonCalled)
+    XCTAssertTrue(uniquePassphraseManager.getUniquePassphraseAuthMethodContextCalled)
+    XCTAssertTrue(userSession.startSessionPassphraseCredentialTypeCalled)
 
-    XCTAssertEqual(AuthMethod.biometric, spyUniquePassphraseManager.getUniquePassphraseAuthMethodContextReceivedArguments?.authMethod)
-    XCTAssertEqual(mockUniquePassphraseData, spyContextManager.setCredentialContextReceivedArguments?.data)
+    XCTAssertEqual(AuthMethod.biometric, uniquePassphraseManager.getUniquePassphraseAuthMethodContextReceivedArguments?.authMethod)
+    XCTAssertEqual(mockUniquePassphraseData, userSession.startSessionPassphraseCredentialTypeReceivedArguments?.passphrase)
 
     XCTAssertTrue(dataStoreConfiguration.setEncryptionKeyCalled)
     XCTAssertEqual(dataStoreConfiguration.setEncryptionKeyCallsCount, 1)
@@ -50,14 +52,14 @@ final class LoginBiometricUseCaseTests: XCTestCase {
   }
 
   func testBiometricsUseCaseError() async throws {
-    spyRequestBiometricAuthUseCase.executeReasonContextThrowableError = AuthError.biometricPolicyEvaluationFailed
+    context.evaluatePolicyLocalizedReasonReturnValue = false
     do {
       try await useCase.execute()
       XCTFail("Should fail instead...")
-    } catch AuthError.biometricPolicyEvaluationFailed {
-      XCTAssertTrue(spyRequestBiometricAuthUseCase.executeReasonContextCalled)
-      XCTAssertFalse(spyUniquePassphraseManager.getUniquePassphraseAuthMethodContextCalled)
-      XCTAssertFalse(spyContextManager.setCredentialContextCalled)
+    } catch AuthError.LAContextError {
+      XCTAssertTrue(context.evaluatePolicyLocalizedReasonCalled)
+      XCTAssertFalse(uniquePassphraseManager.getUniquePassphraseAuthMethodContextCalled)
+      XCTAssertFalse(userSession.startSessionPassphraseCredentialTypeCalled)
       XCTAssertFalse(dataStoreConfiguration.setEncryptionKeyCalled)
     } catch {
       XCTFail("Unexpected error: \(error.localizedDescription)")
@@ -65,15 +67,16 @@ final class LoginBiometricUseCaseTests: XCTestCase {
   }
 
   func testWrongBiometrics() async throws {
-    spyRequestBiometricAuthUseCase.executeReasonContextClosure = { _, _ in }
-    spyUniquePassphraseManager.getUniquePassphraseAuthMethodContextThrowableError = VaultError.secretRetrievalError(reason: "wrong biometrics")
+    userSession.startSessionPassphraseCredentialTypeReturnValue = context
+    context.evaluatePolicyLocalizedReasonReturnValue = true
+    uniquePassphraseManager.getUniquePassphraseAuthMethodContextThrowableError = VaultError.secretRetrievalError(reason: "wrong biometrics")
     do {
       try await useCase.execute()
       XCTFail("Should fail instead...")
     } catch VaultError.secretRetrievalError {
-      XCTAssertTrue(spyRequestBiometricAuthUseCase.executeReasonContextCalled)
-      XCTAssertTrue(spyUniquePassphraseManager.getUniquePassphraseAuthMethodContextCalled)
-      XCTAssertFalse(spyContextManager.setCredentialContextCalled)
+      XCTAssertTrue(context.evaluatePolicyLocalizedReasonCalled)
+      XCTAssertTrue(uniquePassphraseManager.getUniquePassphraseAuthMethodContextCalled)
+      XCTAssertFalse(userSession.startSessionPassphraseCredentialTypeCalled)
 
       XCTAssertFalse(dataStoreConfiguration.setEncryptionKeyCalled)
     } catch {
@@ -84,25 +87,11 @@ final class LoginBiometricUseCaseTests: XCTestCase {
   // MARK: Private
 
   // swiftlint:disable all
-  private var spyRequestBiometricAuthUseCase: RequestBiometricAuthUseCaseProtocolSpy!
-  private var spyUniquePassphraseManager: UniquePassphraseManagerProtocolSpy!
-  private var spyContextManager: ContextManagerProtocolSpy!
-  private var spyContext: LAContextProtocolSpy!
+  private var uniquePassphraseManager: UniquePassphraseManagerProtocolSpy!
+  private var userSession: SessionSpy!
+  private var context: LAContextProtocolSpy!
   private var useCase: LoginBiometricUseCase!
   private var dataStoreConfiguration: DataStoreConfigurationManagerProtocolSpy!
   // swiftlint:enable all
-
-}
-
-extension LoginBiometricUseCaseTests {
-
-  private func configureSpy(uniquePassphrase: Data, requestBiometricError: Error?) {
-    if let requestBiometricError {
-      spyRequestBiometricAuthUseCase.executeReasonContextThrowableError = requestBiometricError
-    } else {
-      spyRequestBiometricAuthUseCase.executeReasonContextClosure = { _, _ in }
-    }
-    spyUniquePassphraseManager.generateReturnValue = uniquePassphrase
-  }
 
 }

@@ -8,20 +8,6 @@ import Foundation
 
 public struct CheckAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialStatusUseCaseProtocol {
 
-  // MARK: Lifecycle
-
-  init(
-    createAnyCredentialUseCase: CreateAnyCredentialUseCaseProtocol = Container.shared.createAnyCredentialUseCase(),
-    localRepository: CredentialRepositoryProtocol = Container.shared.databaseCredentialRepository(),
-    dateBuffer: TimeInterval = Container.shared.dateBuffer(),
-    validators: [AnyStatusType: any AnyStatusCheckValidatorProtocol] = Container.shared.statusValidators())
-  {
-    self.createAnyCredentialUseCase = createAnyCredentialUseCase
-    self.localRepository = localRepository
-    self.dateBuffer = dateBuffer
-    self.validators = validators
-  }
-
   // MARK: Public
 
   public func execute(_ credentials: [Credential]) async throws -> [Credential] {
@@ -48,15 +34,12 @@ public struct CheckAndUpdateCredentialStatusUseCase: CheckAndUpdateCredentialSta
     }
   }
 
-  // MARK: Internal
-
-  var validators: [AnyStatusType: any AnyStatusCheckValidatorProtocol]
-
   // MARK: Private
 
-  private let dateBuffer: TimeInterval
-  private let createAnyCredentialUseCase: CreateAnyCredentialUseCaseProtocol
-  private let localRepository: CredentialRepositoryProtocol
+  @Injected(\.createAnyCredentialUseCase) private var createAnyCredentialUseCase: CreateAnyCredentialUseCaseProtocol
+  @Injected(\.statusValidators) private var validators: [AnyStatusType: any AnyStatusCheckValidatorProtocol]
+  @Injected(\.databaseCredentialRepository) private var localRepository: CredentialRepositoryProtocol
+  @Injected(\.dateBuffer) private var dateBuffer: TimeInterval
 }
 
 extension CheckAndUpdateCredentialStatusUseCase {
@@ -78,13 +61,13 @@ extension CheckAndUpdateCredentialStatusUseCase {
   }
 
   private func checkDateValidity(anyCredential: AnyCredential) -> VcStatus {
-    let now = Date().addingTimeInterval(dateBuffer)
-
-
+    let now = Date()
+    if let validFrom = anyCredential.validFrom, validFrom > now.addingTimeInterval(dateBuffer) {
+      return .notYetValid
+    }
     if let validUntil = anyCredential.validUntil, validUntil < now {
       return .expired
     }
-
     return .valid
   }
 

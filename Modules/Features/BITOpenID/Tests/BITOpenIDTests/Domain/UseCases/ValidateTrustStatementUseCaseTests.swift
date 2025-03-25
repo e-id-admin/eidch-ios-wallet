@@ -115,8 +115,8 @@ final class ValidateTrustStatementUseCaseTests: XCTestCase {
   // swiftlint:enable all
 
   private let trustedDids: [String] = [
-    "did:tdw:123:identifier.domain.ch:api:v1:did:123",
-    "did:tdw:123:identifier.domain.ch:api:v1:did:456",
+    "did:tdw:example",
+    "did:tdw:another-example",
   ]
 
 }

@@ -7,33 +7,56 @@ import XCTest
 
 final class SdJWTTests: XCTestCase {
 
+  // MARK: Internal
+
   func testInit_fromRawStringPayload() throws {
     // swiftlint: disable all
     let rawString = String(data: SdJWT.Mock.sampleData, encoding: .utf8)!
     // swiftlint: enable all
 
     guard let sdJWT = try? SdJWT(from: rawString) else {
-      XCTFail("init from rawCredential failed")
+      XCTFail("init from rawString failed")
       return
     }
 
     XCTAssertEqual(sdJWT.raw, rawString)
   }
 
-  func testInit_withDisclosures() throws {
-    // swiftlint: disable all
-    let rawString = String(data: SdJWT.Mock.sampleData, encoding: .utf8)!
-    // swiftlint: enable all
-    let parts = rawString.split(separator: SdJWT.disclosuresSeparator)
-    let disclosures = parts[1..<parts.count]
-    let rawDisclosures = disclosures.joined(separator: String(SdJWT.disclosuresSeparator))
+  func testApplySelectiveDisclosure_withFlatDisclosuresRequiringAllKeys_ReturnsWhole() throws {
+    let sdJwt = SdJWT.Mock.flat
+    let keys = [Self.key1, Self.key2, Self.key3]
 
-    guard let sdJwt = try? SdJWT(from: rawString, rawDisclosures: rawDisclosures) else {
-      XCTFail("init with disclosures failed")
-      return
-    }
+    let newSdJwt = try sdJwt.applySelectiveDisclosure(for: keys)
 
-    XCTAssertEqual(rawString, sdJwt.raw)
+    XCTAssertEqual(sdJwt, newSdJwt)
+  }
+
+  func testApplySelectiveDisclosure_withFlatDisclosuresRequiringSomeKeys_ReturnsJwtWithRequiredDisclosures() throws {
+    let sdJwt = SdJWT.Mock.flat
+    let keys = [Self.key1, Self.key3]
+
+    let newSdJwt = try sdJwt.applySelectiveDisclosure(for: keys)
+
+    let expected = [SdJWT.Mock.flatJwt, SdJWT.Mock.disclosure1, SdJWT.Mock.disclosure3, ""].joined(separator: SdJWT.disclosuresSeparator)
+    XCTAssertEqual(expected, newSdJwt.raw)
+  }
+
+  func testApplySelectiveDisclosure_withFlatDisclosuresRequiringNoKeys_ReturnsJwt() throws {
+    let sdJwt = SdJWT.Mock.flat
+    let keys: [String] = []
+
+    let newSdJwt = try sdJwt.applySelectiveDisclosure(for: keys)
+
+    XCTAssertEqual(SdJWT.Mock.flatJwt + SdJWT.disclosuresSeparator, newSdJwt.raw)
+  }
+
+  func testApplySelectiveDisclosure_withFlatDisclosuresRequiringOtherKeys_ReturnsJwt() throws {
+    let sdJwt = SdJWT.Mock.flat
+    let keys: [String] = ["otherKey", "otherKey2"]
+
+    let newSdJwt = try sdJwt.applySelectiveDisclosure(for: keys)
+
+    XCTAssertEqual(SdJWT.Mock.flatJwt + SdJWT.disclosuresSeparator, newSdJwt.raw)
   }
 
   func testDecodeSample() throws {
@@ -83,9 +106,9 @@ final class SdJWTTests: XCTestCase {
     }
   }
 
-  func testReplaceDigestsAndFindClaims() throws {
+  func testReplaceDigestsWithDisclosedClaims() throws {
     let sdJwt = SdJWT.Mock.sample
-    let raw = try sdJwt.replaceDigestsAndFindClaims()
+    let raw = try sdJwt.replaceDigestsWithDisclosedClaims()
     guard let data = raw.data(using: .utf8) else {
       XCTFail("error while decoding string created by replaceDigestsAndFindClaims")
       return
@@ -100,5 +123,11 @@ final class SdJWTTests: XCTestCase {
       XCTAssertNotNil(payloadDictionary[claim.key] as? String, "claim with key \(claim.key) must have been added at the root of the VC")
     }
   }
+
+  // MARK: Private
+
+  private static let key1 = "test_key_1"
+  private static let key2 = "test_key_2"
+  private static let key3 = "test_key_3"
 
 }

@@ -3,12 +3,31 @@ import BITJWT
 import BITNetworking
 import Factory
 import Foundation
+import Moya
+
+// MARK: - OpenIdRepositoryError
+
+enum OpenIdRepositoryError: Error {
+  case presentationProcessClosed
+}
 
 // MARK: - OpenIDRepository
 
 struct OpenIDRepository: OpenIDRepositoryProtocol {
 
   // MARK: Internal
+
+  func fetchVcSchemaData(from url: URL) async throws -> VcSchema {
+    try await networkService.request(OpenIDEndpoint.vcSchema(url: url)).data
+  }
+
+  /// Retrieving Type Metadata from a registry given as the url parameter
+  /// - Documentation: [SD-JWT-based Verifiable Credentials - Draft 06](https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-06.html#name-from-a-registry)
+  func fetchTypeMetadata(from url: URL) async throws -> (TypeMetadata, Data) {
+    let response: Response = try await networkService.request(OpenIDEndpoint.typeMetadata(url: url))
+    let typeMetadata = try JSONDecoder().decode(TypeMetadata.self, from: response.data)
+    return (typeMetadata, response.data)
+  }
 
   func fetchMetadata(from issuerUrl: URL) async throws -> CredentialMetadata {
     try await networkService.request(OpenIDEndpoint.metadata(fromIssuerUrl: issuerUrl))
@@ -37,7 +56,11 @@ struct OpenIDRepository: OpenIDRepositoryProtocol {
   }
 
   func fetchRequestObject(from url: URL) async throws -> Data {
-    try await networkService.request(OpenIDEndpoint.requestObject(url: url)).data
+    do {
+      return try await networkService.request(OpenIDEndpoint.requestObject(url: url)).data
+    } catch let error as NetworkError where error.status == .gone {
+      throw OpenIdRepositoryError.presentationProcessClosed
+    }
   }
 
   func fetchTrustStatements(from url: URL, issuerDid: String) async throws -> [String] {

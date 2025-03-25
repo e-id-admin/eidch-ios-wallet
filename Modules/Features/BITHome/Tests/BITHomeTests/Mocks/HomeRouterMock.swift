@@ -13,6 +13,7 @@ class HomeRouterMock: HomeRouterRoutes {
   var didCallOpenCredentialDetail = false
   var didCallBetaId = false
   var didCallEIDRequest = false
+  var didCallAutoVerification = false
 
   func deeplink(url: URL, animated: Bool) -> Bool {
     didCallDeeplink = true
@@ -45,6 +46,10 @@ class HomeRouterMock: HomeRouterRoutes {
 
   func eIDRequest() {
     didCallEIDRequest = true
+  }
+
+  func autoVerification() {
+    didCallAutoVerification = true
   }
 
 }

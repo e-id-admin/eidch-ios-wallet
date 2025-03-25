@@ -1,5 +1,6 @@
 import BITAnyCredentialFormat
 import BITCore
+import BITCrypto
 import BITEntities
 import BITOpenID
 import BITVault
@@ -28,6 +29,7 @@ public struct Credential: Identifiable, Codable {
     payload: CredentialPayload,
     format: String,
     issuer: String,
+    validFrom: Date? = nil,
     createdAt: Date = Date(),
     updatedAt: Date? = nil,
     claims: [CredentialClaim] = [],
@@ -41,6 +43,7 @@ public struct Credential: Identifiable, Codable {
     self.payload = payload
     self.format = format
     self.issuer = issuer
+    self.validFrom = validFrom
     self.createdAt = createdAt
     self.updatedAt = updatedAt
     self.claims = claims
@@ -66,6 +69,7 @@ public struct Credential: Identifiable, Codable {
       payload: container.decode(Data.self, forKey: .payload),
       format: container.decode(String.self, forKey: .format),
       issuer: container.decode(String.self, forKey: .issuer),
+      validFrom: container.decodeIfPresent(Date.self, forKey: .validFrom),
       createdAt: container.decode(Date.self, forKey: .createdAt),
       updatedAt: container.decodeIfPresent(Date.self, forKey: .updatedAt),
       claims: container.decode([CredentialClaim].self, forKey: .claims),
@@ -86,6 +90,7 @@ public struct Credential: Identifiable, Codable {
       payload: entity.payload,
       format: entity.format,
       issuer: entity.issuer,
+      validFrom: entity.validFrom,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       claims: claims,
@@ -93,11 +98,10 @@ public struct Credential: Identifiable, Codable {
       displays: displays)
   }
 
-  public init(credentialWithKeyBinding: CredentialWithKeyBinding, metadataWrapper: CredentialMetadataWrapper) throws {
+  public init(anyCredential: AnyCredential, keyPair: KeyPair?, metadataWrapper: CredentialMetadataWrapper) throws {
     guard let selectedCredential = metadataWrapper.selectedCredential else {
       throw CredentialError.selectedCredentialNotFound
     }
-    let anyCredential = credentialWithKeyBinding.anyCredential
     guard let payload = anyCredential.raw.data(using: .utf8) else {
       throw CredentialError.invalidPayload
     }
@@ -107,11 +111,12 @@ public struct Credential: Identifiable, Codable {
     self.init(
       id: id,
       status: .unknown,
-      keyBindingIdentifier: credentialWithKeyBinding.keyPair?.identifier,
-      keyBindingAlgorithm: credentialWithKeyBinding.keyPair?.algorithm,
+      keyBindingIdentifier: keyPair?.identifier,
+      keyBindingAlgorithm: keyPair?.algorithm,
       payload: payload,
       format: anyCredential.format,
       issuer: anyCredential.issuer,
+      validFrom: anyCredential.validFrom,
       createdAt: Date(),
       updatedAt: nil,
       claims: credentialClaims,
@@ -129,6 +134,7 @@ public struct Credential: Identifiable, Codable {
   public var format: String
   public var issuer: String
 
+  public var validFrom: Date? = nil
   public var createdAt = Date()
   public var updatedAt: Date? = nil
 
@@ -150,6 +156,7 @@ public struct Credential: Identifiable, Codable {
     case payload
     case format
     case issuer
+    case validFrom
     case createdAt
     case updatedAt
     case claims
@@ -169,10 +176,8 @@ extension Credential {
   private static func getCredentialClaims(from anyClaims: [AnyClaim], selectedCredential: any CredentialMetadata.AnyCredentialConfigurationSupported, id: UUID) throws -> [CredentialClaim] {
     var credentialClaims = [CredentialClaim]()
     for anyClaim in anyClaims {
-      guard let metadataClaim = selectedCredential.claims.first(where: { $0.key == anyClaim.key }) else {
-        throw CredentialClaimError.invalidCredentialClaim(key: anyClaim.key)
-      }
-      let credentialClaim = try CredentialClaim(metadataClaim, anyClaim: anyClaim, credentialId: id)
+      let metadataClaim = selectedCredential.claims.first(where: { $0.key == anyClaim.key })
+      guard let credentialClaim = CredentialClaim(metadataClaim, anyClaim: anyClaim, credentialId: id) else { continue }
       credentialClaims.append(credentialClaim)
     }
     return credentialClaims
@@ -192,6 +197,7 @@ extension Credential: Equatable {
       lhs.payload == rhs.payload &&
       lhs.format == rhs.format &&
       lhs.issuer == rhs.issuer &&
+      lhs.validFrom == rhs.validFrom &&
       lhs.createdAt == rhs.createdAt &&
       lhs.updatedAt == rhs.updatedAt &&
       lhs.claims.map({ claimLhs in rhs.claims.contains(where: { $0 == claimLhs }) }).allSatisfy({ $0 }) &&

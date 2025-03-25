@@ -1,7 +1,6 @@
 import BITCore
 import BITL10n
 import Factory
-import Foundation
 import SwiftUI
 
 // MARK: - NewPinCodeViewModel
@@ -36,6 +35,10 @@ class NewPinCodeViewModel: ObservableObject, Vibrating {
     }
   }
 
+  var isSubmitEnabled: Bool {
+    pinCode.count >= pinCodeMinimumSize
+  }
+
   func submit() {
     do {
       userDidRequestValidation = true
@@ -53,6 +56,7 @@ class NewPinCodeViewModel: ObservableObject, Vibrating {
 
   private var userDidRequestValidation = false
 
+  @Injected(\.pinCodeMinimumSize) private var pinCodeMinimumSize: Int
   @Injected(\.validatePinCodeRuleUseCase) private var validatePinCodeRuleUseCase: ValidatePinCodeRuleUseCaseProtocol
 
   private func handleError(_ error: Error) {

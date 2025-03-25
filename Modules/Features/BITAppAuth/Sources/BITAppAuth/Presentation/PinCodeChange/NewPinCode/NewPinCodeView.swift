@@ -1,7 +1,6 @@
 import BITL10n
 import BITTheming
 import Factory
-import Foundation
 import PopupView
 import SwiftUI
 
@@ -21,6 +20,7 @@ struct NewPinCodeView: View {
       fieldTitle: L10n.tkGlobalNewpassword,
       inputFieldState: viewModel.inputFieldState,
       inputFieldMessage: viewModel.inputFieldMessage,
+      isSubmitEnabled: viewModel.isSubmitEnabled,
       onPressNext: viewModel.submit)
       .navigationTitle(L10n.tkGlobalNewpassword)
       .popup(isPresented: $viewModel.isToastPresented) {

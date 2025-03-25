@@ -15,9 +15,9 @@ struct PrivacyPermissionView: View {
 
     image = Assets.verifyCross.swiftUIImage
     backgroundImage = ThemingAssets.Gradient.gradient6.swiftUIImage
-    primary = L10n.tkOnboardingImprovementTitle
-    secondary = L10n.tkOnboardingImprovementBody
-    tertiary = L10n.tkOnboardingImprovementLinkText
+    primary = L10n.tkOnboardingAnalyticsPrimary
+    secondary = L10n.tkOnboardingAnalyticsSecondary
+    tertiary = L10n.tkOnboardingAnalyticsTertiaryLinkText
   }
 
   // MARK: Internal
@@ -127,18 +127,17 @@ extension PrivacyPermissionView {
   private func footer() -> some View {
     FooterView {
       Button(action: { Task { await viewModel.updatePrivacyPolicy(to: false) } }) {
-        Text(L10n.tkGlobalNotallow)
+        Text(L10n.tkOnboardingAnalyticsButtonSecondary)
           .multilineTextAlignment(.center)
           .lineLimit(1)
           .frame(maxWidth: .infinity)
       }
       .buttonStyle(.bezeledLight)
       .controlSize(.large)
-      .accessibilityLabel(L10n.onboardingPrivacyDeclineLoggingButton)
       .accessibilityIdentifier(AccessibilityIdentifier.acceptButton.rawValue)
 
       Button(action: { Task { await viewModel.updatePrivacyPolicy(to: true) } }) {
-        Text(L10n.tkGlobalAllow)
+        Text(L10n.tkOnboardingAnalyticsButtonPrimary)
           .multilineTextAlignment(.center)
           .lineLimit(1)
           .frame(maxWidth: .infinity)

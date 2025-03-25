@@ -67,11 +67,25 @@ final class PresentationRepositoryTests: XCTestCase {
       XCTFail("Should have thrown an error")
     } catch {
       guard let error = error as? PresentationError else { return XCTFail("Expected a PresentationError") }
-      XCTAssertEqual(error, .credentialInvalid)
+      XCTAssertEqual(error, .presentationFailed)
     }
   }
 
-  func testSubmitPresentation_InvalidRequest_ReturnsCredentialInvalid() async throws {
+  func testSubmitPresentation_InvalidCredential_ReturnsCredentialInvalid() async throws {
+    // swiftlint: disable all
+    mockResponse(code: 400, data: "{\"error\":\"invalid_credential\"}".data(using: .utf8)!)
+    // swiftlint: enable all
+
+    do {
+      _ = try await repository.submitPresentation(from: mockUrl, presentationRequestBody: mockSubmitBody)
+      XCTFail("Should have thrown an error")
+    } catch {
+      guard let error = error as? PresentationError else { return XCTFail("Expected a PresentationError") }
+      XCTAssertEqual(error, .invalidCredential)
+    }
+  }
+
+  func testSubmitPresentation_InvalidRequest_ReturnsPresentationFailed() async throws {
     // swiftlint: disable all
     mockResponse(code: 400, data: "{\"error\":\"invalid_request\"}".data(using: .utf8)!)
     // swiftlint: enable all
@@ -81,7 +95,7 @@ final class PresentationRepositoryTests: XCTestCase {
       XCTFail("Should have thrown an error")
     } catch {
       guard let error = error as? PresentationError else { return XCTFail("Expected a PresentationError") }
-      XCTAssertEqual(error, .credentialInvalid)
+      XCTAssertEqual(error, .presentationFailed)
     }
   }
 
@@ -95,11 +109,11 @@ final class PresentationRepositoryTests: XCTestCase {
       XCTFail("Should have thrown an error")
     } catch {
       guard let error = error as? PresentationError else { return XCTFail("Expected a PresentationError") }
-      XCTAssertEqual(error, .credentialInvalid)
+      XCTAssertEqual(error, .presentationFailed)
     }
   }
 
-  func testSubmitPresentation_ProcessClosed_ReturnsCancelled() async throws {
+  func testSubmitPresentation_ProcessClosed_ReturnsProcessClosed() async throws {
     // swiftlint: disable all
     mockResponse(code: 400, data: "{\"error\":\"verification_process_closed\"}".data(using: .utf8)!)
     // swiftlint: enable all
@@ -109,7 +123,7 @@ final class PresentationRepositoryTests: XCTestCase {
       XCTFail("Should have thrown an error")
     } catch {
       guard let error = error as? PresentationError else { return XCTFail("Expected a PresentationError") }
-      XCTAssertEqual(error, .presentationCancelled)
+      XCTAssertEqual(error, .processClosed)
     }
   }
 

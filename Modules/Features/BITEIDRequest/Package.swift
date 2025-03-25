@@ -22,13 +22,14 @@ let package = Package(
     .package(path: "../../Platforms/BITTheming"),
     .package(path: "../../Platforms/BITNetworking"),
     .package(url: "https://github.com/hmlongco/Factory", exact: "2.2.0"),
-    .package(url: "https://github.com/Matejkob/swift-spyable", revision: "8f78f36989bde9f06cc5a5254a6748c23c16b045"),
+    .package(url: "https://github.com/Matejkob/swift-spyable", exact: "0.8.0"),
   ],
   targets: [
     .target(
       name: "BITEIDRequest",
       dependencies: [
         .product(name: "BITCore", package: "BITCore"),
+        .product(name: "BITTestingCore", package: "BITCore"),
         .product(name: "Factory", package: "Factory"),
         .product(name: "BITL10n", package: "BITL10n"),
         .product(name: "BITNavigation", package: "BITNavigation"),

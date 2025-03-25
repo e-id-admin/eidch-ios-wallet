@@ -107,6 +107,8 @@ public struct ClientMetadata: Decodable, Equatable {
 
 extension ClientMetadata {
 
+  /// Data model providing a Hash representation of the localized display
+  /// where the  key of the hash is the language in two letters form (ISO-639)
   public struct LocalizedDisplay: Decodable, Equatable {
 
     // MARK: Lifecycle
@@ -126,6 +128,32 @@ extension ClientMetadata {
 
     // MARK: Public
 
+    /// A static helper method that retrieves the preferred display string from a set of localized displays,
+    /// prioritizing the user's preferred language codes.
+    ///
+    /// - Returns: The best matching display string based on the preferred languages, the app's default language, or a fallback if available. Returns `nil` if no display is found.
+    public static func getPreferredDisplay(from displays: LocalizedDisplay?, considering preferredUserLanguageCodes: [UserLanguageCode] ) -> String? {
+      guard let displays else {
+        return nil
+      }
+
+      for languageCode in preferredUserLanguageCodes {
+        if let display = displays.value(for: languageCode) {
+          return display
+        }
+      }
+
+      if let display = displays.value(for: UserLanguageCode.defaultAppLanguageCode) {
+        return display
+      }
+
+      if let display = displays.fallback() {
+        return display
+      }
+
+      return nil
+    }
+
     public func value(for locale: String) -> String? {
       values[locale]
     }
@@ -139,7 +167,6 @@ extension ClientMetadata {
     private static let separator = "#"
 
     private var values: [String: String] = [:]
-
   }
 }
 

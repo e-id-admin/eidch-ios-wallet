@@ -1,13 +1,12 @@
 {
-  "state": "InQueueing",
+  "state": "IN_QUEUING",
   "queueInformation": {
     "positionInQueue": 3978,
     "totalInQueue": 5789,
-    "expectedOnlineSessionStart": "2024-03-24T00:00:00Z"
+    "expectedOnlineSessionStart": "2024-03-24T11:55:23Z"
   },
   "legalRepresentant": {
     "verified": false,
     "verificationLink": "https://test.ch"
-  },
-  "onlineSessionStartTimeout": "2024-03-27T00:00:00Z"
+  }
 }

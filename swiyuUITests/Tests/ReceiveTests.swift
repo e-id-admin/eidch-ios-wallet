@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import swiyu
+@testable import swiyuUITests_App
 
 // MARK: - ReceiveTests
 
@@ -12,8 +12,6 @@ final class ReceiveTests: XCTestCase {
     super.setUp()
     app = XCUIApplication()
     app.launchArguments.append("-disable-onboarding")
-    app.launchArguments.append("-disable-delays")
-    app.launchArguments.append("-ui-tests")
     app.launch()
   }
 

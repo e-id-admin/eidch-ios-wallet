@@ -33,6 +33,7 @@ extension PresentationErrorRequestBody {
   public enum ErrorType: String, Codable {
     case clientRejected = "client_rejected"
     case invalidRequest = "invalid_request"
-    case presentationCancelled = "verification_process_closed"
+    case presentationProcessClosed = "verification_process_closed"
+    case invalidCredential = "invalid_credential"
   }
 }

@@ -1,4 +1,4 @@
-![Public Beta banner](https://github.com/e-id-admin/eidch-public-beta/blob/main/assets/github-banner-publicbeta.jpg)
+![swiyu GitHub banner](https://github.com/swiyu-admin-ch/swiyu-admin-ch.github.io/blob/main/assets/images/github-banner.jpg)
 
 # swiyu - iOS wallet
 
@@ -9,6 +9,7 @@ as part of the electronic identity (E-ID) project.
 
 - [Overview](#overview)
 - [Installation and building](#installation-and-building)
+- [Known Issues](#known-issues)
 - [Contributions and feedback](#contributions-and-feedback)
 - [License](#license)
 
@@ -39,6 +40,9 @@ Once in Xcode:
 - Be aware that it's more appropriate to run on real devices rather than in Simulator because of several restrictions and KeyChain usage
 - Finally, just build & run in Xcode with `command + R`
 
+## Known Issues
+
+The swiyu Public Beta Trust Infrastructure was deliberately released at an early stage to enable future ecosystem participants. There may still be minor bugs or security vulnerabilities in the test system. We will publish them in the near future as ‘KnownIssues’ in this repository.
 
 ## Contributions and feedback
 
